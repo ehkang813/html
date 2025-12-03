@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>표만들기</title>
+    <style>
+        caption{
+            text-align: right; font-size: 12px;
+            color: #555; 
+            margin-bottom: 12px;
+        }
+        table{
+            /* 테두리선 색 */
+            border-color: #bbbbbb; 
+            /* 테두리선 두께 */
+            border-width: 1px; 
+            /* 테두리선 종류 */
+            border-style: solid;
+            /* 약식 */
+            border: 1px solid #bbb;
+            width: 662px;
+            margin: auto;
+            border-spacing: 0;
+            border-collapse: collapse;
+            border-top:3px solid #002b5c;
+            border-left: none;
+            border-right: none;
+        }
+        th{
+            border: 1px solid #bbb; 
+            color: #222; background-color: #f1f1f1; 
+            height: 51px; width: 132.4px;
+            border-left: none;
+        }
+        td{
+            border:  1px solid #bbb; color: #555;
+            text-align: center;  height: 51px;
+            border-right: none;
+        }
+        .last{border-right: none;}
+        .year{background-color: #f9f9f9;}
+    </style>
+</head>
+<body>
+    <table>
+        <caption>단위:억원</caption>
+        <tr>
+            <th>연도</th>
+            <th>합계</th>
+            <th>주택</th>
+            <th>토목</th>
+            <th class="last">플랜트</th>
+        </tr>
+        <tr>
+            <th class="year">2024</th>
+            <td>301,778</td>
+            <td>211,853</td>
+            <td>42,676</td>
+            <td class="last">47,249</td>
+        </tr>
+        <tr>
+            <th class="year">2023</th>
+            <td>309,089</td>
+            <td>214,647</td>
+            <td>40,228</td>
+            <td class="last">54,214</td>
+        </tr>
+        <tr>
+            <th class="year">2022</th>
+            <td>265,422</td>
+            <td>190,854</td>
+            <td>40,307</td>
+            <td class="last">34,261</td>
+        </tr>
+    </table>
+</body>
+</html>
