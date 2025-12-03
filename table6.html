@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>표합치기</title>
+    <style>
+
+        table{
+            width: 400px; height: 52px;
+            border:1px solid #000;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin: auto;
+            margin-bottom: 50px;
+        }
+
+        th{ height: 52px;
+            border: 1px solid #000;
+        }
+
+        td{ height: 52px;
+            text-align: center;
+            border: 1px solid #000;
+        }
+
+        .ro1{width: 132px;}
+
+        a{text-decoration: none;}
+        a:hover{text-decoration: underline;}
+
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th colspan="4">2020년 판매현황</th>
+        </tr>
+        <tr>
+            <td colspan="2">전반기</td>
+            <td colspan="2">후반기</td>
+        </tr>
+        <tr>
+            <td>계획</td>
+            <td>실적</td>
+            <td>계획</td>
+            <td>실적</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>189</td>
+            <td>100</td>
+            <td>192</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <th class="ro1">분류</th>
+            <th>사이트주소(URL)</th>
+        </tr>
+        <tr>
+            <td rowspan="2">검색엔진</td>
+            <td><a href="http://www.naver.com" target="_blank">네이버(NAVER)</a></td>
+        </tr>
+        <tr>
+            <td> <a href="http://www.daum.net" target="_blank">다음(DAUM)</a></td>
+        </tr>
+        <tr>
+            <td rowspan="2">오픈마켓</td>
+            <td><a href="https://www.auction.co.kr" target="_blank">옥션(AUCTION)</a></td>
+        </tr>
+        <tr>
+            <td><a href="https://www.gmarket.co.kr" target="_blank">G-마켓(GMARKET)</a> </td>
+        </tr>
+    </table>
+</body>
+</html>
