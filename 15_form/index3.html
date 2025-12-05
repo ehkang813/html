@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신청과목</title>
+    <style>
+        li{list-style: none;}
+        fieldset{width: 525px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <form action="">
+        <fieldset>
+            <legend>신청과목</legend>
+            <ul>
+                <li>
+                    이 달에 신청할 과목을 선택하세요 (1과목만 가능)
+                </li>
+                <li>
+                    <input type="radio" name="cl" id="cl1" checked><label for="cl1">회화</label>
+                    <input type="radio" name="cl" id="cl2"><label for="cl2">문법</label>
+                    <input type="radio" name="cl" id="cl3"><label for="cl3">작문</label>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>메일링</legend>
+            <ul>
+                <li>
+                    메일로 받고 싶은 뉴스 주제를 선택해 주세요 (복수선택가능)
+                </li>
+                <li>
+                    <input type="checkbox" id="ch1"><label for="ch1">해외단신</label>
+                    <input type="checkbox" id="ch2"><label for="ch2">5분 회화</label>
+                    <input type="checkbox" id="ch3" checked><label for="ch3">모닝팝스</label>
+                </li>
+            </ul>    
+        </fieldset>
+        <input type="submit" value="보내기">
+        <input type="reset" value="취소">
+    </form>
+</body>
+</html>
