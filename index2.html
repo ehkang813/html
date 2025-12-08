@@ -3,39 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>강은혜의 홈페이지</title>
+    <title>상품주문서</title>
     <style>
-        h1{text-align: center; color: #008412;}
-        p{text-align: center;}
-        h2{text-align: center;color: #008412;}
-        hr{width: 305px; background-color: blue; height: 5px;
-        }
-        em{color: red;}
-        u{color: red;}
+        body{border: 5px solid #fdc1c9; padding: 20px 20px;}
+        li{list-style: none; background-color: #eeeeee; padding: 10px 10px; margin-bottom: 10px;}
+        legend{color: #ca855b}
+        fieldset{border: 1px solid #d7a75b;}
+        .bl{background-color: #000; color: #fff;}
     </style>
 </head>
 <body>
-    <h1>
-        강은혜의 홈페이지에 오신 것을 환영합니다.
-    </h1>
-    <p>
-멋진 홈페이지가 되도록 노력하겠습니다. <br>
-부디 저의 홈페이지에서 좋은 시간 가지시기 바라며 <br>
-가실 때에 따뜻한 글한마디 남겨주시면 감사하겠습니다. <br>
-    </p>
-
-<p>
-    그리고 제 홈페이지에 궁금한 점이 있으시면 <br>
-     <u><em>xxxxx@naver.com</em> </u>  으로 <br>
-    메일 보내주시기 바랍니다.
-</p>
-<p>
-    2025년 11월 26일
-</p>
-<hr>
-<h2>
-    KD 컴퓨터 학원 강의실에서
-</h2>
-<hr>
+    <h1>상품주문서</h1>
+    <form action="">
+        <fieldset>
+            <legend>개인정보</legend>
+            <ul>
+                <li>
+                    <label for="name">이름</label>
+                    <input type="text" id="name" required placeholder="여백없이 입력">
+                </li>
+                <li>
+                    <label for="pw">비밀번호</label>
+                    <input type="password" id="pw" required placeholder="비밀번호를 입력하시오">
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>배송지 정보</legend>
+            <ul>
+                <li>
+                    <label for="add">주소</label><input type="text" id="add" readonly>
+                </li>
+                <li>
+                    <label for="">전화번호</label>
+                    <select name="" id="st">
+                        <option value="">010</option>
+                        <option value="">011</option>
+                        <option value="">017</option>
+                    </select>-
+                    <input type="text">
+                    <input type="text">
+                </li>
+                <li>
+                    <label for="">메모</label>
+                    <textarea name="" id="" cols="30" rows="2"  placeholder="여기에 메모를 입력하세요"></textarea>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>주문 정보</legend>
+            <ul>
+                <li>
+                    <label for="">과태말라 안티구아 (100g)</label>
+                    <input type="number" min="0" max="10" value="1">개
+                </li>
+                <li>
+                    <label for="">인도네시아 만델링(100g)</label>
+                    <input type="number"  min="0" max="10" value="1">개
+                </li>
+                <li>
+                    <label for="">탐라는도다 (블랜딩)(100g)</label>
+                    <input type="number"  min="0" max="10" value="1">개
+                </li>
+                <li>
+                    <label for="ch1">1</label><input type="checkbox" id="ch1" checked>
+                    <label for="ch2">2</label><input type="checkbox" id="ch2">
+                    <label for="ch3">3</label><input type="checkbox" id="ch3">
+                    <label for="ch4">4</label><input type="checkbox" id="ch4">
+                </li>
+                <li>
+                    <label for="ra1">r01</label><input type="radio" id="ra1" name="radi" checked>
+                    <label for="ra2">r02</label><input type="radio" id="ra2" name="radi">
+                    <label for="ra3">r03</label><input type="radio" id="ra3" name="radi">
+                    <label for="ra4">r04</label><input type="radio" id="ra4" name="radi">
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>버튼모음</legend>
+            <ul>
+                <input class="bl" type="submit" value="주문하기">
+                <input class="bl" type="reset" value="취소하기">
+            </ul>
+        </fieldset>
+    </form>
 </body>
 </html>
