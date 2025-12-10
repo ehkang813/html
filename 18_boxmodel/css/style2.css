@@ -1,0 +1,53 @@
+@charset "uts-8";
+body{
+
+}
+*{margin: 0; padding: 0;}
+li{list-style: none;}
+
+.box{
+    border: 1px solid #e4e2e0;
+    background-color: #e4e2e0;
+    width: 1680px;
+    height: 380px;
+    margin: 0 auto;
+}
+
+.box div{
+    border: 1px solid #2e2e7c;
+    background-color: #2e2e7c;
+    width: 350px;
+    height: 380px;
+    margin-right: 40px;
+    float: left;
+    border-radius: 16px;
+
+}
+
+.box .box2{
+    border: 1px solid #fff;
+    background-color: #fff;
+}
+
+ul{
+    border: 1px solid #e4e2e0;
+    background-color: #e4e2e0;
+    width: 1680px;
+    height: 380px;
+    margin: 20px auto 0;
+}
+
+ul li{
+    border: 1px solid #2e2e7c;
+    background-color: #2e2e7c;
+    width: 350px;
+    height: 380px;
+    margin-right: 40px;
+    float: left;
+    border-radius: 16px;
+}
+
+ul .box2{
+    border: 1px solid #fff;
+    background-color: #fff;
+}
