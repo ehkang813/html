@@ -5,6 +5,7 @@ body{
 }
 
 *{margin: 0; padding: 0;}
+li{list-style: none;}
 
 
 .box{
@@ -18,7 +19,7 @@ body{
     background-color: #1ddb17;
     float: left;
 }
-.box .di2{
+.box .bo2{
     background-color: #00d8ff;
 }
 .box .di3{
@@ -43,4 +44,6 @@ ul{
 ul li{
     width: 300px;
     height: 300px;
+    background-color: #1ddb17;
 }
+ul .
