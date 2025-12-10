@@ -1,0 +1,46 @@
+@charset "utf-8";
+
+body{
+
+}
+
+*{margin: 0; padding: 0;}
+
+
+.box{
+    width: 900px;
+    height: 650px;
+    margin: 0 auto;
+}
+.box div{
+    width: 300px;
+    height: 300px;
+    background-color: #1ddb17;
+    float: left;
+}
+.box .di2{
+    background-color: #00d8ff;
+}
+.box .di3{
+    background-color: #ffbb00;
+}
+.box .di4{
+    width: 900px;
+    height: 300px;
+    background-color: #ffff00;
+}
+.box .di5{
+    width: 900px;
+    height: 50px;
+    background-color: #eeeeee;
+}
+
+ul{
+    width: 900px;
+    height: 650px;
+    margin: 0 auto;
+}
+ul li{
+    width: 300px;
+    height: 300px;
+}
