@@ -1,0 +1,61 @@
+@charset "utf-8";
+
+body{
+    background-color: #356d22;
+}
+/* 초기화 작업 */
+*{margin: 0; padding: 0;}
+li{list-style: none;}
+a{text-decoration: none;}
+
+ul{
+    width: 1280px;
+    /* border: 5px solid red; */
+    margin: 40px auto 0;
+    /* 자식 크기만큼 감싸는 명령 */
+    overflow: hidden;
+}
+
+ul li{
+    width: 400px;
+    height: 272px;
+    float: left;
+    margin-right: 40px;
+}
+
+ul .last{
+    margin-right: 0;
+}
+
+/* 아래로 쌓이는 태그는  block 요소태그 */
+/* a 태그는 옆으로 배치하는 inline태그 */
+/* inline 태그는 크기 설정을 못함 */
+/* inline태그에 크기를 주려면 block 요소태그를 추가 */
+/* display: block; */
+ul li a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+ul li a .imgbox{
+    width: 100%;
+    height: 227px;
+}
+
+ul li a .imgbox img{
+    width: 100%;
+    height: 100%;
+}
+
+ul li a .tit{
+    width: 100%;
+    height: 45px;
+    background-color: #fff;
+    text-align: center;
+}
+
+ul li a .tit h3{
+    line-height: 45px;
+    color: #222;
+}
