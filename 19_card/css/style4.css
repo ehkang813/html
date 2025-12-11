@@ -1,0 +1,70 @@
+@charset "utf-8";
+
+body{
+    font-family: sans-serif, "맑은 고딕", "malgun gothic";
+}
+
+*{margin: 0; padding: 0;}
+li{list-style: none;}
+a{text-decoration: none;}
+
+ul{
+    width: 1600px;
+    margin: 0 auto;
+}
+
+ul li{
+    width: 388px;
+    margin-right: 16px;
+    float: left;
+}
+
+ul .last{
+    margin-right: 0;
+}
+
+ul li a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+ul li a .imgbox{
+    width: 100%;
+    height: 480px;
+}
+
+ul li a .imgbox img{
+    width: 100%;
+    height: 100%;
+}
+
+ul li a .info{
+    text-align: center;
+    padding-top: 25px;
+    box-sizing: border-box;
+}
+
+ul li a .info p{
+    font-size: 19px;
+    color: #666;
+    line-height: 36px;
+}
+
+ul li a .info h2{
+    font-size: 22px;
+    color: #000;
+    line-height: 36px;
+}
+
+ul li a .info h3{
+    font-size: 20px;
+    color: #000;
+    font-weight: 400;
+    line-height: 34px;
+}
+
+ul li a .info .ps{
+    font-size: 12px;
+    color: #666;
+}
