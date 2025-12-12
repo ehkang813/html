@@ -1,0 +1,147 @@
+@charset "utf-8";
+
+body{
+
+}
+
+*{margin: 0;padding: 0;}
+
+.big{
+    width: 1000px;
+    height: 1000px;
+    background-color: #87ceea;
+
+    position: relative;
+}
+
+.big .violet1{
+    width: 200px;
+    height: 200px;
+    background-color: #81007f;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.big .violet2{
+    width: 200px;
+    height: 200px;
+    background-color: #81007f;
+
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.big .violet3{
+    width: 200px;
+    height: 200px;
+    background-color: #81007f;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.big .violet4{
+    width: 200px;
+    height: 200px;
+    background-color: #81007f;
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.big .yellow1{
+    width: 200px;
+    height: 200px;
+    background-color: #ffff00;
+
+    position: absolute;
+    left: 100px;
+    top: 100px;
+}
+
+.big .yellow2{
+    width: 200px;
+    height: 200px;
+    background-color: #ffff00;
+
+    position: absolute;
+    right: 100px;
+    top: 100px;
+}
+
+.big .yellow3{
+    width: 200px;
+    height: 200px;
+    background-color: #ffff00;
+
+    position: absolute;
+    right: 100px;
+    bottom: 100px;
+}
+
+.big .yellow4{
+    width: 200px;
+    height: 200px;
+    background-color: #ffff00;
+
+    position: absolute;
+    left: 100px;
+    bottom: 100px;
+}
+
+.big .red1{
+    width: 200px;
+    height: 200px;
+    background-color: #fe0000;
+
+    position: absolute;
+    left: 200px;
+    top: 200px;
+}
+
+.big .red2{
+    width: 200px;
+    height: 200px;
+    background-color: #fe0000;
+
+    position: absolute;
+    right: 200px;
+    top: 200px;
+}
+
+.big .red3{
+    width: 200px;
+    height: 200px;
+    background-color: #fe0000;
+
+    position: absolute;
+    right: 200px;
+    bottom: 200px;
+}
+
+.big .red4{
+    width: 200px;
+    height: 200px;
+    background-color: #fe0000;
+
+    position: absolute;
+    left: 200px;
+    bottom: 200px;
+}
+
+.big .black{
+    width: 200px;
+    height: 200px;
+    background-color: #000;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -100px;
+    margin-top: -100px;
+}
