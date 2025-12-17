@@ -1,0 +1,101 @@
+@charset "utf-8";
+
+body{
+
+}
+
+*{margin: 0; padding: 0;}
+button{border: none; background: none;}
+
+
+.box{
+    width: 1000px;
+    height: 1003px;
+    /* background-color: gold; */
+    /* 가로 가운데, 세로 가운데 정렬 */
+    /* 부모가 position이 되어 있으면 자동으로 부모 기준으로 설정 */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    /* margin-left: -500px;
+    margin-top: -501.5px; */
+    transform: translate(-50%, -50%);
+}
+
+.box .left{
+    position: absolute;
+    left: 50%; 
+    margin-left: -73px;
+    top: 50%;
+    margin-top: -501.5px;
+    /* transform: translate(-50%, -50%); */
+    /* 애니메이션 실행 명령 */
+    animation: left_ani 2s ease-in-out forwards; 
+}
+
+/* 애니메이션 설정 */
+@keyframes left_ani {
+    from{left: 50%;}
+    to{left: 20%;}
+}
+
+.box .right{
+    position: absolute;
+    right: 50%;
+    margin-right: -73px;
+    top: 50%;
+    margin-top: -501.5px;
+    animation: right_ani 2s ease-in-out forwards;
+}
+
+@keyframes right_ani {
+    0%{right: 50%;}
+    100%{right: 20%;}
+}
+
+.box .tit{
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.box .tit h2{
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 45px;
+    color: #333;
+    /* 숨김 */
+    opacity: 0;
+    animation: h2_ani 1s ease-in-out forwards 2s ;
+}
+@keyframes h2_ani {
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}
+.box .tit p{
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 22px;
+    color: #888;
+    margin: 24px 0;
+    opacity: 0;
+    animation: p_ani 1s ease-in-out forwards 2.5s;
+}
+
+@keyframes p_ani {
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}
+
+.box .tit button{
+    cursor: pointer;
+    opacity: 0;
+    animation: button_ani 1s ease-in-out forwards 3s;
+}
+
+@keyframes button_ani {
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}

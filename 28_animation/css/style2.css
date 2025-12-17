@@ -27,7 +27,7 @@ div{
     /* 한번은 시계방향, 한번은 반대방향 */
     /* animation-direction: alternate; */
     /* 가속도 */
-    /* animation-timing-function: linear; */
+    /* animation-timing-function: ease-in-out; */
     /* 지연시간 */
     /* animation-delay: 2s; */
 
