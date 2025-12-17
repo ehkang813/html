@@ -23,7 +23,7 @@ button{border: none; background: none;}
     position: absolute;
     left: 55px;
     top: 155px;
-    animation: tit_ani 2s ease-in-out forwards;
+    animation: tit_ani 1s ease-in-out forwards;
 }
 
 @keyframes tit_ani {
@@ -35,7 +35,7 @@ button{border: none; background: none;}
     position: absolute;
     right: 0;
     bottom: -285px;
-    animation: picture_ani 2s ease-in-out forwards 2s;
+    animation: picture_ani 1s ease-in-out forwards 1s;
 }
 
 @keyframes picture_ani {
