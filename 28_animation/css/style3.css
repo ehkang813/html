@@ -40,7 +40,7 @@ body{
     height: 100px;
     background-color: yellow;
     position: absolute;
-    left: -101px;
+    left: 0;
     top: 0;
     animation: rotate_ani2 4s 2s;
 
