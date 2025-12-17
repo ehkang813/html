@@ -1,0 +1,66 @@
+@charset "utf-8";
+
+body{
+
+}
+
+*{margin: 0; padding: 0;}
+
+.box{
+    width: 1000px;
+    height: 300px;
+    border: 1px solid blue;
+    margin: 10px auto 0;
+    position: relative;
+}
+
+.box .son{
+    width: 100px;
+    height: 100px;
+    background-color: #ff69b3;
+    position: absolute;
+    left: 0;
+    top: 0;
+    animation: rotate_ani 3s  infinite 2s;
+
+}
+
+.box2{
+    width: 1000px;
+    height: 300px;
+    border: 1px solid red;
+    margin: 10px auto 0;
+    position: relative;
+    
+}
+
+.box2 .son2{
+    width: 100px;
+    height: 100px;
+    background-color: yellow;
+    position: absolute;
+    left: -101px;
+    top: 0;
+    animation: rotate_ani2 4s 2s;
+
+}
+
+/* 애니메이션 설정 */
+@keyframes rotate_ani {
+    0%{left: 0; top: 0;}
+    25%{left: 900px; top: 0;}
+    50%{left: 900px; top: 200px}
+    75%{left: 0; top: 200px}
+    100%{left: 0; top: 0;}
+
+}
+
+@keyframes rotate_ani2 {
+    0%{left: 0; top: 0;}
+    20%{left: 900px; top: 0;}
+    40%{left: 900px; top: 200px}
+    60%{left: 0; top: 200px}
+    80%{left: 0; top: 0;}
+    100%{left: -101px; top: 0;}
+
+}
