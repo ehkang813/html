@@ -34,11 +34,11 @@ button{border: none; background: none;}
 .box .pictur{
     position: absolute;
     right: 0;
-    bottom: -283px;
+    bottom: -285px;
     animation: picture_ani 2s ease-in-out forwards 2s;
 }
 
 @keyframes picture_ani {
-    0%{right: 0; bottom: -283px; }
-    100%{right: 0; bottom: -5px;}
+    0%{right: 0; bottom: -285px; }
+    100%{right: 0; bottom: -7px;}
 }
