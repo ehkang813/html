@@ -55,7 +55,7 @@ button{border: none; background: none;}
     gap: 66px;
 }
 
-.header ul.gnb>a{
+.header ul.gnb a{
     font-size: 17px;
     font-weight: 700;
     color: #626262;
