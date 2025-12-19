@@ -1,0 +1,181 @@
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+body{
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+*{margin: 0; padding: 0;}
+li{list-style: none;}
+a{text-decoration: none;}
+button{border: none; background: none;}
+
+.header{
+    width: 100%;
+    height: 80px;
+    border-bottom: 1px solid #e8e8e8;
+    background: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 999;
+}
+.header .inner{
+    width: 1400px;
+    height: 80px;
+    /* background: gold; */
+    margin: 0 auto;
+    /* 옆으로 배치 */
+    display: flex;
+    /* 양쪽 균등 배열 */
+    justify-content: space-between;
+    /* 가운데 정렬 */
+    align-items: center;
+}
+
+.header .inner h1 a{
+    display: block;
+    width: 200px;
+    height: 46px;
+    background: url(../images/logo-all.png) no-repeat;
+    text-indent: -999999px;
+}
+
+.header .inner .gnb{
+    display:flex
+
+}
+.header .inner .gnb>li>a{
+    display: block;
+    /* background: pink; */
+    padding: 0 20px;
+    height: 80px;
+    line-height: 80px;
+    /* 소문자를 대문자로 바꾸기 */
+    text-transform: uppercase;
+    font-size: 17px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* 2차메뉴 */
+.header .inner .gnb>li>.depth2{
+    width: 100%;
+    height: 80px;
+    border-bottom: 1px solid #ccc;
+    position: absolute;
+    left: 0;
+    top: 81px;
+    background: #fff;
+    display: none;
+}
+
+.header .inner .gnb>li:hover>.depth2{
+    display: block;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner{
+    width: 1400px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    /* background: gold; */
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner .ceo{
+    margin-left: 300px;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner .sun{
+    margin-left: 320px;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner .part{
+    margin-left: 370px;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner .edu{
+    margin-left: 528px;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner .new{
+    margin-left: 730px;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner .supp{
+    margin-left: 625px;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner li a{
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+.header .inner .gnb>li>.depth2 .depth2_inner li:hover a{
+    color: #0056aa;
+}
+
+.header .inner .gnb>li:hover>a{
+    color: #0056aa;
+    position: relative;
+}
+
+.header .inner .gnb>li:hover>a::after{
+    content: "";
+    width: 100%;
+    height: 2px;
+    background: #0056aa;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.header .inner ul.icon{
+    display: flex;
+    gap: 10px;
+    color: #fff;
+}
+
+.header .inner ul.icon li:nth-child(1) a{
+    background: #222;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 999px;
+    font-size: 16px;
+}
+
+.header .inner ul.icon li:nth-child(2) a{
+    background: #0056aa;
+    color: #fff;
+    padding: 10px 15px;
+    padding-right: 30px;
+    border-radius: 999px;
+    font-size: 16px;
+    position: relative;
+}
+
+.header .inner ul.icon li:nth-child(2) a::after{
+    content: "";
+    width: 11px;
+    height: 11px;
+    background: url(../images/icon-arrow.png)no-repeat;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+/* 메인 비쥬얼 영역(동영상) */
+.video{
+    width: 100%;
+    height: 100%;
+}
+
+.video video{
+    width: 100%;
+    height: 100%;
+}
