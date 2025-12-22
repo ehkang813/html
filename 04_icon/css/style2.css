@@ -14,8 +14,6 @@ li{list-style: none;}
     background: #000;
     border-bottom: 1px solid #6b6b6b;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     position: absolute;
     left: 0;
     top: 0;
