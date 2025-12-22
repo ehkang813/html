@@ -58,7 +58,7 @@ li{list-style: none;}
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 74px;
+    gap: 40px;
 }
 
 .menu ul li{
@@ -70,10 +70,13 @@ li{list-style: none;}
     line-height: 48px;
     color: #fff;
     font-size: 14px;
+    padding: 0 16px;
+    
 }
 
 .menu ul li.active a{
     color: #e6007e;
     font-weight: 600;
     position: relative;
+    border-bottom: 2px solid #e6007e;
 }
