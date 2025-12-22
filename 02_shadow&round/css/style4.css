@@ -28,12 +28,11 @@ ul{
 ul li{
     width: 200px;
     height: 80px;
-    border: 1px solid #fff;
     text-align: center;
     line-height: 80px;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 0 10px #fff;
+    box-shadow: 0 3px 8px #fff;
 }
 
 ul li:hover a{
