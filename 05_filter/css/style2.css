@@ -1,0 +1,53 @@
+@charset "utf-8"
+
+body{
+
+
+}
+
+*{margin: 0; padding: 0;}
+
+.box{ 
+    width: 1140px;
+    /* background: gold; */
+    display: flex;
+    gap: 20px;
+    margin: 20px auto 0;}
+
+.box div{
+    /* background: red; */
+    width: 270px;
+    height: 285px;
+    
+}
+
+.box img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.box .img1{
+    filter: blur(10px);
+}
+
+.box .img1:hover {filter: blur(10px) invert(100%);}
+
+.box .img2{
+    filter: opacity(20%);
+}
+
+.box .img2:hover {filter: opacity(100%);}
+
+.box .img3{
+    filter: grayscale(100%);
+}
+
+.box .img3:hover {filter: grayscale(0) contrast(150%);}
+
+.box .img4{
+    filter: contrast(200%);
+}
+
+.box .img4:hover {filter: hue-rotate(60deg) brightness(150%);}
