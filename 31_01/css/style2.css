@@ -1,4 +1,5 @@
 @charset "utf-8";
+
 body{
     background: #fff;
     color: #333;
@@ -8,12 +9,13 @@ body{
 a{text-decoration: none;}
 .wrap{
     width: 1200px;
-    margin: 0 auto;}
+    margin: 0 auto;
+}
 
 .header{
     width: 1200px;
     height: 100px;
-    background: skyblue;
+    background: aquamarine;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -22,30 +24,27 @@ a{text-decoration: none;}
 .header h1{
     width: 200px;
     height: 40px;
-    background: bisque;
+    background: antiquewhite;
 }
 
 .header .gnb{
-    width: 600px;
+    width: 800px;
     height: 40px;
-    background: olivedrab;
+    background: blueviolet;
 }
 
 .slide{
     width: 1200px;
     height: 300px;
-    background: darkkhaki;
-    margin: 0 auto;
+    background: burlywood;
 }
 
 .contents{
     width: 1200px;
     height: 200px;
     background: chocolate;
-    margin: 0 auto;
     display: flex;
 }
-
 .contents .notice{
     width: 400px;
     height: 200px;
@@ -55,19 +54,19 @@ a{text-decoration: none;}
 .contents .banner{
     width: 400px;
     height: 200px;
-    background: forestgreen;
+    background: greenyellow;
 }
 
 .contents .go{
     width: 400px;
     height: 200px;
-    background: darkorange;
+    background: gold;
 }
 
 .footer{
     width: 1200px;
     height: 100px;
-    background: firebrick;
+    background: hotpink;
     display: flex;
     align-items: center;
 }
@@ -75,17 +74,22 @@ a{text-decoration: none;}
 .footer .logo{
     width: 200px;
     height: 40px;
-    background: fuchsia;
+    background: khaki;
 }
 
-.footer .copy{
-    width: 800px;
+.footer .down{
+    width: 1000px;
     height: 100px;
-    background: hotpink;
+    background: palegreen;
 }
 
-.footer .sns{
-    width: 200px;
-    height: 100px;
-    background: grey;
+.footer .down .menu{
+    width: 1000px;
+    height: 50px;
+    background: skyblue;
+}
+.footer .down .copy{
+    width: 1000px;
+    height: 50px;
+    background: sandybrown;
 }
