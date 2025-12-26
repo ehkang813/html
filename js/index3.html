@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>평균점수</title>
+</head>
+<body>
+    <script>
+        let num = prompt("번호를 입력하세요")
+        let name = prompt("이름을 입력하세요")
+        let korea = prompt("국어점수를 입력하세요")
+        let math = prompt("수학점수를 입력하세요")
+        let english = prompt("영어점수를 입력하세요")
+
+        let add = Number(korea) + Number(math) + Number(english)
+        let average = Number(add) / 3
+
+        alert("번호: " + num + "\n" + "이름: " + name + "님"+ "\n" + 
+        "국어점수 " + korea + "점" + "\n" + 
+        "수학점수 " + math + "점" + "\n" +
+        "영어점수 " + english + "점" + "\n" +
+        "총점 " + add + "점" + "\n" +
+        "평균 " + average + "점" + "\n" )
+    </script>
+</body>
+</html>
