@@ -18,7 +18,7 @@ a{text-decoration: none;}
 .header .inner{
     width: 940px;
     height: 74px;
-    background: gold;
+    /* background: gold; */
     margin: 0 auto;
     display: flex;
     align-items: center;
