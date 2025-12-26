@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문자data를 숫자data로 변환</title>
+</head>
+<body>
+    <script>
+        // 외부로부터 이름을 입력받고, 체중, 키, 몸무게를 입력받아서 BMI지수를 계산하는 프로그램
+
+        // 입력data
+        let name = prompt("이름을 입력해 주세요")
+        let weight = prompt("몸무게를 입력하세요")
+        let height = prompt("키를 입력하세요")
+
+        // 체질량 지수 구하는 공식
+        let bmi = weight / (height * height) *10000
+        let res = ''
+
+        if(bmi>=25){
+            res = "비만"
+        }else if(bmi>=23){
+            res = "과체중"
+        }else if(bmi>=18.5){
+            res = "정상 체중"
+        }else{
+            res = "저체중"
+        }
+
+        // 출력 data
+        alert("고객님의 이름은" + name + "이고\n" + "입력하신 체질량 지수는" + bmi + "이므로 " + res + "입니다")
+
+
+
+    </script>
+
+
+</body>
+</html>
