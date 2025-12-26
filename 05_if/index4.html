@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>if문(제3형식)</title>
+</head>
+<body>
+    <pre>
+        if문 3형식
+        if(조건식){
+            참일때 실행
+        }else if(조건식){
+            참일때 실행
+        }else if(조건식){
+            참일때 실행
+        }else if(조건식){
+            참일때 실행
+        }else(조건식){
+            거짓일때
+        }
+    </pre>
+    <hr>
+    <script>
+        // 이름, 국어, 영어, 수학 입력받아서 총점, 평균을 구함
+        // 평균이 90점 이상이면 "수"
+        // 평균이 80점 이상이면 "우"
+        // 평균이 70점 이상이면 "미"
+        // 평균이 60점 이상이면 "양"
+        // 나머지면 "가"
+
+        let name = prompt("이름을 입력해주세요")
+        let kor = prompt("국어점수를 입력해주세요")
+        let eng = prompt("영어점수를 입력해주세요")
+        let mat = prompt("수학점수를 입력해주세요")
+
+        // 처리
+        let tot = Number(kor) + Number(eng) + Number(mat)
+        let avg = tot/3
+        let res = ''
+        if(avg>=90){
+            res = "수"
+        }else if(avg>=80){
+            res = "우"
+        }else if(avg>=70){
+            res = "미"
+        }else if(avg>=60){
+            res = "양"
+        }else{
+            res = "가"
+        }
+
+        if(avg>=95){
+            res2 = "A+"
+        }else if(avg>=90){
+            res2 = "A"
+        }else if(avg>=85){
+            res2 = "B+"
+        }else if(avg>=80){
+            res2 = "B"
+        }else if(avg>=75){
+            res2 = "C+"
+        }else if(avg>=70){
+            res2 = "C"
+        }else if(avg>=65){
+            res2 = "D+"
+        }else if(avg>=60){
+            res2 = "D"
+        }else{
+            res2 = "F"
+        }
+
+        document.write("이름= " + name + "님<br>")
+        document.write("국어점수= " + kor + "점<br>")
+        document.write("영어점수= " + eng + "점<br>")
+        document.write("수학점수= " + mat + "점<br>")
+        document.write("총점= " + tot + "점<br>")
+        document.write("평균= " + avg + "점<br>")
+        document.write("평점= " + res + "<br>")
+        document.write("학점= " + res2 )
+
+
+    </script>
+</body>
+</html>
