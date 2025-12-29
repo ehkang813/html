@@ -30,6 +30,6 @@ function goLogin() {
   document.body.classList.add('fade-out');
 
   setTimeout(() => {
-    window.location.href = 'login.html';
+    window.location.href = './login.html';
   }, 400); // CSS transition 시간과 동일
 }
