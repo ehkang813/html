@@ -2,6 +2,7 @@ const swiper = new Swiper('.swiper', {
   // Optional parameters
     direction: 'horizontal',
     effect: 'fade',
+    speed: 1500,
     fadeEffect: {
     crossFade: true // 이미지가 부드럽게 겹치며 전환
     },
@@ -47,4 +48,5 @@ playBtn.addEventListener('click', () => {
     playBtn.textContent = '▶';
     isPlaying = false;
   }
+
 });
