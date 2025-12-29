@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoamOn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .splash-screen {
+            width: 100%;
+            height: 100vh;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+        }
+
+        .brand-name {
+            font-size: 48px;
+            font-weight: 700;
+            color: #E87722;
+            letter-spacing: -1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-screen">
+        <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 80 L50 20 L80 80 L70 80 L50 45 L30 80 Z" fill="#E87722"/>
+            <rect x="45" y="55" width="10" height="25" fill="#E87722"/>
+        </svg>
+        <div class="brand-name">RoamOn</div>
+    </div>
+
+    <script>
+        // 5초 후 네이버로 이동
+        setTimeout(() => {
+            window.location.href = 'https://www.naver.com';
+        }, 5000);
+    </script>
+</body>
+</html>
