@@ -22,7 +22,7 @@ const swiper = new Swiper('.swiper-container', {
 
 document.querySelectorAll('.start-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    window.location.href = '../login.html';
+    window.location.href = 'login.html';
   });
 });
 
