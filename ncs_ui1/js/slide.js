@@ -31,5 +31,5 @@ function goLogin() {
 
   setTimeout(() => {
     window.location.href = './login.html';
-  }, 400); // CSS transition 시간과 동일
+  },800); // CSS transition 시간과 동일
 }

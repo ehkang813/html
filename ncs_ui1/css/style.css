@@ -48,3 +48,12 @@
         transform: translateY(0);
       }
     }
+
+.loading-text {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #d2691e;
+}
+
+
+
