@@ -1,3 +1,3 @@
   setTimeout(() => {
-    window.location.href = "https://www.naver.com";
-  }, 5000);
+    window.location.href = "../slide.html";
+  }, 4000);

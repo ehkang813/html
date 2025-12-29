@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>차박 온보딩</title>
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="./css/slide.css" />
+</head>
+<body>
+
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+
+      <!-- Slide 1 -->
+      <div class="swiper-slide">
+        <div class="content">
+          <h2><span class="highlight">차박,</span><br/>어디로 떠나야 할지 모르겠나요?</h2>
+          <p>지도 기반 위치 앱 및 키워드 검색으로 내가 원하는 장소를 한번에!</p>
+          <img src="./images/img_work_01.png" alt="곰과 지도" />
+        </div>
+        <button class="start-btn" onclick="goLogin()">시작하기</button>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="swiper-slide">
+        <div class="content">
+          <h2>차만 있다면,<br/><span class="highlight">장비는 가격부담 적은 렌탈로</span></h2>
+          <p>차박에 필요한 용품들을 용도별로 둘러보세요.</p>
+          <img src="./images/img_work_02.png" alt="차와 캠핑용품" />
+        </div>
+        <button class="start-btn" onclick="goLogin()">시작하기</button>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="swiper-slide">
+        <div class="content">
+          <h2>일상이 바쁠 땐,<br/><span class="highlight">실시간 라이브로 대리만족</span>하세요.</h2>
+          <p>라이브로 나를 뽐내고 시청자들과 소통하는 즐거움!</p>
+          <img src="./images/img_work_03.png" alt="불멍과 라이브" />
+        </div>
+        <button class="start-btn" onclick="goLogin()">시작하기</button>
+      </div>
+
+    </div>
+
+    <!-- Pagination Dots -->
+    <div class="swiper-pagination"></div>
+  </div>
+
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="./js/slide.js"></script>
+</body>
+</html>
