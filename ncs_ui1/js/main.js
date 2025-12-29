@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
-    window.location.href = "./slide.html";
+    window.location.href = "slide.html";
   }, 4000);
+});
