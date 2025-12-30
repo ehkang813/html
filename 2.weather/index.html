@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mobile Weather UI (Final)</title>
+
+<style>
+:root{
+  --bg:#eaf3ff;
+  --card:#ffffffcc;
+  --text:#2f3a4a;
+  --sub:#7a8aa0;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.app{
+  max-width:390px;
+  margin:0 auto;
+  padding:20px;
+  position:relative;
+}
+
+/* 날짜 */
+.date{
+  font-size:22px;
+  font-weight:500;
+  color:var(--sub);
+  margin-bottom:14px;
+}
+
+/* 검색 */
+.search-wrap{
+  display:flex;
+  gap:10px;
+  margin-bottom:26px;
+}
+.search,#myLocationBtn{
+  height:52px;
+  background:#fff;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+}
+.search{flex:1;padding:0 16px}
+.search input{
+  width:100%;
+  height:100%;
+  border:none;
+  font-size:15px;
+  outline:none;
+}
+#myLocationBtn{
+  border:none;
+  padding:0 16px;
+  font-size:18px;
+  cursor:pointer;
+}
+
+/* 메인 */
+.temp{
+  font-size:68px;
+  font-weight:700;
+  margin-bottom:16px;
+}
+.main{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+.icon img{
+  width:140px;
+  height:140px;
+}
+.side{
+  font-size:15px;
+  line-height:1.9;
+  color:var(--sub);
+  text-align:right;
+}
+.side b{color:var(--text)}
+
+/* Other City */
+.section{
+  font-size:24px;
+  font-weight:600;
+  margin:30px 0 18px;
+}
+.others{
+  display:flex;
+  gap:14px;
+}
+.card{
+  flex:1;
+  background:var(--card);
+  border-radius:20px;
+  padding:16px;
+  font-size:13px;
+  cursor:pointer;
+}
+.card img{
+  width:44px;
+  height:44px;
+  margin:10px 0;
+}
+
+/* 🌬️ 로딩 스피너 */
+.loading{
+  position:absolute;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  backdrop-filter: blur(6px);
+}
+.loader{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  border:6px solid #cfe1ff;
+  border-top:6px solid #5b8cff;
+  animation:spin 1s linear infinite;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <div class="loading" id="loading">
+    <div class="loader"></div>
+  </div>
+
+  <div class="date" id="date"></div>
+
+  <div class="search-wrap">
+    <div class="search">
+      <input id="cityInput" placeholder="현재 위치 / 도시 검색" />
+    </div>
+    <button id="myLocationBtn">📍</button>
+  </div>
+
+  <div class="temp" id="temp">--°C</div>
+
+  <div class="main">
+    <div class="icon">
+      <img id="weatherIcon">
+    </div>
+    <div class="side">
+      Wind <b id="wind">--</b><br>
+      Humidity <b id="humidity">--</b><br>
+      Precip <b id="precip">0%</b><br>
+      Max <b id="max">--</b>°C<br>
+      Min <b id="min">--</b>°C
+    </div>
+  </div>
+
+  <div class="section">Other City</div>
+  <div class="others" id="history"></div>
+
+</div>
+
+<script>
+const API_KEY="d8c670b0995c84a39e0b323b05783f67";
+const loading=document.getElementById('loading');
+const historyEl=document.getElementById('history');
+
+/* 무료 아이콘 CDN */
+const iconMap={
+  Clear:'https://img.icons8.com/fluency/144/sun.png',
+  Clouds:'https://img.icons8.com/fluency/144/cloud.png',
+  Rain:'https://img.icons8.com/fluency/144/rain.png',
+  Drizzle:'https://img.icons8.com/fluency/144/rain.png',
+  Snow:'https://img.icons8.com/fluency/144/snow.png',
+  Thunderstorm:'https://img.icons8.com/fluency/144/storm.png',
+  Mist:'https://img.icons8.com/fluency/144/fog-day.png',
+  Fog:'https://img.icons8.com/fluency/144/fog-day.png'
+};
+
+let history=[];
+
+/* 날짜 */
+const d=new Date();
+date.textContent=`Today, ${d.getDate()} ${d.toLocaleString('en',{month:'short'})}`;
+
+/* 로딩 */
+function showLoading(v){
+  loading.style.display=v?'flex':'none';
+}
+
+/* 메인 렌더 */
+function renderMain(d){
+  temp.textContent=`${Math.round(d.main.temp)}°C`;
+  wind.textContent=d.wind?.speed||'--';
+  humidity.textContent=d.main.humidity||'--';
+  precip.textContent=`${Math.round((d.rain?.['1h']||0)*100)}%`;
+  max.textContent=Math.round(d.main.temp_max);
+  min.textContent=Math.round(d.main.temp_min);
+  weatherIcon.src=iconMap[d.weather[0].main];
+  cityInput.value=d.name;
+}
+
+/* Other City 렌더 */
+function renderHistory(){
+  historyEl.innerHTML='';
+  history.forEach(h=>{
+    const el=document.createElement('div');
+    el.className='card';
+    el.innerHTML=`
+      <strong>${h.name}</strong><br>
+      <img src="${iconMap[h.weather]}">
+      Temp ${h.temp}°C<br>
+      Humid ${h.humidity}%
+    `;
+    el.onclick=()=>fetchWeather(h.lat,h.lon,false);
+    historyEl.appendChild(el);
+  });
+}
+
+/* history 추가 */
+function pushHistory(d){
+  history=history.filter(h=>h.name!==d.name);
+  history.unshift({
+    name:d.name,
+    lat:d.coord.lat,
+    lon:d.coord.lon,
+    temp:Math.round(d.main.temp),
+    humidity:d.main.humidity,
+    weather:d.weather[0].main
+  });
+  history=history.slice(0,2);
+  renderHistory();
+}
+
+/* 날씨 호출 */
+function fetchWeather(lat,lon,save=true){
+  showLoading(true);
+  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`)
+    .then(r=>r.json())
+    .then(d=>{
+      renderMain(d);
+      if(save) pushHistory(d);
+    })
+    .finally(()=>showLoading(false));
+}
+
+/* 현재 위치 (history 안 건드림) */
+function loadByLocation(){
+  navigator.geolocation.getCurrentPosition(p=>{
+    fetchWeather(p.coords.latitude,p.coords.longitude,false);
+  });
+}
+
+/* 검색 */
+function searchCity(name){
+  showLoading(true);
+  fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(name)}&limit=5&appid=${API_KEY}`)
+    .then(r=>r.json())
+    .then(list=>{
+      const city=list.find(c=>c.country==='KR')||list[0];
+      fetchWeather(city.lat,city.lon,true);
+    });
+}
+
+/* 기본 Other City: 하와이 + 오사카 */
+function loadDefaultOtherCities(){
+  const defaults=[
+    {name:'Hawaii',lat:21.3069,lon:-157.8583},
+    {name:'Osaka',lat:34.6937,lon:135.5023}
+  ];
+
+  defaults.forEach(c=>{
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${c.lat}&lon=${c.lon}&appid=${API_KEY}&units=metric&lang=kr`)
+      .then(r=>r.json())
+      .then(d=>pushHistory(d));
+  });
+}
+
+/* 이벤트 */
+cityInput.onkeydown=e=>{
+  if(e.key==='Enter') searchCity(e.target.value);
+};
+myLocationBtn.onclick=loadByLocation;
+
+/* 초기 실행 */
+loadByLocation();
+loadDefaultOtherCities();
+</script>
+
+</body>
+</html>
