@@ -33,3 +33,5 @@ function goLogin() {
     window.location.href = './login.html';
   },800); // CSS transition 시간과 동일
 }
+
+

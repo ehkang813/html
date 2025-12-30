@@ -82,5 +82,7 @@ img {
 
 .fade-out {
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 0.8s ease;
 }
+
+
