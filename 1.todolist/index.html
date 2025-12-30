@@ -268,8 +268,14 @@ function toggleDone(key,i){
   const t=todos[key][i];
   t.done=!t.done;
   if(t.done){
-    const n=new Date();
-    t.time=`오전 ${n.getHours()}시 ${n.getMinutes()}분 완료`;
+    const n = new Date();
+
+const hour24 = n.getHours();
+const isAM = hour24 < 12;
+const hour12 = hour24 % 12 || 12;
+const minute = n.getMinutes().toString().padStart(2,'0');
+
+t.time = `${isAM ? '오전' : '오후'} ${hour12}시 ${minute}분 완료`;
   }else t.time='미완료';
   renderTodos();
 }
