@@ -24,37 +24,38 @@ html,body{
   font-family:Pretendard,-apple-system,BlinkMacSystemFont,sans-serif;
 }
 
-.app{
-  width:100vw;
-  height:100vh;
-  background:#fff;
-  position:relative;
-}
+.app{width:100vw;height:100vh;background:#fff;position:relative;}
 
-header{
-  background:var(--green);
-  color:#fff;
-  padding:18px 16px 20px;
-}
+header{background:var(--green);color:#fff;padding:18px 16px 20px;}
 
-.header-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
+.header-top{display:flex;justify-content:space-between;align-items:center;}
 .menu{font-size:22px;cursor:pointer;}
+
 .profile{
-  width:36px;height:36px;border-radius:50%;
-  background:#e0e0e0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;
+  width:48px;height:48px;border-radius:50%;
+  overflow:hidden;background:#e0e0e0;
 }
+.profile img{width:100%;height:100%;object-fit:cover;}
 
 h1{margin:18px 0 12px;font-size:28px;font-weight:700;}
 
-.month-row{display:flex;align-items:center;gap:6px;}
-.month-btn{font-size:16px;font-weight:600;}
+.month-row{position:relative;}
+.month-btn{font-size:16px;font-weight:600;cursor:pointer;}
+
+.month-list{
+  display:none;
+  position:absolute;
+  top:26px;left:0;
+  background:#fff;color:#222;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
+  z-index:20;
+}
+.month-list div{
+  padding:10px 14px;
+  cursor:pointer;
+}
+.month-list div:active{background:#f0f0f0;}
 
 .date-area{margin-top:14px;overflow:hidden;}
 .date-track{display:flex;gap:8px;transition:.3s ease;}
@@ -83,7 +84,6 @@ main{
   padding:14px;
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
   box-shadow:0 4px 10px rgba(0,0,0,.08);
   margin-bottom:12px;
 }
@@ -117,21 +117,18 @@ main{
 
 .modal{
   display:none;
-  position:fixed;
-  inset:0;
+  position:fixed;inset:0;
   background:rgba(0,0,0,.45);
   justify-content:center;
   align-items:center;
   z-index:100;
 }
-
 .modal-box{
   background:#fff;
   width:85%;
   border-radius:14px;
   padding:20px;
 }
-
 .modal-box input{
   width:100%;
   padding:12px;
@@ -139,7 +136,6 @@ main{
   border-radius:8px;
   border:1px solid #ddd;
 }
-
 .modal-box button{
   width:100%;
   margin-top:14px;
@@ -150,62 +146,50 @@ main{
   border-radius:10px;
   font-size:15px;
 }
-
-
-.profile{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  overflow:hidden;        /* 동그랗게 자르기 */
-  background:#e0e0e0;
-}
-
-.profile img{
-  width:100%;
-  height:100%;
-  object-fit:cover;       /* 얼굴 꽉 차게 */
-}
-
-
 </style>
 </head>
 
 <body>
 <div class="app">
 
-    <div class="modal" id="modal">
-  <div class="modal-box">
-    <input id="todoInput" placeholder="오늘 할 일을 입력하세요" />
-    <button id="saveTodo">등록</button>
-  </div>
-</div>
 <header>
   <div class="header-top">
     <div class="menu" id="todayBtn">☰</div>
     <div class="profile">
-  <img src="./images/Gemini_Generated_Image_mbllsymbllsymbll.png" alt="user profile">
-</div>
+      <img src="./images/Gemini_Generated_Image_mbllsymbllsymbll.png">
+    </div>
   </div>
 
   <h1>Todo List</h1>
+
   <div class="month-row">
     <div class="month-btn" id="monthText"></div>
+    <div class="month-list" id="monthList"></div>
   </div>
 
   <div class="date-area">
     <div class="date-track" id="dateTrack"></div>
   </div>
-
 </header>
 
 <main id="todoWrap"></main>
 <button class="fab" id="addBtn">+</button>
+
+<!-- 일정 추가 모달 -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <input id="todoInput" placeholder="오늘 할 일을 입력하세요" />
+    <button id="saveTodo">등록</button>
+  </div>
+</div>
+
 </div>
 
 <script>
 const dateTrack=document.getElementById('dateTrack');
 const todoWrap=document.getElementById('todoWrap');
 const monthText=document.getElementById('monthText');
+const monthList=document.getElementById('monthList');
 const todayBtn=document.getElementById('todayBtn');
 
 let current=new Date();
@@ -213,10 +197,25 @@ let todos={};
 
 const todayKey=current.toDateString();
 todos[todayKey]=[
-  {text:'아침 7시 일어나기',done:true,time:'오전 7시 04분 완료'},
-  {text:'아침 9시 운동',done:false,time:'미완료'},
-  {text:'12시 점심 약속',done:false,time:'미완료'}
+  {text:'아침 7시 일어나기',done:true,time:'오전 7시 04분 완료'}
 ];
+
+/* 월 리스트 생성 */
+function drawMonthList(){
+  monthList.innerHTML='';
+  for(let m=0;m<12;m++){
+    const el=document.createElement('div');
+    el.innerText=`${m+1}월`;
+    el.onclick=()=>{
+      current.setMonth(m);
+      current.setDate(1);
+      monthList.style.display='none';
+      drawDates();
+      renderTodos();
+    };
+    monthList.appendChild(el);
+  }
+}
 
 function drawDates(){
   dateTrack.innerHTML='';
@@ -230,13 +229,11 @@ function drawDates(){
     el.className='date'+(d.toDateString()===current.toDateString()?' active':'');
     const dayName=['일','월','화','수','목','금','토'][d.getDay()];
     el.innerHTML=`${d.getDate()}<br>${dayName}`;
-
     el.onclick=()=>{
       current=new Date(d);
       drawDates();
       renderTodos();
     };
-
     dateTrack.appendChild(el);
   }
 }
@@ -244,15 +241,13 @@ function drawDates(){
 function renderTodos(){
   todoWrap.innerHTML='';
   const key=current.toDateString();
-
   (todos[key]||[]).forEach((t,i)=>{
     const el=document.createElement('div');
     el.className='todo';
-
     el.innerHTML=`
       <div class="todo-left">
         <input type="checkbox" ${t.done?'checked':''}
-          onchange="toggleDone('${key}',${i})" />
+          onchange="toggleDone('${key}',${i})">
         <div>
           <div class="todo-title" contenteditable
             onblur="editTodo('${key}',${i},this.innerText)">
@@ -264,8 +259,7 @@ function renderTodos(){
       <div class="todo-actions">
         <button onclick="focusEdit(this)">수정</button>
         <button onclick="deleteTodo('${key}',${i})">삭제</button>
-      </div>
-    `;
+      </div>`;
     todoWrap.appendChild(el);
   });
 }
@@ -276,61 +270,63 @@ function toggleDone(key,i){
   if(t.done){
     const n=new Date();
     t.time=`오전 ${n.getHours()}시 ${n.getMinutes()}분 완료`;
-  }else{
-    t.time='미완료';
-  }
+  }else t.time='미완료';
   renderTodos();
 }
-
 function editTodo(key,i,text){todos[key][i].text=text;}
 function deleteTodo(key,i){todos[key].splice(i,1);renderTodos();}
 function focusEdit(btn){
   btn.closest('.todo').querySelector('.todo-title').focus();
 }
 
+/* 오늘 이동 */
 todayBtn.onclick=()=>{
   current=new Date();
   drawDates();
   renderTodos();
 };
 
-drawDates();
-renderTodos();
-
-const addBtn = document.getElementById('addBtn');
-const modal = document.getElementById('modal');
-const todoInput = document.getElementById('todoInput');
-const saveTodo = document.getElementById('saveTodo');
-
-addBtn.onclick = () => {
-  modal.style.display = 'flex';
-  todoInput.focus();
+/* 월 선택 토글 */
+monthText.onclick=()=>{
+  monthList.style.display=
+    monthList.style.display==='block'?'none':'block';
 };
 
-saveTodo.onclick = () => {
-  const text = todoInput.value.trim();
+/* 일정 추가 */
+const addBtn=document.getElementById('addBtn');
+const modal=document.getElementById('modal');
+const todoInput=document.getElementById('todoInput');
+const saveTodo=document.getElementById('saveTodo');
+
+addBtn.onclick=()=>{modal.style.display='flex';todoInput.focus();};
+saveTodo.onclick=()=>{
+  const text=todoInput.value.trim();
   if(!text) return;
-
-  const key = current.toDateString();
-  todos[key] = todos[key] || [];
-  todos[key].push({
-    text,
-    done:false,
-    time:'미완료'
-  });
-
-  todoInput.value = '';
-  modal.style.display = 'none';
+  const key=current.toDateString();
+  todos[key]=todos[key]||[];
+  todos[key].push({text,done:false,time:'미완료'});
+  todoInput.value='';
+  modal.style.display='none';
   renderTodos();
 };
+modal.onclick=e=>{if(e.target===modal)modal.style.display='none';};
 
-// 바깥 클릭 시 닫기
-modal.onclick = e => {
-  if(e.target === modal){
-    modal.style.display = 'none';
+
+// 월 선택창 외부 터치 시 닫기
+document.addEventListener('click', (e) => {
+  if (
+    monthList.style.display === 'block' &&
+    !monthList.contains(e.target) &&
+    !monthText.contains(e.target)
+  ) {
+    monthList.style.display = 'none';
   }
-};
+});
 
+
+drawMonthList();
+drawDates();
+renderTodos();
 </script>
 </body>
 </html>
