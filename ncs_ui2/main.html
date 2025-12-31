@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JejuRide Main</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f6f8;
+  color:#111;
+  padding-bottom:70px; /* 탭바 높이 */
+}
+.app{
+  width:100vw;
+  min-height:100vh;
+  margin:0;
+}
+/* ================= HERO ================= */
+.hero{
+  position:relative;
+  height: 360px; 
+  overflow:visible;
+}
+.hero img.bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scale(1.1);
+  z-index:0;
+}
+
+/* 인사 */
+.greeting{
+  position:absolute;
+  top:40px;
+  left:20px;
+  display:flex;
+  gap:10px;
+  color:#fff;
+}
+.greeting img{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+}
+.greeting strong{font-size:24px}
+.greeting p{
+  margin:4px 0 0;
+  font-size:15px;
+  opacity:.9;
+}
+
+.greeting,
+.hero-cards{
+  position:relative;
+  z-index:2;
+}
+
+/* HERO 카드 */
+.hero-cards{
+  position:absolute;
+  left:0px;
+  right:16px;
+  bottom:-80px;
+  display:flex;
+  justify-content:center;
+  gap: 20px;
+}
+
+.weather-card,
+.stats-card{
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+
+/* 날씨 */
+.weather-card{
+  flex:1.2;
+  position:relative;
+  width:44%;
+}
+.weather-card .desc{
+  font-size:13px;
+  color:#666;
+}
+.weather-card .temp{
+  font-size:28px;
+  font-weight:700;
+  color:#ff8a00;
+}
+.weather-card img{
+  width:48px;
+  position:absolute;
+  right:12px;
+  bottom:12px;
+}
+
+/* 완주 / 이동 */
+.stats-card{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:10px;
+  width:44%;
+}
+.stats-line{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#666;
+}
+.stats-line strong{
+  font-size:16px;
+  color:#111;
+}
+
+
+
+.weather-card,
+.stats-card{
+  flex:none;
+}
+
+.weather-card,
+.stats-card{
+  padding:16px;
+  border-radius:16px;
+  box-shadow:0 10px 24px rgba(0,0,0,0.16);
+}
+
+/* spacer */
+.spacer{height:96px}
+
+/* ================= CONTENT ================= */
+.section{
+  padding:20px 16px;
+}
+.section h3{
+  margin:0 0 12px;
+  font-size:16px;
+}
+
+/* 가로 슬라이드 */
+.horizontal{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.horizontal::-webkit-scrollbar{display:none}
+.card{
+  min-width:160px;
+}
+.card img{
+  width:100%;
+  border-radius:12px;
+}
+
+/* 패키지 */
+.package{
+  margin-bottom:16px;
+}
+.package img{
+  width:100%;
+  border-radius:14px;
+}
+.package .title{
+  position:absolute;
+  bottom:12px;
+  left:12px;
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+}
+.package-wrap{
+  position:relative;
+}
+
+/* ================= TAB BAR ================= */
+.tabbar{
+  position:fixed;
+  left:0;
+  bottom:0;
+  width:100vw;
+  height:70px;
+  background:#fff;
+  border-top:1px solid #eee;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:999;
+}
+
+.tabbar .tab{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  font-size:11px;
+  color:#999;
+}
+
+.tabbar .tab img{
+  width:32px;
+  height:32px;
+}
+
+.tabbar .tab.active{
+  color:#007aff;
+}
+
+
+/* 로딩 */
+.loading{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  backdrop-filter:blur(6px);
+}
+.loader{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:6px solid #cfe1ff;
+  border-top:6px solid #5b8cff;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<!-- HERO -->
+<div class="hero">
+  <img class="bg" src="./images/main.png">
+
+  <div class="greeting">
+    <img src="./images/KakaoTalk_20251231_130035544.jpg">
+    <div>
+      <strong>강은혜님 안녕하세요</strong>
+      <p>즐거운 자전거 여행이 되세요</p>
+    </div>
+  </div>
+
+  <div class="hero-cards">
+    <div class="weather-card">
+      <div class="desc" id="weatherDesc">Mostly Sunny</div>
+      <div class="temp" id="temp">--°</div>
+      <img id="weatherIcon">
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-line">
+        <span>완주코스</span>
+        <strong>1 / 10</strong>
+      </div>
+      <div class="stats-line">
+        <span>이동거리</span>
+        <strong>15 km</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- GUIDE -->
+<div class="section">
+  <h3>제주도 자전거 여행정보 가이드</h3>
+  <div class="horizontal">
+    <div class="card"><img src="./images/guide1.png"></div>
+    <div class="card"><img src="./images/guide2.png"></div>
+    <div class="card"><img src="./images/guide3.png"></div>
+    <div class="card"><img src="./images/guide4.png"></div>
+  </div>
+</div>
+
+<!-- PACKAGE -->
+<div class="section">
+  <h3>제주도 자전거 여행 패키지</h3>
+
+  <div class="package">
+    <div class="package-wrap">
+      <img src="./images/pkg1.png">
+      <!-- <div class="title">첫 번째 코스 이야기</div> -->
+    </div>
+  </div>
+
+  <div class="package">
+    <div class="package-wrap">
+      <img src="./images/pkg2.png">
+      <!-- <div class="title">두 번째 코스 이야기</div> -->
+    </div>
+  </div>
+
+  <div class="package">
+    <div class="package-wrap">
+      <img src="./images/pkg3.png">
+      <!-- <div class="title">세 번째 코스 이야기</div> -->
+    </div>
+  </div>
+</div>
+
+<!-- TAB -->
+</div> <!-- .app 끝 -->
+
+<nav class="tabbar">
+  <div class="tab active" id="tabHome">
+    <img src="./images/tab_home_2.png" alt="홈">
+    <span>홈</span>
+  </div>
+
+  <div class="tab" id="tabCommunity">
+    <img src="./images/tab_community.png" alt="커뮤니티">
+    <span>커뮤니티</span>
+  </div>
+
+  <div class="tab" id="tabCourse">
+    <img src="./images/tab_course.png" alt="코스">
+    <span>코스</span>
+  </div>
+
+  <div class="tab" id="tabRank">
+    <img src="./images/tab_rank.png" alt="랭킹">
+    <span>랭킹</span>
+  </div>
+
+  <div class="tab" id="tabMy">
+    <img src="./images/tab_my.png" alt="마이">
+    <span>마이</span>
+  </div>
+</nav>
+
+
+
+</div>
+
+<!-- 로딩 -->
+<div class="loading" id="loading">
+  <div class="loader"></div>
+</div>
+
+<script>
+const API_KEY="d8c670b0995c84a39e0b323b05783f67";
+const iconMap={
+  Clear:'https://img.icons8.com/fluency/144/sun.png',
+  Clouds:'https://img.icons8.com/fluency/144/cloud.png',
+  Rain:'https://img.icons8.com/fluency/144/rain.png',
+  Snow:'https://img.icons8.com/fluency/144/snow.png'
+};
+
+const tempEl=document.getElementById('temp');
+const iconEl=document.getElementById('weatherIcon');
+const descEl=document.getElementById('weatherDesc');
+const loading=document.getElementById('loading');
+
+function showLoading(v){loading.style.display=v?'flex':'none'}
+
+function fetchWeather(lat,lon){
+  showLoading(true);
+  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`)
+    .then(r=>r.json())
+    .then(d=>{
+      tempEl.textContent=`${Math.round(d.main.temp)}°`;
+      descEl.textContent=d.weather[0].main;
+      iconEl.src=iconMap[d.weather[0].main]||iconMap.Clear;
+    })
+    .finally(()=>showLoading(false));
+}
+
+navigator.geolocation.getCurrentPosition(p=>{
+  fetchWeather(p.coords.latitude,p.coords.longitude);
+});
+
+
+  document.getElementById('tabCommunity')
+    .addEventListener('click', () => {
+      location.href = './community.html';
+    });
+
+
+</script>
+
+</body>
+</html>

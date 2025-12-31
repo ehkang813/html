@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JejuRide Login</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{
+      width:100%;height:100%;
+      font-family:'Noto Sans KR', sans-serif;
+      background:#fff;
+      color:#111;
+    }
+
+    .login{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:40px 20px 24px;
+    }
+
+    /* ===== Logo ===== */
+    .logo{
+      margin-top:40px;
+      margin-bottom:32px;
+    }
+    .logo img{
+      width:120px;
+      height:auto;
+      border-radius:24px;
+    }
+
+    /* ===== Form ===== */
+    .form{
+      width:100%;
+      max-width:360px;
+    }
+
+    .input{
+      width:100%;
+      height:48px;
+      border:none;
+      border-radius:10px;
+      background:#f2f2f2;
+      padding:0 14px;
+      font-size:14px;
+      margin-bottom:12px;
+    }
+    .input::placeholder{color:#aaa;}
+
+    /* ===== Options ===== */
+    .options{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      font-size:13px;
+      color:#666;
+      margin:8px 0 20px;
+    }
+    .options label{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    /* ===== Login Button ===== */
+    .login-btn{
+      width:100%;
+      height:50px;
+      border:none;
+      border-radius:12px;
+      background:#0aa7ff;
+      color:#fff;
+      font-size:16px;
+      font-weight:600;
+      margin-bottom:20px;
+    }
+
+    /* ===== Links ===== */
+    .links{
+      font-size:13px;
+      color:#666;
+      text-align:center;
+      margin-bottom:28px;
+    }
+    .links span{
+      margin:0 6px;
+      color:#ddd;
+    }
+/* ===== Link Reset ===== */
+.links a{
+  text-decoration:none;   /* 밑줄 제거 */
+  color:#666;             /* 텍스트 컬러 통일 */
+  font-size:13px;
+  font-weight:500;
+}
+
+.links a:visited{
+  color:#666;             /* 방문 후 색상 유지 */
+}
+
+.links a:hover{
+  color:#0aa7ff;          /* 포인트 컬러 (선택) */
+}
+
+    
+
+    /* ===== Social ===== */
+    .social{
+      display:flex;
+      justify-content:center;
+      gap:24px;
+    }
+    .social img{
+      width:44px;
+      height:44px;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width:360px){
+      .logo img{width:104px;}
+    }
+  </style>
+</head>
+<body>
+
+<section class="login">
+
+  <!-- Logo -->
+  <div class="logo">
+    <img src="./images/logo.png" alt="JejuRide 로고" />
+  </div>
+
+  <!-- Form -->
+  <div class="form">
+    <input class="input" type="text" placeholder="아이디 또는 이메일을 입력해주세요." />
+    <input class="input" type="password" placeholder="비밀번호를 입력해주세요." />
+
+    <div class="options">
+      <label><input type="checkbox" checked /> 자동 로그인</label>
+      <label><input type="checkbox" /> 아이디 저장</label>
+    </div>
+
+    <button class="login-btn" id="loginBtn">로그인</button>
+
+
+    <div class="links">
+  <a href="./id.html">아이디찾기</a>
+  <span>|</span>
+  <a href="./pw.html">비밀번호찾기</a>
+  <span>|</span>
+  <a href="./signup.html">회원가입</a>
+</div>
+
+    <!-- Social Login -->
+    <div class="social">
+      <img src="./images/kakao.png" alt="카카오 로그인" />
+      <img src="./images/naver.png" alt="네이버 로그인" />
+      <img src="./images/facebook.png" alt="페이스북 로그인" />
+    </div>
+  </div>
+
+</section>
+
+<script>
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    location.href = './main.html';
+  });
+</script>
+
+
+</body>
+</html>

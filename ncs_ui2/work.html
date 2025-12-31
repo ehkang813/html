@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JejuRide Walkthrough (Slide)</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html, body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans-serif;background:#fff;color:#111;}
+
+    .work{position:fixed;inset:0;overflow:hidden;}
+
+    /* ===== Slides Wrapper ===== */
+    .slides{
+      display:flex;
+      width:300%;
+      height:100%;
+      transition:transform .6s ease-in-out;
+    }
+
+    .slide{
+      width:100vw;
+      height:100vh;
+      flex-shrink:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .image-area{flex:0 0 65%;overflow:hidden;}
+    .image-area img{width:100%;height:100%;object-fit:cover;}
+
+    .text-area{flex:1;padding:24px 20px 0;}
+    .title{font-size:20px;font-weight:700;color:#0aa7ff;margin-bottom:10px;}
+    .desc{font-size:14px;line-height:1.6;color:#333;}
+
+    /* ===== Controls ===== */
+    .controls{position:absolute;bottom:20px;left:0;width:100%;padding:0 20px;display:flex;justify-content:space-between;align-items:center;z-index:10;}
+    .dots{display:flex;gap:8px;}
+    .dot{width:8px;height:8px;border-radius:50%;background:#ccc;cursor:pointer;}
+    .dot.active{width:20px;border-radius:10px;background:#0aa7ff;}
+
+    .skip{font-size:14px;color:#aaa;cursor:pointer;transition:transform .2s ease,color .2s ease;}
+    .skip:hover{color:#0aa7ff;transform:scale(1.1);} .skip:active{transform:scale(.95);}    
+
+    .start-btn{position:absolute;left:20px;right:20px;bottom:64px;padding:16px 0;background:#0aa7ff;color:#fff;font-size:16px;font-weight:600;text-align:center;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .4s ease;z-index:10;}
+    .work.show-start .start-btn{opacity:1;pointer-events:auto;}
+
+    /* 마지막 슬라이드 Skip 숨김 */
+    .work.show-start .skip{visibility:hidden;}
+  </style>
+</head>
+<body>
+
+<section class="work" id="work">
+  <div class="slides" id="slides">
+    <div class="slide">
+      <div class="image-area"><img src="./images/work_1.png"></div>
+      <div class="text-area"><div class="title">바람 따라 떠나는 시작</div><div class="desc">제주의 바람과 함께, 당신만의 여행이 시작됩니다.</div></div>
+    </div>
+    <div class="slide">
+      <div class="image-area"><img src="./images/work_2.png"></div>
+      <div class="text-area"><div class="title">나만의 코스를 찾아주는 플래너</div><div class="desc">체력과 취향, 날씨까지 고려해 안내합니다.</div></div>
+    </div>
+    <div class="slide">
+      <div class="image-area"><img src="./images/work_3.png"></div>
+      <div class="text-area"><div class="title">완주의 순간</div><div class="desc">달린 순간이 추억이 됩니다.</div></div>
+    </div>
+  </div>
+
+  <div class="start-btn" id="startBtn">바로 시작하기</div>
+
+  <div class="controls">
+    <div class="dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="skip" id="skip">Skip</div>
+  </div>
+</section>
+
+<script>
+  const slidesWrap = document.getElementById('slides');
+  const dots = document.querySelectorAll('.dot');
+  const work = document.getElementById('work');
+  const skip = document.getElementById('skip');
+  const startBtn = document.getElementById('startBtn');
+
+  let current = 0;
+  let timer = null;
+
+  function showSlide(i){
+    slidesWrap.style.transform = `translateX(-${i * 100}vw)`;
+    dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
+    work.classList.toggle('show-start', i===dots.length-1);
+  }
+
+  function startAuto(){
+    clearTimeout(timer);
+    if(current>=dots.length-1) return;
+    timer=setTimeout(()=>{ current++; showSlide(current); startAuto(); },3000);
+  }
+
+  // init
+  showSlide(current); startAuto();
+
+  dots.forEach((dot,idx)=>dot.onclick=(e)=>{e.stopPropagation(); clearTimeout(timer); current=idx; showSlide(current); startAuto();});
+  skip.onclick=(e)=>{e.stopPropagation(); clearTimeout(timer); current=dots.length-1; showSlide(current);} ;
+  startBtn.onclick=()=>location.href='./main.html';
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JejuRide Splash – Center Loading</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+
+    html, body{
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      font-family:'Noto Sans KR', sans-serif;
+      background:#000;
+    }
+
+    /* ===== Splash ===== */
+    .splash{
+      position:fixed;
+      inset:0;
+      background:url('./images/splish.png') no-repeat center center;
+      background-size:cover;
+    }
+
+    /* ===== Center Loader ===== */
+    .loader{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+
+      width:56px;
+      aspect-ratio:1 / 1;
+      border-radius:50%;
+
+      background:rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+
+      border:3px solid rgba(255,255,255,0.25);
+      border-top-color:rgba(255,255,255,0.85);
+
+      animation:spin 1.2s linear infinite;
+    }
+
+    @keyframes spin{
+      to{ transform:translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width:420px){
+      .loader{ width:46px; }
+    }
+
+    @media (min-width:600px){
+      .loader{ width:64px; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="splash">
+  <!-- Always Center Loading Spinner -->
+  <div class="loader"></div>
+</section>
+
+<script>
+  // 5초 후 워크스루 화면으로 이동
+  setTimeout(() => {
+    location.href = 'work.html';
+  }, 5000);
+</script>
+
+</body>
+</html>

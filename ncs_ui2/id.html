@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>비밀번호 찾기</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{
+      width:100%;
+      font-family:'Noto Sans KR', sans-serif;
+      background:#fff;
+      color:#111;
+    }
+
+    /* ===== Header ===== */
+    .header{
+      height:60px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:0 16px;
+      border-bottom:1px solid #eee;
+    }
+
+    .back-btn{
+      background:none;
+      border:none;
+      padding:0;
+      display:flex;
+      align-items:center;
+      cursor:pointer;
+    }
+
+    .back-btn img{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .title{
+      font-size:20px;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      /* transform:translateY(1px); 시각 보정 */
+    }
+
+    /* ===== Container ===== */
+    .container{
+      max-width:420px;
+      margin:0 auto;
+      padding:24px 20px 40px;
+    }
+
+    /* ===== Tabs ===== */
+    .tabs{
+      display:flex;
+      background:#f2f2f2;
+      border-radius:10px;
+      overflow:hidden;
+      margin-bottom:20px;
+    }
+
+    .tab{
+      flex:1;
+      text-align:center;
+      padding:12px 0;
+      font-size:14px;
+      color:#999;
+      cursor:pointer;
+    }
+
+    .tab.active{
+      background:#fff;
+      color:#111;
+      font-weight:600;
+    }
+
+    /* ===== Options ===== */
+    .options{
+      display:flex;
+      gap:20px;
+      font-size:14px;
+      margin-bottom:20px;
+    }
+
+    /* ===== Form ===== */
+    .form-group{
+      margin-bottom:28px;
+    }
+
+    .input{
+      width:100%;
+      height:48px;
+      border:1px solid #eee;
+      border-radius:8px;
+      padding:0 12px;
+      font-size:14px;
+      margin-bottom:10px;
+    }
+
+    .input::placeholder{
+      color:#bbb;
+    }
+
+    .phone-wrap{
+      display:flex;
+      gap:8px;
+    }
+
+    .cert-btn{
+      width:96px;
+      height:48px;
+      border:none;
+      border-radius:8px;
+      background:#e0e0e0;
+      color:#999;
+      font-size:12px;
+      flex-shrink:0;
+    }
+
+    /* ===== Submit ===== */
+    .submit{
+      width:100%;
+      height:52px;
+      border:none;
+      border-radius:12px;
+      background:#e0e0e0;
+      color:#aaa;
+      font-size:16px;
+      font-weight:600;
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+<header class="header">
+  <button class="back-btn" onclick="history.back()">
+    <img src="./images/back.png" alt="뒤로가기" />
+  </button>
+  <h1 class="title">아이디 찾기</h1>
+</header>
+
+<div class="container">
+
+  <div class="tabs">
+    <div class="tab active" id="tab-id">아이디 찾기</div>
+    <div class="tab" id="tab-pw">비밀번호 찾기</div>
+  </div>
+
+  <div class="options">
+    <label><input type="radio" checked> 휴대전화</label>
+    <label><input type="radio"> 이메일</label>
+    <label><input type="radio"> 본인인증</label>
+  </div>
+
+  <div class="form-group">
+    <input class="input" type="text" id="userName" placeholder="이름 입력" />
+
+    <!-- <div class="error">이름을 입력해 주세요</div> -->
+    <div class="phone-wrap">
+      <input class="input" type="tel" id="userPhone" placeholder="휴대전화 입력(-없이)" />
+
+      <button class="cert-btn">인증요청</button>
+    </div>
+  </div>
+
+  <button class="submit" id="findIdBtn">아이디 찾기</button>
+
+</div>
+
+<script>
+  document.getElementById('tab-pw').onclick = () => {
+    location.href = './pw.html';
+  };
+
+  document.getElementById('findIdBtn').addEventListener('click', () => {
+    const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+
+    if (!name || !phone) {
+      alert('이름과 휴대전화를 모두 입력해 주세요.');
+      return;
+    }
+
+    // 조건 만족 시 로그인 화면으로 이동
+    location.href = './login.html';
+  });
+</script>
+
+</body>
+</html>
