@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OPP – Netflix Style</title>
+
+<style>
+:root{
+  --bg:#000;
+  --text:#fff;
+  --muted:#b3b3b3;
+  --accent:#e50914;
+  --card:#141414;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* ================= HEADER ================= */
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  height:80px;
+  padding:0 3vw;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(0,0,0,.9);
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+
+.logo{
+  font-weight:900;
+  font-size:22px;
+  letter-spacing:1px;
+  color:var(--accent);
+}
+
+nav{
+  display:flex;
+  gap:16px;
+}
+
+.nav-new{
+  color:var(--accent);
+  font-size:11px;
+  font-weight:700;
+  margin-left:4px;
+}
+
+
+nav a{
+  font-size:13px;
+  color:#e5e5e5;
+  text-decoration:none;
+}
+
+nav a:hover{color:#fff}
+
+.login-btn{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:6px 14px;
+  font-size:13px;
+  border-radius:3px;
+  cursor:pointer;
+}
+
+/* ================= HERO ================= */
+.hero{
+  height:80vh;
+  padding:4vw;
+  display:flex;
+  align-items:flex-end;
+  background-size:cover;
+  background-position:center;
+}
+
+.hero-content{max-width:560px}
+
+.hero h1{font-size:48px;margin-bottom:12px}
+.hero p{color:var(--muted);margin-bottom:24px}
+
+.hero button{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:12px 26px;
+  font-size:16px;
+  border-radius:4px;
+  margin-right:10px;
+}
+
+.hero .secondary{background:rgba(109,109,110,.7)}
+
+/* ================= SECTIONS ================= */
+section{padding:24px 0 40px}
+section h2{font-size:20px;margin:0 0 14px 3vw}
+
+/* 가로 스와이프 (PC + 모바일 공통) */
+.row{
+  display:flex;
+  gap:14px;
+  padding:0 3vw;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+.row::-webkit-scrollbar{display:none}
+
+.card{
+  flex:0 0 auto;
+  width:220px;
+  height:330px;
+  border-radius:6px;
+  background:var(--card);
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  overflow:hidden;
+  transition:.25s;
+}
+
+.card:hover{transform:scale(1.08);z-index:2}
+
+.card-title{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  padding:10px 8px;
+  font-size:13px;
+  background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,0));
+}
+
+.card-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  opacity:0;
+  padding:24px 16px;
+  transition:.25s;
+}
+
+.card:hover .card-overlay{opacity:1}
+
+.card-overlay h3{font-size:16px;margin-bottom:8px}
+.card-overlay p{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:4;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* ================= LOGIN MODAL ================= */
+/* ================= LOGIN MODAL (Netflix Style) ================= */
+
+.login-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+}
+
+.login-modal.active{
+  display:flex;
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  background:#000;
+  padding:48px 40px 40px;
+  position:relative;
+}
+
+.login-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+  opacity:.8;
+}
+
+.login-close:hover{opacity:1}
+
+.login-title{
+  font-size:32px;
+  margin-bottom:28px;
+}
+
+.login-box input{
+  width:100%;
+  padding:14px;
+  margin-bottom:16px;
+  background:#333;
+  border:none;
+  color:#fff;
+  font-size:14px;
+  border-radius:2px;
+}
+
+.login-box input::placeholder{
+  color:#8c8c8c;
+}
+
+.login-submit{
+  width:100%;
+  background:var(--accent);
+  border:none;
+  padding:14px;
+  font-size:16px;
+  color:#fff;
+  margin:8px 0 16px;
+  border-radius:2px;
+  cursor:pointer;
+}
+
+.login-options{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+  color:#b3b3b3;
+  margin-bottom:28px;
+}
+
+.login-options input{
+  margin-right:6px;
+}
+
+.login-help{
+  cursor:pointer;
+}
+
+.login-signup{
+  font-size:14px;
+  color:#737373;
+  margin-bottom:14px;
+}
+
+.login-signup strong{
+  color:#fff;
+  cursor:pointer;
+}
+
+.login-desc{
+  font-size:11px;
+  color:#8c8c8c;
+  line-height:1.5;
+}
+
+/* 모바일 보정 */
+@media(max-width:480px){
+  .login-box{
+    padding:36px 24px;
+  }
+}
+
+
+
+/* ================= FOOTER ================= */
+footer{
+  padding:50px 3vw 70px;
+  color:#737373;
+}
+
+.footer-links{
+  max-width:1000px;
+  margin:0 auto 28px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:6px 10px;
+  font-size:12px;
+  list-style:none;
+}
+
+.footer-links li:hover{text-decoration:underline}
+
+.footer-copy{
+  max-width:1000px;
+  margin:0 auto;
+  font-size:11px;
+  line-height:1.6;
+  color:#666;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+  .hero{height:60vh}
+  .hero h1{font-size:32px}
+  .card{width:140px;height:210px}
+  nav{display:none}
+}
+
+
+/* ================= SLIDER ================= */
+.slider-wrap{
+  position:relative;
+}
+
+.slide-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border:none;
+  background:rgba(0,0,0,.6);
+  color:#fff;
+  font-size:28px;
+  cursor:pointer;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transition:.2s;
+}
+
+.slider-wrap:hover .slide-btn{
+  opacity:1;
+}
+
+.slide-btn.prev{left:0}
+.slide-btn.next{right:0}
+
+/* 모바일에서는 버튼 숨김 */
+@media(max-width:768px){
+  .slide-btn{display:none}
+}
+
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">OPP</div>
+    <nav class="main-nav">
+  <a href="#">홈</a>
+  <a href="#">시리즈</a>
+  <a href="#">영화</a>
+  <a href="#">게임 <span class="nav-new">NEW!</span></a>
+  <a href="#">요즘 대세 콘텐츠</a>
+  <a href="#">내가 찜한 리스트</a>
+  <a href="#">언어별로 찾아보기</a>
+</nav>
+
+  </div>
+  <button class="login-btn" id="loginBtn">로그인</button>
+</header>
+
+<div class="hero" id="hero">
+  <div class="hero-content">
+    <h1 id="heroTitle">로딩 중...</h1>
+    <p id="heroOverview"></p>
+    <button>▶ 재생</button>
+    <button class="secondary">ℹ 상세 정보</button>
+  </div>
+</div>
+
+<section>
+  <h2>최근에 상영작</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="nowPlaying"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>넷플릭스에서만 상영작</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="netflixOnly"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>🔥 최신 Trending</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="trending"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>인기 영화</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="popular"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>액션</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="action"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>코미디</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="comedy"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>공포</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="horror"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>로맨스</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="romance"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+<section>
+  <h2>다큐멘터리</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn prev">‹</button>
+    <div class="row" id="documentary"></div>
+    <button class="slide-btn next">›</button>
+  </div>
+</section>
+
+
+<footer>
+  <ul class="footer-links">
+    <li>자주 묻는 질문</li><li>고객센터</li><li>계정</li><li>미디어 센터</li>
+    <li>투자 정보</li><li>입사 정보</li><li>이용 약관</li>
+    <li>개인정보 처리방침</li><li>쿠키 설정</li><li>회사 정보</li>
+  </ul>
+  <div class="footer-copy">
+    <p>© 2025 OPP Entertainment. All rights reserved.</p>
+    <p>본 서비스는 TMDB API를 사용하며, 제공되는 영화 정보는 참고용입니다.</p>
+    <p>Netflix는 Netflix, Inc.의 등록 상표이며 본 사이트는 학습용 클론 프로젝트입니다.</p>
+  </div>
+</footer>
+
+<!-- LOGIN MODAL -->
+<!-- LOGIN MODAL -->
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <button class="login-close" id="loginClose">✕</button>
+
+    <h2 class="login-title">로그인</h2>
+
+    <input type="email" placeholder="이메일 주소 또는 전화번호" />
+    <input type="password" placeholder="비밀번호" />
+
+    <button class="login-submit">로그인</button>
+
+    <div class="login-options">
+      <label>
+        <input type="checkbox" />
+        로그인 정보 저장
+      </label>
+      <span class="login-help">도움이 필요하신가요?</span>
+    </div>
+
+    <p class="login-signup">
+      OPP 회원이 아닌가요? <strong>지금 가입하세요.</strong>
+    </p>
+
+    <p class="login-desc">
+      이 페이지는 Google reCAPTCHA의 보호를 받아 사용자가 로봇이 아님을 확인합니다.
+    </p>
+  </div>
+</div>
+
+
+<script>
+const API_KEY="310c326b60d62c5e0e69b7d24efe4474";
+const IMG="https://image.tmdb.org/t/p/original";
+
+/* HERO */
+async function setHero(){
+  const r=await fetch(`https://api.themoviedb.org/3/trending/movie/day?language=ko-KR&api_key=${API_KEY}`);
+  const d=await r.json();
+  const m=d.results[Math.floor(Math.random()*d.results.length)];
+  hero.style.backgroundImage=
+    `linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,.2)),url(${IMG+m.backdrop_path})`;
+  heroTitle.innerText=m.title;
+  heroOverview.innerText=m.overview||"";
+}
+
+/* ROW */
+async function fill(url,id){
+  const row=document.getElementById(id);
+  let page=1,count=0;
+  while(count<15 && page<=5){
+    const r=await fetch(`${url}&page=${page}`);
+    const d=await r.json();
+    d.results.forEach(m=>{
+      if(!m.poster_path||count>=15)return;
+      const c=document.createElement("div");
+      c.className="card";
+      c.style.backgroundImage=`url(${IMG+m.poster_path})`;
+      c.innerHTML=`
+        <div class="card-overlay">
+          <h3>${m.title||m.name}</h3>
+          <p>${m.overview||""}</p>
+        </div>
+        <div class="card-title">${m.title||m.name}</div>`;
+      row.appendChild(c);
+      count++;
+    });
+    page++;
+  }
+}
+
+/* LOGIN */
+/* LOGIN MODAL – 안정 버전 */
+document.addEventListener("DOMContentLoaded", () => {
+  const loginBtn = document.getElementById("loginBtn");
+  const loginModal = document.getElementById("loginModal");
+  const loginClose = document.getElementById("loginClose");
+
+  loginBtn.addEventListener("click", () => {
+    loginModal.classList.add("active");
+  });
+
+  loginClose.addEventListener("click", () => {
+    loginModal.classList.remove("active");
+  });
+
+  loginModal.addEventListener("click", (e) => {
+    if (e.target === loginModal) {
+      loginModal.classList.remove("active");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+  setHero();
+  fill(`https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&api_key=${API_KEY}`,"nowPlaying");
+  fill(`https://api.themoviedb.org/3/discover/tv?with_networks=213&language=ko-KR&api_key=${API_KEY}`,"netflixOnly");
+  fill(`https://api.themoviedb.org/3/trending/all/week?language=ko-KR&api_key=${API_KEY}`,"trending");
+  fill(`https://api.themoviedb.org/3/movie/popular?language=ko-KR&api_key=${API_KEY}`,"popular");
+  fill(`https://api.themoviedb.org/3/discover/movie?with_genres=28&language=ko-KR&api_key=${API_KEY}`,"action");
+  fill(`https://api.themoviedb.org/3/discover/movie?with_genres=35&language=ko-KR&api_key=${API_KEY}`,"comedy");
+  fill(`https://api.themoviedb.org/3/discover/movie?with_genres=27&language=ko-KR&api_key=${API_KEY}`,"horror");
+  fill(`https://api.themoviedb.org/3/discover/movie?with_genres=10749&language=ko-KR&api_key=${API_KEY}`,"romance");
+  fill(`https://api.themoviedb.org/3/discover/movie?with_genres=99&language=ko-KR&api_key=${API_KEY}`,"documentary");
+});
+
+
+document.querySelectorAll(".slider-wrap").forEach(wrap=>{
+  const row = wrap.querySelector(".row");
+  const prev = wrap.querySelector(".prev");
+  const next = wrap.querySelector(".next");
+
+  const scrollAmount = () => row.clientWidth * 0.8;
+
+  prev.addEventListener("click",()=>{
+    row.scrollBy({ left:-scrollAmount(), behavior:"smooth" });
+  });
+
+  next.addEventListener("click",()=>{
+    row.scrollBy({ left:scrollAmount(), behavior:"smooth" });
+  });
+});
+
+
+</script>
+
+</body>
+</html>
