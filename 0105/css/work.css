@@ -1,7 +1,14 @@
+/* =========================
+   Reset
+========================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
@@ -10,81 +17,91 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* =========================
+   Walkthrough Layout
+========================= */
 .walkthrough {
-  width: 100%;
-  height: 100vh;
-  padding: 24px;
+  min-height: 100dvh;
+  padding: 24px 24px 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-/* Slides */
+/* =========================
+   Slides Wrapper
+========================= */
 .slides {
   flex: 1;
   position: relative;
   overflow: hidden;
 }
 
+/* =========================
+   Slide
+========================= */
 .slide {
   position: absolute;
   inset: 0;
 
-  display: flex;
+  display: none;
   flex-direction: column;
+  padding-top: 100px;
 
-  transform: translateX(100%);   /* 기본은 오른쪽 */
-  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-
-  padding-top: 150px;
+  overflow-y: auto;                 /* 🔥 잘림 방지 */
+  -webkit-overflow-scrolling: touch;
 }
 
-.slide:nth-child(3) {
-  padding-top: 150px;   /* ← 150px보다 줄임 */
-}
-
-
-/* 현재 슬라이드 */
 .slide.active {
-  transform: translateX(0);
-  pointer-events: auto;
+  display: flex;
 }
 
-/* 이전 슬라이드 (왼쪽) */
-.slide.prev {
-  transform: translateX(-100%);
-}
-
-/* 다음 슬라이드 (오른쪽) */
-.slide.next {
-  transform: translateX(100%);
-}
-
-
-
-/* 🔴 핵심: 위 / 아래 영역 분리 */
+/* =========================
+   Visual Area
+========================= */
 .visual {
-  flex: 0.7;
+  flex-shrink: 0;
+  min-height: 36vh;
+  max-height: 42vh;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.content {
-  min-height: 20px;        /* 🔥 모든 워크스루 하단 높이 통일 */
-  text-align: center;
-}
+/* 카드 슬라이드(2번)는 조금 더 여유 */
+/* .slide:nth-child(2) .visual {
+  min-height: 40vh;
+  max-height: 46vh;
+} */
 
-/* Images */
+/* =========================
+   Images
+========================= */
 .visual img {
   width: 60%;
   max-width: 230px;
-  max-height: 340px;
+  max-height: 100%;
   object-fit: contain;
 }
 
-/* Text */
+/* 1번 슬라이드 */
+.slide:nth-child(1) img {
+  width: 50%;
+}
+
+/* 3번 슬라이드 */
+.slide:nth-child(3) img {
+  width: 25%;
+}
+
+/* =========================
+   Content Area
+========================= */
+.content {
+  text-align: center;
+  padding: 12px 0 24px;
+}
+
 .content h2 {
   font-size: 20px;
   font-weight: 700;
@@ -97,19 +114,24 @@ body {
   color: #7b6f66;
 }
 
-/* ===== Slide 2 Card UI ===== */
+/* =========================
+   Slide 2 – Plan Cards
+========================= */
 .plan-cards {
   display: flex;
   gap: 12px;
+  transform: scale(0.95);
+  transform-origin: center top;
 }
 
 .plan {
-  width: 110px;
-  padding: 16px 12px;
+  width: 102px;
+  padding: 16px 8px;
   border: 2px solid #fff;
   background: #efe8de;
   border-radius: 14px;
   text-align: center;
+
   box-shadow:
     0 6px 14px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -123,8 +145,6 @@ body {
 .plan h3 {
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
   min-height: 32px;
 
   display: flex;
@@ -148,31 +168,26 @@ body {
   color: #6f6259;
 }
 
-.slide:nth-child(1) img {
-  width: 50%;
-  max-width: 230px;
-  max-height: 340px;
-  object-fit: contain;
-  /* margin-bottom: 8px; */
-}
-
-
-.slide:nth-child(3) img {
-  width: 25%;
-  max-width: 230px;
-  max-height: 340px;
-  object-fit: contain;
-  margin-bottom: 24px;
-}
-
-
-
-/* Pagination */
+/* =========================
+   Pagination
+========================= */
 .pagination {
+  position: fixed;
+  left: 0;
+  right: 0;
+
+  bottom: calc(
+    16px +                /* CTA bottom */
+    env(safe-area-inset-bottom) +
+    56px +                /* CTA height */
+    36px                  /* 원하는 간격 */
+  );
+
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 16px 0;
+
+  z-index: 110;
 }
 
 .dot {
@@ -180,7 +195,6 @@ body {
   height: 8px;
   background: #ddd;
   border-radius: 50%;
-  cursor: pointer;
 }
 
 .dot.active {
@@ -189,16 +203,33 @@ body {
   background: #c7a88a;
 }
 
-/* CTA */
+/* =========================
+   CTA (분리된 버튼)
+========================= */
 .cta {
-  width: 100%;
-  padding: 16px;
-  border-radius: 8px;
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+
+  height: 56px;
+  border-radius: 12px;
   border: none;
+
   font-size: 16px;
   font-weight: 600;
   background: #c7a88a;
   color: #fff;
+
+  z-index: 100;
 }
 
+@media (max-width: 360px) {
+  .plan {
+    width: 90px;
+  }
 
+  .plan-cards {
+    transform: scale(0.92);
+  }
+}

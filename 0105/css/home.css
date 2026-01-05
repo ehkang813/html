@@ -10,6 +10,12 @@ body {
   background: #fff;
   font-family: "Noto Sans KR", "Pretendard", sans-serif;
   color: #1c1c1c;
+  min-height: 100dvh;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+html, body {
+  height: 100%;
 }
 
 /* =========================
@@ -23,7 +29,7 @@ body {
 
   height: 60px;
   padding: 0 20px;
-  border-bottom: 1px solid #e5e5e5;;
+  border-bottom: 1px solid #e5e5e5;
 
   background: #F7F4EF;
   display: flex;
@@ -66,7 +72,8 @@ body {
    Main Layout
 ========================= */
 .home-main {
-  padding: 80px 20px 100px; /* header + tabbar 여유 */
+  padding: 80px 20px 100px 20px;
+  max-width: 100%;
 }
 
 /* =========================
@@ -99,23 +106,32 @@ body {
 
 .hero-dots {
   position: absolute;
-  bottom: 12px;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
+
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+
+  z-index: 5;
 }
 
 .hero-dots .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  width: 8px;
+  height: 8px;
+  border-radius: 50px;
+
+  background: rgba(255,255,255,0.4);
+  transition: all 0.25s ease;
 }
 
 .hero-dots .dot.active {
+  width: 20px;
+  border-radius: 10px;
   background: #fff;
 }
+
 
 /* =========================
    Section Common
@@ -138,6 +154,9 @@ body {
   gap: 12px;
   overflow-x: auto;
   padding-bottom: 4px;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
 
   scrollbar-width: none;
 }
@@ -150,19 +169,19 @@ body {
    Daily Routine Card
 ========================= */
 .routine-card {
-  min-width: 280px;
+  min-width: 320px;
   background: #F7F4EF;
-  padding: 8px;
+  padding: 10px;
 
   display: flex;
-  gap: 8px;
+  gap: 10px;
 
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
 .routine-card .thumb {
-  width: 96px;
-  height: 96px;
+  width: 100px;
+  height: 100px;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -174,61 +193,60 @@ body {
 }
 
 .routine-card .text {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .routine-card .text strong {
   font-size: 14px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .routine-card .text p {
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.5;
   color: #555;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 /* =========================
-   Product / Recommend Cards
-========================= */
-/* =========================
    Product Card (Horizontal)
 ========================= */
 .product-card.horizontal {
-  position: relative; /* + 버튼 기준 */
+  position: relative;
   background: #F7F4EF;
   padding: 8px;
 
   display: flex;
   gap: 12px;
-  align-items: stretch; /* 🔥 이미지 상하 가득 */
+  align-items: stretch;
 
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  min-width: 300px;
 }
 
 .product-card.horizontal.frequent {
-  height: 120px;   /* 👈 컴팩트 */
+  height: 120px;
 }
 
 .product-card.horizontal.recommend {
-  height: 140px;   /* 👈 설명이 더 들어가는 카드 */
+  height: 140px;
 }
 
-
 .product-card.horizontal .thumb {
-  width: 92px;
+  width: 100px;
   flex-shrink: 0;
 
   display: flex;
-  align-items: stretch; /* 중요 */
+  align-items: stretch;
   overflow: hidden;
   background: #fff;
 }
@@ -236,13 +254,11 @@ body {
 .product-card.horizontal .thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 🔥 위아래 꽉 차게 */
+  object-fit: cover;
 }
 
-
-/* 오른쪽 정보 */
 .product-card.horizontal .info {
-   width: 144px;         /* ✅ 요청값 */
+  width: 170px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -266,19 +282,8 @@ body {
   overflow: hidden;
 }
 
-
-/* 하단 가격 + 버튼 */
-.product-card.horizontal .bottom {
-  margin-top: 6px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* 가격 */
 .product-card.horizontal .price {
-  margin-top: auto; /* 아래로 밀기 */
+  margin-top: auto;
 
   display: flex;
   flex-direction: column;
@@ -295,8 +300,6 @@ body {
   color: #888;
 }
 
-
-/* + 버튼 */
 .product-card.horizontal .add {
   position: absolute;
   right: 8px;
@@ -316,19 +319,16 @@ body {
   justify-content: center;
 
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
-
-
 
 /* =========================
    Event Banner
 ========================= */
-/* 이벤트 전체 */
 .event {
   margin-top: 24px;
 }
 
-/* 텍스트 영역 */
 .event-info {
   margin-bottom: 12px;
 }
@@ -343,11 +343,10 @@ body {
 .event-info p {
   margin: 0;
   font-size: 13px;
-  line-height: 1.3;
+  line-height: 1.6;
   color: #444;
 }
 
-/* 배너 이미지 영역 */
 .event-banner {
   position: relative;
   height: 250px;
@@ -358,11 +357,11 @@ body {
 
 .event-banner img {
   width: 100%;
+  height: 100%;
   display: block;
   object-fit: cover;
 }
 
-/* 바로가기 버튼 (이미지 위) */
 .event-btn {
   position: absolute;
   bottom: 14px;
@@ -371,17 +370,16 @@ body {
 
   padding: 8px 18px;
   border-radius: 999px;
-  border: none;
+  border: 3px solid #fff;
 
   background: #D8C59A;
-  border: 3px solid #fff;
   color: #3b2a1a;
   font-size: 13px;
   font-weight: 700;
 
   box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  cursor: pointer;
 }
-
 
 /* =========================
    Bottom Tab Bar
@@ -400,6 +398,7 @@ body {
   align-items: center;
 
   border-top: 1px solid #e5e5e5;
+  z-index: 100;
 }
 
 .tab-bar button {
@@ -409,6 +408,8 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
+  padding: 8px;
 }
 
 .tab-bar .icon img {
@@ -417,11 +418,91 @@ body {
 }
 
 .tab-bar .label {
-  font-size: 11px;
+  font-size: 12px;
   color: #777;
 }
 
 .tab-bar button.active .label {
   color: #1c1c1c;
   font-weight: 700;
+}
+
+/* ===========================
+   MOBILE OPTIMIZATION
+============================ */
+@media (max-width: 600px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .home-main {
+    padding: 70px 16px 90px 16px;
+  }
+
+  .hero,
+  .event-banner {
+    height: 180px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+  }
+
+  .section {
+    margin-bottom: 18px;
+  }
+
+  .section h2 {
+    font-size: 16px;
+  }
+
+  .product-card.horizontal.frequent,
+  .product-card.horizontal.recommend {
+    height: auto !important;
+    min-width: 280px;
+  }
+
+  .product-card.horizontal .thumb {
+    width: 90px;
+  }
+
+  .product-card.horizontal .info {
+    width: auto !important;
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .routine-card {
+    min-width: 280px;
+  }
+
+  .routine-card .thumb {
+    width: 90px;
+    height: 90px;
+  }
+
+  .h-scroll {
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .tab-bar {
+    height: 60px;
+  }
+
+  .tab-bar .label {
+    font-size: 10px;
+  }
+
+  .tab-bar .icon img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .event-info h3 {
+    font-size: 16px;
+  }
+
+  .event-info p {
+    font-size: 12px;
+  }
 }
