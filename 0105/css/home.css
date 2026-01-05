@@ -429,9 +429,34 @@ body {
 
 
 @media (max-width: 480px) {
+
+  /* 카드 높이 고정 제거 */
+  .product-card.horizontal.frequent,
+  .product-card.horizontal.recommend {
+    height: auto;
+  }
+
+  /* 데일리 루틴 카드 폭 축소 */
+  .routine-card {
+    min-width: 240px;
+  }
+
+  /* 상품 info 영역 유동 처리 */
+  .product-card.horizontal .info {
+    width: auto;
+    flex: 1;
+  }
+
+  /* 배너 & 섹션 여백 조정 */
   .hero,
   .event-banner {
     height: 180px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+
+  .section {
+    margin-bottom: 20px;
   }
 }
 
