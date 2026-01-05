@@ -21,9 +21,8 @@ body {
    Walkthrough Layout
 ========================= */
 .walkthrough {
-  width: 100%;
-  min-height: 100dvh; /* 🔥 모바일 핵심 */
-  padding: 24px;
+  min-height: 100dvh;
+  padding: 24px 24px 16px;
   display: flex;
   flex-direction: column;
 }
@@ -47,10 +46,10 @@ body {
   display: none;
   flex-direction: column;
 
-  padding-top: 10vh; /* 🔥 px 제거 */
+  overflow-y: auto;                 /* 🔥 잘림 방지 */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* 활성 슬라이드만 표시 */
 .slide.active {
   display: flex;
 }
@@ -59,7 +58,10 @@ body {
    Visual Area
 ========================= */
 .visual {
-  min-height: 42vh;   /* 🔥 이미지/카드 안전 영역 */
+  flex-shrink: 0;
+  min-height: 36vh;
+  max-height: 42vh;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,7 +69,8 @@ body {
 
 /* 카드 슬라이드(2번)는 조금 더 여유 */
 .slide:nth-child(2) .visual {
-  min-height: 46vh;
+  min-height: 40vh;
+  max-height: 46vh;
 }
 
 /* =========================
@@ -76,19 +79,18 @@ body {
 .visual img {
   width: 60%;
   max-width: 230px;
-  max-height: 340px;
+  max-height: 100%;
   object-fit: contain;
 }
 
-/* 1번 슬라이드 이미지 */
+/* 1번 슬라이드 */
 .slide:nth-child(1) img {
   width: 50%;
 }
 
-/* 3번 슬라이드 이미지 */
+/* 3번 슬라이드 */
 .slide:nth-child(3) img {
   width: 25%;
-  margin-bottom: 24px;
 }
 
 /* =========================
@@ -96,7 +98,7 @@ body {
 ========================= */
 .content {
   text-align: center;
-  margin-top: auto; /* 🔥 하단 고정 느낌 */
+  padding: 12px 0 24px;
 }
 
 .content h2 {
@@ -170,7 +172,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 16px 0;
+  margin: 12px 0;
 }
 
 .dot {
@@ -187,16 +189,22 @@ body {
 }
 
 /* =========================
-   CTA Button
+   CTA (분리된 버튼)
 ========================= */
 .cta {
-  width: 100%;
-  padding: 16px;
-  border-radius: 8px;
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+
+  height: 56px;
+  border-radius: 12px;
   border: none;
 
   font-size: 16px;
   font-weight: 600;
   background: #c7a88a;
   color: #fff;
+
+  z-index: 100;
 }
