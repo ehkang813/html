@@ -1,7 +1,14 @@
+/* =========================
+   Reset
+========================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
@@ -10,75 +17,62 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* =========================
+   Walkthrough Layout
+========================= */
 .walkthrough {
   width: 100%;
-  height: 100vh;
+  min-height: 100dvh; /* 🔥 모바일 핵심 */
   padding: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-/* Slides */
+/* =========================
+   Slides Wrapper
+========================= */
 .slides {
   flex: 1;
   position: relative;
   overflow: hidden;
 }
 
+/* =========================
+   Slide
+========================= */
 .slide {
   position: absolute;
   inset: 0;
 
-  display: flex;
+  display: none;
   flex-direction: column;
 
-  transform: translateX(100%);   /* 기본은 오른쪽 */
-  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-
-  padding-top: 150px;
-  display: none;
+  padding-top: 10vh; /* 🔥 px 제거 */
 }
 
-.slide:nth-child(3) {
-  padding-top: 150px;   /* ← 150px보다 줄임 */
-}
-
-
-/* 현재 슬라이드 */
+/* 활성 슬라이드만 표시 */
 .slide.active {
-  transform: translateX(0);
-  pointer-events: auto;
   display: flex;
 }
 
-/* 이전 슬라이드 (왼쪽) */
-.slide.prev {
-  transform: translateX(-100%);
-}
-
-/* 다음 슬라이드 (오른쪽) */
-.slide.next {
-  transform: translateX(100%);
-}
-
-
-
-/* 🔴 핵심: 위 / 아래 영역 분리 */
+/* =========================
+   Visual Area
+========================= */
 .visual {
-  flex: 0.7;
+  min-height: 42vh;   /* 🔥 이미지/카드 안전 영역 */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.content {
-  min-height: 20px;        /* 🔥 모든 워크스루 하단 높이 통일 */
-  text-align: center;
+/* 카드 슬라이드(2번)는 조금 더 여유 */
+.slide:nth-child(2) .visual {
+  min-height: 46vh;
 }
 
-/* Images */
+/* =========================
+   Images
+========================= */
 .visual img {
   width: 60%;
   max-width: 230px;
@@ -86,7 +80,25 @@ body {
   object-fit: contain;
 }
 
-/* Text */
+/* 1번 슬라이드 이미지 */
+.slide:nth-child(1) img {
+  width: 50%;
+}
+
+/* 3번 슬라이드 이미지 */
+.slide:nth-child(3) img {
+  width: 25%;
+  margin-bottom: 24px;
+}
+
+/* =========================
+   Content Area
+========================= */
+.content {
+  text-align: center;
+  margin-top: auto; /* 🔥 하단 고정 느낌 */
+}
+
 .content h2 {
   font-size: 20px;
   font-weight: 700;
@@ -99,7 +111,9 @@ body {
   color: #7b6f66;
 }
 
-/* ===== Slide 2 Card UI ===== */
+/* =========================
+   Slide 2 – Plan Cards
+========================= */
 .plan-cards {
   display: flex;
   gap: 12px;
@@ -112,6 +126,7 @@ body {
   background: #efe8de;
   border-radius: 14px;
   text-align: center;
+
   box-shadow:
     0 6px 14px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -125,8 +140,6 @@ body {
 .plan h3 {
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
   min-height: 32px;
 
   display: flex;
@@ -150,26 +163,9 @@ body {
   color: #6f6259;
 }
 
-.slide:nth-child(1) img {
-  width: 50%;
-  max-width: 230px;
-  max-height: 340px;
-  object-fit: contain;
-  /* margin-bottom: 8px; */
-}
-
-
-.slide:nth-child(3) img {
-  width: 25%;
-  max-width: 230px;
-  max-height: 340px;
-  object-fit: contain;
-  margin-bottom: 24px;
-}
-
-
-
-/* Pagination */
+/* =========================
+   Pagination
+========================= */
 .pagination {
   display: flex;
   justify-content: center;
@@ -182,7 +178,6 @@ body {
   height: 8px;
   background: #ddd;
   border-radius: 50%;
-  cursor: pointer;
 }
 
 .dot.active {
@@ -191,16 +186,17 @@ body {
   background: #c7a88a;
 }
 
-/* CTA */
+/* =========================
+   CTA Button
+========================= */
 .cta {
   width: 100%;
   padding: 16px;
   border-radius: 8px;
   border: none;
+
   font-size: 16px;
   font-weight: 600;
   background: #c7a88a;
   color: #fff;
 }
-
-
