@@ -428,40 +428,55 @@ body {
 }
 
 
-@media (max-width: 480px) {
+/* ===========================
+   MOBILE OPTIMIZATION START
+============================ */
+@media (max-width: 600px) {
 
-  /* 카드 높이 고정 제거 */
-  .product-card.horizontal.frequent,
-  .product-card.horizontal.recommend {
-    height: auto;
+  /* 전체 스크롤 가로 overflow 제거 */
+  body {
+    overflow-x: hidden;
   }
 
-  /* 데일리 루틴 카드 폭 축소 */
+  /* hero / event-banner height 줄이기 + 여백 보정 */
+  .hero,
+  .event-banner {
+    height: 180px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+  }
+
+  /* section 여백 줄이기 */
+  .section {
+    margin-bottom: 18px;
+  }
+
+  /* product card 고정 height 제거 */
+  .product-card.horizontal.frequent,
+  .product-card.horizontal.recommend {
+    height: auto !important;
+  }
+
+  /* info 영역 자동 유동 */
+  .product-card.horizontal .info {
+    width: auto !important;
+    flex: 1;
+  }
+
+  /* routine-card 폭 축소 */
   .routine-card {
     min-width: 240px;
   }
 
-  /* 상품 info 영역 유동 처리 */
-  .product-card.horizontal .info {
-    width: auto;
-    flex: 1;
+  /* 탭바 높이 줄이고 텍스트 크기 축소 */
+  .tab-bar {
+    height: 52px;
   }
-
-  /* 배너 & 섹션 여백 조정 */
-  .hero,
-  .event-banner {
-    height: 180px;
-    border-radius: 10px;
-    margin-bottom: 16px;
-  }
-
-  .section {
-    margin-bottom: 20px;
+  .tab-bar .label {
+    font-size: 11px;
   }
 }
-@media (max-width: 600px) {
-  body {
-  background: hotpink !important;
-}
-}
+/* ===========================
+   MOBILE OPTIMIZATION END
+============================ */
 
