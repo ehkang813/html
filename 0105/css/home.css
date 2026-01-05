@@ -158,6 +158,12 @@ html, body {
   display: none;
 }
 
+/* 가로 스크롤 카드 시각적 기준 통일 */
+.h-scroll > * {
+  min-width: 88%;
+}
+
+
 /* =========================
    Daily Routine Card
 ========================= */
@@ -594,4 +600,28 @@ html, body {
     padding: 7px 16px;
     font-size: 12px;
   }
+}
+
+/* =========================
+   FIXED CARD WIDTH (ONLY)
+   다른 디자인 요소 수정 없음
+========================= */
+
+/* Daily Routine 카드 */
+.routine-card {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+/* Frequently / Recommended 상품 카드 */
+.product-card.horizontal {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+/* 가로 스크롤 컨테이너는 카드 크기에 관여하지 않음 */
+.h-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
 }
