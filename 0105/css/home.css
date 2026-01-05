@@ -10,6 +10,11 @@ body {
   background: #fff;
   font-family: "Noto Sans KR", "Pretendard", sans-serif;
   color: #1c1c1c;
+  min-height: 100dvh; /* ✅ 모바일 대응 */
+}
+
+html, body {
+  height: 100%;
 }
 
 /* =========================
@@ -66,7 +71,8 @@ body {
    Main Layout
 ========================= */
 .home-main {
-  padding: 80px 20px 100px; /* header + tabbar 여유 */
+  padding-top: 80px;   /* header */
+  padding-bottom: 100px; /* tab-bar */
 }
 
 /* =========================
