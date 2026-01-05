@@ -45,6 +45,7 @@ body {
 
   display: none;
   flex-direction: column;
+  padding-top: 100px;
 
   overflow-y: auto;                 /* 🔥 잘림 방지 */
   -webkit-overflow-scrolling: touch;
@@ -68,10 +69,10 @@ body {
 }
 
 /* 카드 슬라이드(2번)는 조금 더 여유 */
-.slide:nth-child(2) .visual {
+/* .slide:nth-child(2) .visual {
   min-height: 40vh;
   max-height: 46vh;
-}
+} */
 
 /* =========================
    Images
@@ -90,7 +91,7 @@ body {
 
 /* 3번 슬라이드 */
 .slide:nth-child(3) img {
-  width: 25%;
+  width: 20%;
 }
 
 /* =========================
@@ -124,8 +125,8 @@ body {
 }
 
 .plan {
-  width: 100px;
-  padding: 8px 8px;
+  width: 102px;
+  padding: 16px 8px;
   border: 2px solid #fff;
   background: #efe8de;
   border-radius: 14px;
@@ -171,11 +172,21 @@ body {
    Pagination
 ========================= */
 .pagination {
+  position: fixed;
+  left: 0;
+  right: 0;
+
+  bottom: calc(
+    16px +                /* CTA bottom */
+    env(safe-area-inset-bottom) +
+    56px +                /* CTA height */
+    36px                  /* 원하는 간격 */
+  );
+
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 12px 0;
-  position: relative;
+
   z-index: 110;
 }
 
