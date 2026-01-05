@@ -10,7 +10,6 @@ body {
   background: #fff;
   font-family: "Noto Sans KR", "Pretendard", sans-serif;
   color: #1c1c1c;
-  overflow-x: hidden;
 }
 
 /* =========================
@@ -426,57 +425,3 @@ body {
   color: #1c1c1c;
   font-weight: 700;
 }
-
-
-/* ===========================
-   MOBILE OPTIMIZATION START
-============================ */
-@media (max-width: 600px) {
-
-  /* 전체 스크롤 가로 overflow 제거 */
-  body {
-    overflow-x: hidden;
-  }
-
-  /* hero / event-banner height 줄이기 + 여백 보정 */
-  .hero,
-  .event-banner {
-    height: 180px;
-    margin-bottom: 14px;
-    border-radius: 10px;
-  }
-
-  /* section 여백 줄이기 */
-  .section {
-    margin-bottom: 18px;
-  }
-
-  /* product card 고정 height 제거 */
-  .product-card.horizontal.frequent,
-  .product-card.horizontal.recommend {
-    height: auto !important;
-  }
-
-  /* info 영역 자동 유동 */
-  .product-card.horizontal .info {
-    width: auto !important;
-    flex: 1;
-  }
-
-  /* routine-card 폭 축소 */
-  .routine-card {
-    min-width: 240px;
-  }
-
-  /* 탭바 높이 줄이고 텍스트 크기 축소 */
-  .tab-bar {
-    height: 52px;
-  }
-  .tab-bar .label {
-    font-size: 11px;
-  }
-}
-/* ===========================
-   MOBILE OPTIMIZATION END
-============================ */
-
