@@ -1,0 +1,96 @@
+/* =========================
+   Subscribe Page
+========================= */
+
+.sub-section {
+  margin-bottom: 28px;
+}
+
+.sub-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* 구독 플랜 */
+.plan-wrap {
+  display: flex;
+  gap: 12px;
+}
+
+.plan-card {
+  flex: 1;
+  background: #EDE4D8;
+  border-radius: 16px;
+  padding: 20px 12px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+.plan-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.plan-card .badge {
+  display: inline-block;
+  background: #D8C59A;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.plan-card p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* 구독 장점 */
+.benefit-wrap {
+  display: flex;
+  gap: 12px;
+}
+
+.benefit-card {
+  flex: 1;
+  background: #EDE4D8;
+  border-radius: 16px;
+  padding: 18px 12px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+.benefit-card img {
+  width: 42px;
+  margin-bottom: 10px;
+}
+
+.benefit-card strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.benefit-card p {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #555;
+}
+
+/* 이벤트 배너 */
+.sub-event {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+}
+
+.sub-event img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}

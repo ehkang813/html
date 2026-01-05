@@ -1,0 +1,427 @@
+/* =========================
+   Reset & Base
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  font-family: "Noto Sans KR", "Pretendard", sans-serif;
+  color: #1c1c1c;
+}
+
+/* =========================
+   Header
+========================= */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e5e5e5;;
+
+  background: #F7F4EF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 100;
+}
+
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.back-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.profile img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+/* =========================
+   Main Layout
+========================= */
+.home-main {
+  padding: 80px 20px 100px; /* header + tabbar 여유 */
+}
+
+/* =========================
+   Hero Banner
+========================= */
+.hero {
+  position: relative;
+  height: 250px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.hero-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.6s ease;
+}
+
+.hero-slide {
+  min-width: 100%;
+  height: 100%;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+
+.hero-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hero-dots .dot.active {
+  background: #fff;
+}
+
+/* =========================
+   Section Common
+========================= */
+.section {
+  margin-bottom: 24px;
+}
+
+.section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+/* =========================
+   Horizontal Scroll
+========================= */
+.h-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+
+  scrollbar-width: none;
+}
+
+.h-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================
+   Daily Routine Card
+========================= */
+.routine-card {
+  min-width: 280px;
+  background: #F7F4EF;
+  padding: 8px;
+
+  display: flex;
+  gap: 8px;
+
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.routine-card .thumb {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.routine-card .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.routine-card .text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.routine-card .text strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.routine-card .text p {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #555;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* =========================
+   Product / Recommend Cards
+========================= */
+/* =========================
+   Product Card (Horizontal)
+========================= */
+.product-card.horizontal {
+  position: relative; /* + 버튼 기준 */
+  background: #F7F4EF;
+  padding: 8px;
+
+  display: flex;
+  gap: 12px;
+  align-items: stretch; /* 🔥 이미지 상하 가득 */
+
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.product-card.horizontal.frequent {
+  height: 120px;   /* 👈 컴팩트 */
+}
+
+.product-card.horizontal.recommend {
+  height: 140px;   /* 👈 설명이 더 들어가는 카드 */
+}
+
+
+.product-card.horizontal .thumb {
+  width: 92px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: stretch; /* 중요 */
+  overflow: hidden;
+  background: #fff;
+}
+
+.product-card.horizontal .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 🔥 위아래 꽉 차게 */
+}
+
+
+/* 오른쪽 정보 */
+.product-card.horizontal .info {
+   width: 144px;         /* ✅ 요청값 */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-card.horizontal h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.product-card.horizontal .desc {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* 하단 가격 + 버튼 */
+.product-card.horizontal .bottom {
+  margin-top: 6px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 가격 */
+.product-card.horizontal .price {
+  margin-top: auto; /* 아래로 밀기 */
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.product-card.horizontal .price strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.product-card.horizontal .price span {
+  font-size: 11px;
+  color: #888;
+}
+
+
+/* + 버튼 */
+.product-card.horizontal .add {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+
+  background: #b89b7a;
+  color: #fff;
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* =========================
+   Event Banner
+========================= */
+/* 이벤트 전체 */
+.event {
+  margin-top: 24px;
+}
+
+/* 텍스트 영역 */
+.event-info {
+  margin-bottom: 12px;
+}
+
+.event-info h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+}
+
+.event-info p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #444;
+}
+
+/* 배너 이미지 영역 */
+.event-banner {
+  position: relative;
+  height: 250px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 36px;
+}
+
+.event-banner img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* 바로가기 버튼 (이미지 위) */
+.event-btn {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+
+  background: #D8C59A;
+  border: 3px solid #fff;
+  color: #3b2a1a;
+  font-size: 13px;
+  font-weight: 700;
+
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
+
+
+/* =========================
+   Bottom Tab Bar
+========================= */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 72px;
+  background: #F7F4EF;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-top: 1px solid #e5e5e5;
+}
+
+.tab-bar button {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.tab-bar .icon img {
+  width: 22px;
+  height: 22px;
+}
+
+.tab-bar .label {
+  font-size: 11px;
+  color: #777;
+}
+
+.tab-bar button.active .label {
+  color: #1c1c1c;
+  font-weight: 700;
+}
