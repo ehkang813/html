@@ -162,7 +162,7 @@ html, body {
 .routine-card {
   min-width: 320px;
   background: #F7F4EF;
-  padding: 8px;
+  padding: 10px;
 
   display: flex;
   gap: 10px;
@@ -188,7 +188,7 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* gap: 6px; */
+  gap: 6px;
 }
 
 .routine-card .text strong {
@@ -199,7 +199,7 @@ html, body {
 
 .routine-card .text p {
   font-size: 12px;
-  line-height: 1.2;
+  line-height: 1.5;
   color: #555;
 
   display: -webkit-box;
@@ -265,7 +265,7 @@ html, body {
 .product-card.horizontal .desc {
   font-size: 12px;
   color: #666;
-  letter-spacing: -0.03em;
+  
   margin: 0;
 
   display: -webkit-box;
