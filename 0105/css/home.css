@@ -461,8 +461,7 @@ body {
 }
 @media (max-width: 600px) {
   body {
-    background: yellow !important;
-    border: 8px solid red !important;
+    background: lime !important;
   }
 }
 
