@@ -221,7 +221,7 @@ html, body {
   align-items: stretch;
 
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  min-width: 300px;
+  min-width: 320px;
 }
 
 .product-card.horizontal.frequent {
@@ -449,7 +449,7 @@ html, body {
   .product-card.horizontal.frequent,
   .product-card.horizontal.recommend {
     height: auto !important;
-    min-width: 280px;
+    min-width: 300px;
   }
 
   .product-card.horizontal .thumb {
@@ -463,7 +463,7 @@ html, body {
   }
 
   .routine-card {
-    min-width: 280px;
+    min-width: 300px;
   }
 
   .routine-card .thumb {
