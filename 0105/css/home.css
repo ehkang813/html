@@ -121,6 +121,8 @@ html, body {
 }
 
 .hero-dots .dot.active {
+  width: 20px;
+  border-radius: 10px;
   background: #fff;
 }
 
@@ -162,7 +164,7 @@ html, body {
 .routine-card {
   min-width: 320px;
   background: #F7F4EF;
-  padding: 10px;
+  padding: 8px;
 
   display: flex;
   gap: 10px;
@@ -188,18 +190,19 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
+  /* gap: 4px; */
 }
 
 .routine-card .text strong {
   font-size: 14px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .routine-card .text p {
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
   color: #555;
 
   display: -webkit-box;
@@ -265,6 +268,7 @@ html, body {
 .product-card.horizontal .desc {
   font-size: 12px;
   color: #666;
+  letter-spacing: -0.03em;
   margin: 0;
 
   display: -webkit-box;
@@ -284,6 +288,7 @@ html, body {
 .product-card.horizontal .price strong {
   font-size: 14px;
   font-weight: 700;
+  
 }
 
 .product-card.horizontal .price span {
