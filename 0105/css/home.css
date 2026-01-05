@@ -459,4 +459,10 @@ body {
     margin-bottom: 20px;
   }
 }
+@media (max-width: 600px) {
+  body {
+    background: yellow !important;
+    border: 8px solid red !important;
+  }
+}
 
