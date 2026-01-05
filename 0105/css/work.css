@@ -38,6 +38,7 @@ body {
   pointer-events: none;
 
   padding-top: 150px;
+  display: none;
 }
 
 .slide:nth-child(3) {
@@ -49,6 +50,7 @@ body {
 .slide.active {
   transform: translateX(0);
   pointer-events: auto;
+  display: flex;
 }
 
 /* 이전 슬라이드 (왼쪽) */
