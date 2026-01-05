@@ -106,32 +106,23 @@ html, body {
 
 .hero-dots {
   position: absolute;
-  bottom: 14px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
-
   display: flex;
-  align-items: center;
-  gap: 8px;
-
-  z-index: 5;
+  gap: 6px;
 }
 
 .hero-dots .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50px;
-
-  background: rgba(255,255,255,0.4);
-  transition: all 0.25s ease;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .hero-dots .dot.active {
-  width: 20px;
-  border-radius: 10px;
   background: #fff;
 }
-
 
 /* =========================
    Section Common
@@ -503,6 +494,101 @@ html, body {
   }
 
   .event-info p {
+    font-size: 12px;
+  }
+}
+
+/* ===========================
+   SMALL MOBILE (아이폰 미니 등)
+============================ */
+@media (max-width: 400px) {
+  .home-main {
+    padding: 70px 12px 90px 12px;
+  }
+
+  .hero,
+  .event-banner {
+    height: 160px;
+  }
+
+  /* 루틴 카드 - 화면에 꽉 차게 */
+  .routine-card {
+    min-width: calc(100vw - 40px);
+    padding: 8px;
+  }
+
+  .routine-card .thumb {
+    width: 80px;
+    height: 80px;
+  }
+
+  .routine-card .text strong {
+    font-size: 13px;
+  }
+
+  .routine-card .text p {
+    font-size: 11px;
+    -webkit-line-clamp: 2;
+  }
+
+  /* 상품 카드 - 화면에 꽉 차게 */
+  .product-card.horizontal {
+    min-width: calc(100vw - 40px);
+    padding: 8px;
+  }
+
+  .product-card.horizontal .thumb {
+    width: 80px;
+  }
+
+  .product-card.horizontal .info {
+    min-width: 140px;
+  }
+
+  .product-card.horizontal h3 {
+    font-size: 13px;
+  }
+
+  .product-card.horizontal .desc {
+    font-size: 11px;
+  }
+
+  .product-card.horizontal .price strong {
+    font-size: 13px;
+  }
+
+  .product-card.horizontal .price span {
+    font-size: 10px;
+  }
+
+  .product-card.horizontal .add {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+  }
+
+  .h-scroll {
+    margin: 0 -12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 10px;
+  }
+
+  .section h2 {
+    font-size: 15px;
+  }
+
+  .event-info h3 {
+    font-size: 15px;
+  }
+
+  .event-info p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .event-btn {
+    padding: 7px 16px;
     font-size: 12px;
   }
 }
