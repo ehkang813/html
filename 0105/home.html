@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
 
   <!-- Fonts -->
@@ -16,13 +16,17 @@
 <!-- Header -->
 <header class="app-header home-header">
   <div class="left-group">
+    <!-- <button class="back-btn" id="backBtn">
+      <img src="./images/back.png" alt="뒤로가기">
+    </button> -->
     <h1 class="header-title">홈</h1>
   </div>
 
+
   <div class="profile">
     <a href="account.html">
-      <img class="profile-img" src="./images/profile.png" alt="유저">
-    </a>
+  <img class="profile-img" src="./images/profile.png" alt="유저">
+</a>
   </div>
 </header>
 
@@ -101,76 +105,87 @@
     <h2>자주 주문한 상품</h2>
 
     <div class="h-scroll">
-      <article class="product-card horizontal frequent">
-        <div class="thumb">
-          <img src="./images/main_order_01.png" alt="진생 딜라이트">
-        </div>
+      <article class="product-card">
+        <article class="product-card horizontal frequent">
+  <div class="thumb">
+    <img src="./images/main_order_01.png" alt="진생 딜라이트">
+  </div>
 
-        <div class="info">
-          <h3>진생 딜라이트</h3>
-          <p class="desc">인삼 추출을 함유한 캐러멜향 커피</p>
+  <div class="info">
+    <h3>진생 딜라이트</h3>
+    <p class="desc">인삼 추출을 함유한 캐러멜향 커피</p>
 
-          <div class="price">
-            <strong>₩11,000</strong>
-            <span>10캡슐</span>
-          </div>
-        </div>
+    <div class="price">
+      <strong>₩11,000</strong>
+      <span>10캡슐</span>
+    </div>
+  </div>
 
-        <button class="add">+</button>
+  <button class="add">+</button>
+</article>
+
+      </article>
+      <article class="product-card">
+        <article class="product-card horizontal frequent">
+  <div class="thumb">
+    <img src="./images/main_order_02.png" alt="아이스 레제로">
+  </div>
+
+  <div class="info">
+    <h3>아이스 레제로</h3>
+    <p class="desc">아이스로 좋은 과일향</p>
+
+    <div class="price">
+      <strong>₩8,700</strong>
+      <span>10캡슐</span>
+    </div>
+  </div>
+
+  <button class="add">+</button>
+</article>
+
       </article>
 
-      <article class="product-card horizontal frequent">
-        <div class="thumb">
-          <img src="./images/main_order_02.png" alt="아이스 레제로">
-        </div>
+            <article class="product-card">
+        <article class="product-card horizontal frequent">
+  <div class="thumb">
+    <img src="./images/main_order_03.png" alt="더블 에스프레소 돌체">
+  </div>
 
-        <div class="info">
-          <h3>아이스 레제로</h3>
-          <p class="desc">아이스로 좋은 과일향</p>
+  <div class="info">
+    <h3>더블 에스프레소 돌체</h3>
+    <p class="desc">부드럽고 달콤한 캐러멀향</p>
 
-          <div class="price">
-            <strong>₩8,700</strong>
-            <span>10캡슐</span>
-          </div>
-        </div>
+    <div class="price">
+      <strong>₩11,000</strong>
+      <span>10캡슐</span>
+    </div>
+  </div>
 
-        <button class="add">+</button>
+  <button class="add">+</button>
+</article>
+
       </article>
 
-      <article class="product-card horizontal frequent">
-        <div class="thumb">
-          <img src="./images/main_order_03.png" alt="더블 에스프레소 돌체">
-        </div>
+            <article class="product-card">
+        <article class="product-card horizontal frequent">
+  <div class="thumb">
+    <img src="./images/main_order_04.png" alt="액티브">
+  </div>
 
-        <div class="info">
-          <h3>더블 에스프레소 돌체</h3>
-          <p class="desc">부드럽고 달콤한 캐러멜향</p>
+  <div class="info">
+    <h3>액티브</h3>
+    <p class="desc">아이스로 즐기기 좋은 비타민 B6가 함유된 커피</p>
 
-          <div class="price">
-            <strong>₩11,000</strong>
-            <span>10캡슐</span>
-          </div>
-        </div>
+    <div class="price">
+      <strong>₩11,000</strong>
+      <span>10캡슐</span>
+    </div>
+  </div>
 
-        <button class="add">+</button>
-      </article>
+  <button class="add">+</button>
+</article>
 
-      <article class="product-card horizontal frequent">
-        <div class="thumb">
-          <img src="./images/main_order_04.png" alt="액티브">
-        </div>
-
-        <div class="info">
-          <h3>액티브</h3>
-          <p class="desc">아이스로 즐기기 좋은 비타민 B6가 함유된 커피</p>
-
-          <div class="price">
-            <strong>₩11,000</strong>
-            <span>10캡슐</span>
-          </div>
-        </div>
-
-        <button class="add">+</button>
       </article>
     </div>
   </section>
@@ -180,112 +195,118 @@
     <h2>추천 상품</h2>
 
     <div class="h-scroll">
-      <article class="product-card horizontal recommend">
-        <div class="thumb">
-          <img src="./images/main_recom_01.png" alt="버츄오 디스커버리 100팩">
-        </div>
+        
+    <article class="product-card horizontal recommend">
+  <div class="thumb">
+    <img src="./images/main_recom_01.png" alt="버츄오 디스커버리 100팩">
+  </div>
 
-        <div class="info">
-          <h3>버츄오 디스커버리 <br>100팩</h3>
-          <p class="desc">다양한 스타일의 커피를 한번에 만나보세요</p>
+  <div class="info">
+    <h3>버츄오 디스커버리 <br>100팩</h3>
+    <p class="desc">다양한 스타일의 커피를 한번에 만나보세요</p>
 
-          <div class="price">
-            <strong>￦94,500</strong>
-            <span>100캡슐</span>
-          </div>
-        </div>
+    <div class="price">
+      <strong>￦94,500</strong>
+      <span>100캡슐</span>
+    </div>
+  </div>
 
-        <button class="add">+</button>
-      </article>
+  <button class="add">+</button>
+</article>
 
-      <article class="product-card horizontal recommend">
-        <div class="thumb">
-          <img src="./images/main_recom_02.png" alt="버츄오 마일드 셀렉션 6종">
-        </div>
+<article class="product-card horizontal recommend">
+  <div class="thumb">
+    <img src="./images/main_recom_02.png" alt="버츄오 마일드 셀렉션 6종">
+  </div>
 
-        <div class="info">
-          <h3>버츄오 마일드 셀렉션 <br>6종</h3>
-          <p class="desc">네스프레소가 엄선한 부드럽고 마일드한 커피</p>
+  <div class="info">
+    <h3>버츄오 마일드 셀렉션 <br>6종</h3>
+    <p class="desc">네스프레소가 엄선한 부드럽고 마일드한 커피</p>
 
-          <div class="price">
-            <strong>￦57,200</strong>
-            <span>60캡슐</span>
-          </div>
-        </div>
+    <div class="price">
+      <strong>￦57,200</strong>
+      <span>60캡슐</span>
+    </div>
+  </div>
 
-        <button class="add">+</button>
-      </article>
+  <button class="add">+</button>
+</article>
 
-      <article class="product-card horizontal recommend">
-        <div class="thumb">
-          <img src="./images/main_recom_03.png" alt="미아 디스펜서, 라지">
-        </div>
+<article class="product-card horizontal recommend">
+  <div class="thumb">
+    <img src="./images/main_recom_03.png" alt="미아 디스펜서, 라지">
+  </div>
 
-        <div class="info">
-          <h3>미아 디스펜서, 라지 <br></h3>
-          <p class="desc">최애 커피를 담는 보관함</p>
+  <div class="info">
+    <h3>미아 디스펜서, 라지 <br></h3>
+    <p class="desc">최애 커피를 담는 보관함</p>
 
-          <div class="price">
-            <strong>￦52,000</strong>
-            <span><br></span>
-          </div>
-        </div>
+    <div class="price">
+      <strong>￦52,000</strong>
+      <span><br></span>
+    </div>
+  </div>
 
-        <button class="add">+</button>
-      </article>
+  <button class="add">+</button>
+</article>
+
+
     </div>
   </section>
+
+
 
   <!-- Event Banner -->
-  <section class="event">
-    <div class="event-info">
-      <h3>시즌 한정 캡슐 런칭 이벤트</h3>
-      <p>
-        1. 시즌 한정 캡슐 10슬리브 구매 시<br>
-        → 전용 머그 or 오너먼트 1개 증정<br>
-        2. 20슬리브 이상 구매 시<br>
-        → 프리미엄 액세서리 업그레이드 증정
-      </p>
-    </div>
+<section class="event">
+  <div class="event-info">
+    <h3>시즌 한정 캡슐 런칭 이벤트</h3>
+    <p>
+      1. 시즌 한정 캡슐 10슬리브 구매 시<br>
+      → 전용 머그 or 오너먼트 1개 증정<br>
+      2. 20슬리브 이상 구매 시<br>
+      → 프리미엄 액세서리 업그레이드 증정
+    </p>
+  </div>
 
-    <div class="event-banner">
-      <img src="./images/main_event_01.png" alt="이벤트 배너">
-      <button class="event-btn">바로가기</button>
-    </div>
-  </section>
+  <div class="event-banner">
+    <img src="./images/main_event_01.png" alt="이벤트 배너">
+    <button class="event-btn">바로가기</button>
+  </div>
+</section>
 
-  <section class="event">
-    <div class="event-info">
-      <h3>나만의 레시피 공유 챌린지</h3>
-      <p>
-        1. 나만의 레시피 또는 나의 루틴 업로드 시<br>
-        → 참여자 전원 10% 할인 코드 제공<br>
-        2. 좋아요 TOP 10 레시피<br>
-        → 시즌 한정 캡슐 세트 증정
-      </p>
-    </div>
+<section class="event">
+  <div class="event-info">
+    <h3>나만의 레시피 공유 챌린지</h3>
+    <p>
+      1. 나만의 레시피 또는 나의 루틴 업로드 시<br>
+      → 참여자 전원 10% 할인 코드 제공<br>
+      2. 좋아요 TOP 10 레시피<br>
+      → 시즌 한정 캡슐 세트 증정
+    </p>
+  </div>
 
-    <div class="event-banner">
-      <img src="./images/main_event_02.png" alt="이벤트 배너">
-      <button class="event-btn">바로가기</button>
-    </div>
-  </section>
+  <div class="event-banner">
+    <img src="./images/main_event_02.png" alt="이벤트 배너">
+    <button class="event-btn">바로가기</button>
+  </div>
+</section>
 
-  <section class="event">
-    <div class="event-info">
-      <h3>머신 구매 혜택: '스마트 페이백'</h3>
-      <p>
-        1. 머신 + 캡슐 10 슬리브 구매 시 → 30% 할인<br>
-        2. 머신 + 캡슐 15 슬리브 구매 시 → 50% 할인<br>
-        3. 머신 + 구독 가입 동시 진행 시 → 추가 5% 할인<br>
-      </p>
-    </div>
+<section class="event">
+  <div class="event-info">
+    <h3>머신 구매 혜택: '스마트 페이백'</h3>
+    <p>
+      1. 머신 + 캡슐 10 슬리브 구매 시 → 30% 할인<br>
+      2. 머신 + 캡슐 15 슬리브 구매 시 → 50% 할인<br>
+      3. 머신 + 구독 가입 동시 진행 시 → 추가 5% 할인<br>
+    </p>
+  </div>
 
-    <div class="event-banner">
-      <img src="./images/main_event_03.png" alt="이벤트 배너">
-      <button class="event-btn">바로가기</button>
-    </div>
-  </section>
+  <div class="event-banner">
+    <img src="./images/main_event_03.png" alt="이벤트 배너">
+    <button class="event-btn">바로가기</button>
+  </div>
+</section>
+
 
 </main>
 
@@ -327,6 +348,8 @@
   </button>
 </nav>
 
+
 <script src="./js/home.js"></script>
 </body>
 </html>
+ -->
