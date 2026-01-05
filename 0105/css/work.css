@@ -119,11 +119,13 @@ body {
 .plan-cards {
   display: flex;
   gap: 12px;
+  transform: scale(0.95);
+  transform-origin: center top;
 }
 
 .plan {
-  width: 110px;
-  padding: 16px 12px;
+  width: 96px;
+  padding: 12px 10px;
   border: 2px solid #fff;
   background: #efe8de;
   border-radius: 14px;
@@ -208,3 +210,14 @@ body {
 
   z-index: 100;
 }
+
+@media (max-width: 360px) {
+  .plan {
+    width: 90px;
+  }
+
+  .plan-cards {
+    transform: scale(0.92);
+  }
+}
+
