@@ -121,6 +121,8 @@ html, body {
 }
 
 .hero-dots .dot.active {
+  width: 20px;
+  border-radius: 10px;
   background: #fff;
 }
 
