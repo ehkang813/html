@@ -609,13 +609,13 @@ html, body {
 
 /* Daily Routine 카드 */
 .routine-card {
-  width: 300px;
+  width: 280px;
   flex-shrink: 0;
 }
 
 /* Frequently / Recommended 상품 카드 */
 .product-card.horizontal {
-  width: 300px;
+  width: 280px;
   flex-shrink: 0;
 }
 
