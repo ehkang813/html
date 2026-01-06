@@ -349,38 +349,3 @@ body {
   color: #1c1c1c;
   font-weight: 700;
 }
-
-/* =========================
-   Primary Order Button
-========================= */
-
-.order-btn {
-  width: 100%;
-  height: 56px;
-
-  border-radius: 14px;
-  border: none;
-
-  background: #c9a88a; /* 브랜드 베이지 */
-  color: #ffffff;
-
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 24px;
-}
-
-/* 눌림 상태 */
-.order-btn:active {
-  background: #b99675;
-}
-
-/* 비활성 상태 (선택) */
-.order-btn:disabled {
-  background: #e2dbd2;
-  color: #ffffff;
-}

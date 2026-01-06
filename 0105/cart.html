@@ -149,8 +149,14 @@
 </nav>
 
 <script>
-  document.querySelector('.back-btn')
-    .addEventListener('click', () => history.back());
+  document.addEventListener('DOMContentLoaded', function () {
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+      backBtn.addEventListener('click', function () {
+        history.back();
+      });
+    }
+  });
 </script>
 
 </body>
