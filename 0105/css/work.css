@@ -1,5 +1,7 @@
+@charset "utf-8";
+
 /* =========================
-   Reset
+   Reset (시험에서 필수)
 ========================= */
 * {
   margin: 0;
@@ -7,15 +9,38 @@
   box-sizing: border-box;
 }
 
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Base Style (시험에서 권장)
+========================= */
+body {
+  font-family: "Pretendard", "Noto Sans KR",
+               -apple-system, BlinkMacSystemFont,
+               "Segoe UI", sans-serif;
+  background: #f6f3ee;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+}
+
+
 html, body {
   height: 100%;
 }
 
-body {
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
-  background: #f6f3ee;
-  letter-spacing: -0.02em;
-}
 
 /* =========================
    Walkthrough Layout

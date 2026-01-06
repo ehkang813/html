@@ -1,21 +1,44 @@
+@charset "utf-8";
+
 /* =========================
-   Reset & Base
+   Reset (시험에서 필수)
 ========================= */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Base Style (시험에서 권장)
+========================= */
+body {
+  font-family: "Pretendard", "Noto Sans KR",
+               -apple-system, BlinkMacSystemFont,
+               "Segoe UI", sans-serif;
+  color: #1c1c1c;
+  background: #fff;
+  min-height: 100dvh;
+  overflow-x: hidden;
 }
 
 html, body {
   height: 100%;
-}
-
-body {
-  margin: 0;
-  background: #fff;
-  font-family: "Noto Sans KR", "Pretendard", sans-serif;
-  color: #1c1c1c;
-  min-height: 100dvh;
-  overflow-x: hidden;
 }
 
 /* =========================
@@ -37,7 +60,7 @@ body {
 }
 
 .header-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   margin: 0;
 }
@@ -83,7 +106,7 @@ body {
 }
 .hero-title {
   position: absolute;
-  top: 0;        /* 상단 여백 */
+  top: 20px;        /* 상단 여백 */
   left: 50%;
   transform: translateX(-50%);
 

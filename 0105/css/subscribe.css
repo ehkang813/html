@@ -1,3 +1,109 @@
+@charset "utf-8";
+
+/* =========================
+   Reset (시험에서 필수)
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Base Style (시험에서 권장)
+========================= */
+body {
+  font-family: "Pretendard", "Noto Sans KR",
+               -apple-system, BlinkMacSystemFont,
+               "Segoe UI", sans-serif;
+  color: #222;
+  background: #fff;
+}
+
+
+
+
+
+/* =========================
+   Header (Left Aligned)
+========================= */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 60px;
+  padding: 0 16px;
+  background: #F7F4EF;
+  border-bottom: 1px solid #e5e5e5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 100;
+}
+
+/* 왼쪽 그룹: 아이콘 + 타이틀 */
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* 👉 여기서 간격 조절 */
+}
+
+/* 뒤로가기 */
+.back-btn {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.back-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* 타이틀 */
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+
+  white-space: nowrap;
+}
+
+/* 프로필 */
+.profile-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+
+
 /* =========================
    Subscribe Page
 ========================= */
@@ -12,58 +118,78 @@
   margin-bottom: 14px;
 }
 
-/* 구독 플랜 */
-.plan-wrap {
-  display: flex;
-  gap: 12px;
-}
+/* =========================
+   Subscription Cards
+   (Walkthrough Plan Style)
+========================= */
 
-.plan-card {
-  flex: 1;
-  background: #EDE4D8;
-  border-radius: 16px;
-  padding: 20px 12px;
-  text-align: center;
-  box-shadow: 0 0 6px rgba(0,0,0,0.2);
-}
-
-.plan-card h3 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.plan-card .badge {
-  display: inline-block;
-  background: #D8C59A;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.plan-card p {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #555;
-}
-
-/* 구독 장점 */
+/* 카드 래퍼 */
+.plan-wrap,
 .benefit-wrap {
   display: flex;
   gap: 12px;
 }
 
+/* 공통 카드 스타일 */
+.plan-card,
 .benefit-card {
   flex: 1;
-  background: #EDE4D8;
-  border-radius: 16px;
-  padding: 18px 12px;
+  padding: 16px 8px;
+  border-radius: 14px;
+
+  background: #efe8de;
+  border: 2px solid #fff;
+
   text-align: center;
-  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+
+  box-shadow:
+    0 0px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
+/* 강조 카드 (필요 시 class="plan-card active") */
+.plan-card.active {
+  background: #e3d2bd;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* 타이틀 */
+.plan-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  min-height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 뱃지 */
+.plan-card .badge {
+  display: inline-block;
+  padding: 4px 8px;
+  margin-bottom: 12px;
+
+  font-size: 11px;
+  border-radius: 10px;
+
+  background: #c7a88a;
+  color: #fff;
+
+  
+}
+
+/* 설명 텍스트 */
+.plan-card p,
+.benefit-card p {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #6f6259;
+}
+
+/* =========================
+   Benefit Card Detail
+========================= */
 .benefit-card img {
   width: 42px;
   margin-bottom: 10px;
@@ -71,26 +197,35 @@
 
 .benefit-card strong {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   margin-bottom: 6px;
 }
 
-.benefit-card p {
-  font-size: 13px;
-  line-height: 1.4;
-  color: #555;
+/* 모바일 대응 */
+@media (max-width: 360px) {
+  .plan-wrap,
+  .benefit-wrap {
+    gap: 10px;
+  }
+
+  .plan-card,
+  .benefit-card {
+    padding: 14px 6px;
+  }
 }
+
 
 /* 이벤트 배너 */
 .sub-event {
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
 
 .sub-event img {
   width: 100%;
+  height: 100px;
   display: block;
   object-fit: cover;
 }

@@ -1,16 +1,42 @@
-/* Reset */
+@charset "utf-8";
+
+/* =========================
+   Reset (시험에서 필수)
+========================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Base Style (시험에서 권장)
+========================= */
+
+
+
 /* Body */
 body {
   width: 100%;
   height: 100vh;
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
-
+  font-family: "Pretendard", "Noto Sans KR",
+               -apple-system, BlinkMacSystemFont,
+               "Segoe UI", sans-serif;
   opacity: 1;
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }

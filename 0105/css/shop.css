@@ -1,0 +1,321 @@
+@charset "utf-8";
+
+/* =========================
+   Reset (시험에서 필수)
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Base Style (시험에서 권장)
+========================= */
+body {
+  font-family: "Pretendard", "Noto Sans KR",
+               -apple-system, BlinkMacSystemFont,
+               "Segoe UI", sans-serif;
+  color: #222;
+  background: #fff;
+}
+
+
+
+/* =========================
+   Header (Left Aligned)
+========================= */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 60px;
+  padding: 0 16px;
+  background: #F7F4EF;
+  border-bottom: 1px solid #e5e5e5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 100;
+}
+
+/* 왼쪽 그룹: 아이콘 + 타이틀 */
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* 👉 여기서 간격 조절 */
+}
+
+/* 뒤로가기 */
+.back-btn {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.back-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* 타이틀 */
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+
+  white-space: nowrap;
+}
+
+/* 프로필 */
+.profile-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+
+
+/* =========================
+   Subscribe Page
+========================= */
+
+.sub-section {
+  margin-bottom: 28px;
+}
+
+.sub-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+
+
+
+
+:root {
+  --bg-main: #f7f4ef;
+  --card-bg: #f3eee7;
+
+  --text-main: #2c2c2c;
+  --text-sub: #8a8178;
+
+  --brand-beige: #c9a88a;
+  --line-soft: #e5ded6;
+}
+
+/* Base */
+body {
+  margin: 0;
+  background: var(--bg-main);
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  color: var(--text-main);
+}
+
+
+/* Layout */
+.container {
+  padding: 76px 20px 120px;
+}
+
+/* Category */
+.category-bar {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.category {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid var(--line-soft);
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.category.active {
+  background: var(--brand-beige);
+  color: #fff;
+  border-color: var(--brand-beige);
+}
+
+/* Product List */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+/* Product Card */
+.product-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 14px;
+  position: relative;
+}
+
+/* Badge */
+.badge-wrap {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.badge.dark {
+  background: #2c2c2c;
+  color: #fff;
+}
+
+.badge.light {
+  background: #f0c14b;
+  color: #2c2c2c;
+}
+
+/* Image */
+.product-img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* Meta */
+.meta {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
+/* Text */
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+}
+
+/* Bottom */
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-size: 14px;
+}
+
+.add-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--brand-beige);
+  color: #fff;
+  font-size: 20px;
+}
+
+/* =========================
+   Bottom Tab Bar
+========================= */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 72px;
+  background: #F7F4EF;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-top: 1px solid #e5e5e5;
+  z-index: 100;
+}
+
+.tab-bar button {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.tab-bar .icon img {
+  width: 22px;
+  height: 22px;
+}
+
+.tab-bar .label {
+  font-size: 12px;
+  color: #777;
+}
+
+.tab-bar button.active .label {
+  color: #1c1c1c;
+  font-weight: 700;
+}
+
+
+/* =========================
+   Category Bar Scroll Hide
+========================= */
+
+.category-bar {
+  overflow-x: auto;
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.category-bar::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
