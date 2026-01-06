@@ -84,15 +84,30 @@ html, body {
 .hero {
   position: relative;
   height: 250px;
-  border-radius: 14px;
-  overflow: hidden;
   margin-bottom: 24px;
+
+  border-radius: 14px;   /* ⭕ 여기로 이동 */
+  overflow: hidden;      /* ⭕ 여기로 이동 */
 }
 
 .hero-track {
-  display: flex;
   height: 100%;
+  display: flex;
 }
+
+.hero-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+
+  z-index: 5;
+}
+
 
 .hero-slide {
   min-width: 100%;
@@ -145,6 +160,7 @@ html, body {
   transform: translateX(-50%);
   display: flex;
   gap: 6px;
+  z-index: 5;
 }
 
 .hero-dots .dot {
