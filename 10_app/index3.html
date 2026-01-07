@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>부산 공공주차장 지도</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>부산 공공주차장 지도</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- 카카오맵 -->
-  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
+<!-- 카카오맵 -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
 
-  <style>
+<style>
 * {
   margin: 0;
   padding: 0;
@@ -32,6 +32,7 @@ body {
   flex: 6;
 }
 
+/* 리스트 영역 */
 .list-wrap {
   flex: 4;
   background: #fff;
@@ -41,13 +42,66 @@ body {
   border-top-right-radius: 16px;
 }
 
+/* 주차장 카드 */
+.parking-card {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f9f9f9;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.parking-card h3 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.parking-card p {
+  font-size: 13px;
+  color: #666;
+}
+
+/* 팝업 */
+.popup {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -100%;
+  background: #fff;
+  padding: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.popup.active {
+  bottom: 0;
+}
+
+.popup h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.popup p {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.close-btn {
+  margin-top: 12px;
+  text-align: center;
+  color: #007aff;
+  font-weight: 600;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
-
-  
 <div id="map"></div>
-
 <div class="list-wrap" id="parkingList"></div>
 
 <div class="popup" id="popup">
@@ -63,24 +117,18 @@ body {
 const SERVICE_KEY = "64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
 
 let map;
-let markers = [];
 
 navigator.geolocation.getCurrentPosition(pos => {
-  const lat = pos.coords.latitude;
-  const lng = pos.coords.longitude;
-  initMap(lat, lng);
-  loadParkingData(lat, lng);
+  initMap(pos.coords.latitude, pos.coords.longitude);
+  loadParkingData();
 });
 
 function initMap(lat, lng) {
-  const container = document.getElementById('map');
-  const options = {
+  map = new kakao.maps.Map(document.getElementById("map"), {
     center: new kakao.maps.LatLng(lat, lng),
     level: 5
-  };
-  map = new kakao.maps.Map(container, options);
+  });
 
-  // 내 위치 마커
   new kakao.maps.Marker({
     map,
     position: new kakao.maps.LatLng(lat, lng)
@@ -88,48 +136,55 @@ function initMap(lat, lng) {
 }
 
 function loadParkingData() {
-  const url = `https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getBusanPblcPrkngInfo?serviceKey=${SERVICE_KEY}&numOfRows=50&pageNo=1`;
+  const url =
+    `https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getBusanPblcPrkngInfo` +
+    `?serviceKey=${SERVICE_KEY}&numOfRows=50&pageNo=1`;
 
   fetch(url)
     .then(res => res.text())
     .then(xml => {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xml, "text/xml");
+      const xmlDoc = new DOMParser().parseFromString(xml, "text/xml");
       const items = xmlDoc.getElementsByTagName("item");
       const listEl = document.getElementById("parkingList");
 
       for (let item of items) {
-        const name = item.getElementsByTagName("pkNm")[0]?.textContent;
-        const lat = item.getElementsByTagName("lat")[0]?.textContent;
-        const lng = item.getElementsByTagName("lng")[0]?.textContent;
+        const name = item.getElementsByTagName("pkNm")[0]?.textContent || "이름 없음";
+        const lat = Number(item.getElementsByTagName("yCdnt")[0]?.textContent);
+        const lng = Number(item.getElementsByTagName("xCdnt")[0]?.textContent);
 
-        if (!lat || !lng) continue;
-
-        // 마커
-        const marker = new kakao.maps.Marker({
-          map,
-          position: new kakao.maps.LatLng(lat, lng)
-        });
-
-        marker.setMap(map);
-
-        // 리스트
+        // 리스트는 무조건 표시
         const card = document.createElement("div");
         card.className = "parking-card";
         card.innerHTML = `<h3>${name}</h3><p>공공주차장</p>`;
         card.onclick = () => openPopup(item);
-
         listEl.appendChild(card);
+
+        // 좌표 있을 때만 마커 생성
+        if (!lat || !lng) continue;
+
+        new kakao.maps.Marker({
+          map,
+          position: new kakao.maps.LatLng(lat, lng)
+        });
       }
     });
 }
 
 function openPopup(item) {
-  document.getElementById("pName").innerText = item.getElementsByTagName("pkNm")[0]?.textContent || "";
-  document.getElementById("pAddr").innerText = "주소: " + (item.getElementsByTagName("addr")[0]?.textContent || "정보 없음");
-  document.getElementById("pTel").innerText = "전화: " + (item.getElementsByTagName("tel")[0]?.textContent || "정보 없음");
-  document.getElementById("pTime").innerText = "운영시간: " + (item.getElementsByTagName("operDay")[0]?.textContent || "정보 없음");
-  document.getElementById("pCnt").innerText = "주차대수: " + (item.getElementsByTagName("pkCnt")[0]?.textContent || "정보 없음");
+  document.getElementById("pName").innerText =
+    item.getElementsByTagName("pkNm")[0]?.textContent || "";
+
+  document.getElementById("pAddr").innerText =
+    "주소: " + (item.getElementsByTagName("addr")[0]?.textContent || "정보 없음");
+
+  document.getElementById("pTel").innerText =
+    "전화: " + (item.getElementsByTagName("tel")[0]?.textContent || "정보 없음");
+
+  document.getElementById("pTime").innerText =
+    "운영시간: " + (item.getElementsByTagName("operDay")[0]?.textContent || "정보 없음");
+
+  document.getElementById("pCnt").innerText =
+    "주차대수: " + (item.getElementsByTagName("pkCnt")[0]?.textContent || "정보 없음");
 
   document.getElementById("popup").classList.add("active");
 }
