@@ -133,12 +133,24 @@ header h1 {
 let map, userLat, userLng;
 let markers = [];
 
+/* ======================
+   더미 주정차 단속 데이터
+   (현재 위치 기준 근처)
+====================== */
+const dummyNoParkingData = [
+  { name: "장기동 주정차 단속구역", latOffset: 0.0012, lngOffset: 0.0008 },
+  { name: "장기초등학교 앞", latOffset: -0.0009, lngOffset: 0.0011 },
+  { name: "김포시청 인근 단속구역", latOffset: 0.0015, lngOffset: -0.0012 },
+  { name: "장기공원 주변", latOffset: -0.0014, lngOffset: -0.0006 },
+  { name: "장기역 인근 단속구역", latOffset: 0.0007, lngOffset: -0.0015 }
+];
+
 /* 현재 위치 */
 navigator.geolocation.getCurrentPosition(pos => {
   userLat = pos.coords.latitude;
   userLng = pos.coords.longitude;
   initMap();
-  loadData();
+  renderDummyData();
 });
 
 /* 지도 초기화 */
@@ -148,13 +160,14 @@ function initMap() {
     level: 4
   });
 
+  // 내 위치 마커
   new kakao.maps.Marker({
     map,
     position: new kakao.maps.LatLng(userLat, userLng)
   });
 }
 
-/* 내 위치 이동 */
+/* 내 위치로 이동 */
 function moveToMyLocation() {
   map.setCenter(new kakao.maps.LatLng(userLat, userLng));
 }
@@ -172,50 +185,41 @@ function searchAddress() {
   });
 }
 
-/* 공공데이터 호출 */
-function loadData() {
-  fetch(`https://apis.data.go.kr/4090000/NoParkingAreasService/getNoParkingAreaList
-?serviceKey=64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d
-&pageNo=1&numOfRows=50&type=json`)
-    .then(res => res.json())
-    .then(data => render(data.response.body.items.item));
-}
-
-/* 리스트 + 마커 렌더링 */
-function render(items) {
+/* 더미 데이터 렌더링 */
+function renderDummyData() {
   const list = document.getElementById("list");
   list.innerHTML = "";
   markers.forEach(m => m.setMap(null));
   markers = [];
 
-  items
-    .map(i => {
-      const lat = parseFloat(i.latitude);
-      const lng = parseFloat(i.longitude);
-      if (isNaN(lat) || isNaN(lng)) return null;
+  const dataWithDistance = dummyNoParkingData.map(d => {
+    const lat = userLat + d.latOffset;
+    const lng = userLng + d.lngOffset;
+    return {
+      name: d.name,
+      lat,
+      lng,
+      distance: calcDistance(userLat, userLng, lat, lng)
+    };
+  });
 
-      return {
-        ...i,
-        lat,
-        lng,
-        distance: calcDistance(userLat, userLng, lat, lng)
-      };
-    })
-    .filter(Boolean)
+  dataWithDistance
     .sort((a, b) => a.distance - b.distance)
-    .slice(0, 5)
-    .forEach(i => {
+    .forEach(d => {
+      // 지도 마커
       const marker = new kakao.maps.Marker({
         map,
-        position: new kakao.maps.LatLng(i.lat, i.lng)
+        position: new kakao.maps.LatLng(d.lat, d.lng)
       });
       markers.push(marker);
 
+      // 리스트
       list.innerHTML += `
-        <div class="item">
-          <strong>${i.roadNm || i.address || "주정차 단속구역"}</strong>
-          <span>${Math.round(i.distance)}m</span>
-        </div>`;
+        <div class="item" onclick="map.setCenter(new kakao.maps.LatLng(${d.lat}, ${d.lng}))">
+          <strong>${d.name}</strong>
+          <span>${Math.round(d.distance)}m</span>
+        </div>
+      `;
     });
 }
 
@@ -232,6 +236,7 @@ function calcDistance(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 </script>
+
 
 </body>
 </html>
