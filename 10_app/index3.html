@@ -5,54 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>여기주차</title>
 
-<!-- 카카오맵 -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 
-/* 헤더 */
 .header{
-  position:fixed;top:0;left:0;width:100%;height:56px;
-  background:#fff;display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;font-weight:700;z-index:10;
+  height:56px;display:flex;align-items:center;
+  padding:0 16px;font-weight:700;
   box-shadow:0 2px 6px rgba(0,0,0,.1);
 }
 
-/* 지도 */
-#map{
-  position:fixed;top:56px;left:0;width:100%;
-  height:calc(100vh - 56px - 40vh);
+.search{
+  padding:12px 16px;border-bottom:1px solid #eee;
 }
-
-/* 검색 */
-.search-bar{
-  position:fixed;top:56px;left:0;width:100%;
-  background:#fff;padding:10px 16px;z-index:5;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-.search-bar input{
+.search input{
   width:100%;height:40px;border:1px solid #ddd;
   border-radius:8px;padding:0 12px;
 }
 
-/* 목록 */
+#map{width:100%;height:45vh}
+
 .list{
-  position:fixed;bottom:0;left:0;width:100%;height:40vh;
-  background:#fff;border-radius:16px 16px 0 0;
-  padding:16px;overflow-y:auto;
+  height:calc(55vh - 56px);
+  overflow-y:auto;padding:16px;
 }
 .item{
-  padding:12px 0;border-bottom:1px solid #eee;cursor:pointer;
+  padding:12px 0;border-bottom:1px solid #eee;
+  cursor:pointer;
 }
 .item h3{font-size:15px}
 .item p{font-size:13px;color:#666}
 
-/* 팝업 */
 .popup{
   position:fixed;inset:0;background:rgba(0,0,0,.4);
-  display:none;align-items:flex-end;z-index:20;
+  display:none;align-items:flex-end;
 }
 .popup.show{display:flex}
 .popup-box{
@@ -69,12 +57,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 <body>
 
 <div class="header">여기주차</div>
-<div id="map"></div>
 
-<div class="search-bar">
-  <input id="search" placeholder="부산 지역 검색 (예: 해운대)" />
+<div class="search">
+  <input id="search" placeholder="부산 지역 검색 (예: 해운대)">
 </div>
 
+<div id="map"></div>
 <div class="list" id="list"></div>
 
 <div class="popup" id="popup">
@@ -87,53 +75,82 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 </div>
 
 <script>
-const BUSAN_KEY =
-"64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
-
-const API =
-`https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInfo?serviceKey=${BUSAN_KEY}&pageNo=1&numOfRows=100&resultType=json`;
-
+/* 지도 */
 const map = new kakao.maps.Map(document.getElementById("map"), {
   center: new kakao.maps.LatLng(35.1796,129.0756),
   level: 6
 });
+
+const ps = new kakao.maps.services.Places();
 const geocoder = new kakao.maps.services.Geocoder();
 
-fetch(API)
-  .then(r=>r.json())
-  .then(data=>{
-    const rows = data.getPblcPrkngInfo.body.items.item;
-    const list = document.getElementById("list");
+/* 현재 위치 */
+navigator.geolocation.getCurrentPosition(pos=>{
+  const myPos = new kakao.maps.LatLng(
+    pos.coords.latitude,
+    pos.coords.longitude
+  );
+  map.panTo(myPos);
+  new kakao.maps.Marker({
+    map,
+    position: myPos,
+    image: new kakao.maps.MarkerImage(
+      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+      new kakao.maps.Size(24,35)
+    )
+  });
+});
 
-    rows.forEach(p=>{
-      const item = document.createElement("div");
-      item.className="item";
-      item.innerHTML = `
-        <h3>${p.prkplceNm}</h3>
-        <p>${p.lnmadr}</p>
-      `;
-      list.appendChild(item);
+/* 부산 공공주차장 API */
+const BUSAN_KEY =
+"64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
 
-      geocoder.addressSearch(p.lnmadr,(r,s)=>{
+fetch(
+  `https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInfo?serviceKey=${BUSAN_KEY}&pageNo=1&numOfRows=50&resultType=json`
+)
+.then(r=>r.json())
+.then(data=>{
+  const items =
+    data.getPblcPrkngInfo?.body?.items?.item || [];
+
+  const list = document.getElementById("list");
+
+  items.forEach(p=>{
+    if(!p.prkplceNm) return;
+
+    /* 목록 */
+    const item = document.createElement("div");
+    item.className="item";
+    item.innerHTML=`
+      <h3>${p.prkplceNm}</h3>
+      <p>${p.lnmadr || ""}</p>
+    `;
+    list.appendChild(item);
+
+    /* 지도 좌표는 카카오 장소검색으로 */
+    ps.keywordSearch(
+      p.prkplceNm + " 공영주차장",
+      (r,s)=>{
         if(s!==kakao.maps.services.Status.OK) return;
+
         const pos = new kakao.maps.LatLng(r[0].y,r[0].x);
         new kakao.maps.Marker({map,position:pos});
-      });
 
-      item.onclick=()=>{
-        pName.textContent=p.prkplceNm;
-        pAddr.textContent=p.lnmadr;
-        pTel.textContent=p.phoneNumber||"정보없음";
-        pTotal.textContent=p.prkcmprt||"정보없음";
-        popup.classList.add("show");
-      };
-    });
+        item.onclick=()=>{
+          pName.textContent=p.prkplceNm;
+          pAddr.textContent=p.lnmadr||"정보없음";
+          pTel.textContent=p.phoneNumber||"정보없음";
+          pTotal.textContent=p.prkcmprt||"정보없음";
+          popup.classList.add("show");
+          map.panTo(pos);
+        };
+      }
+    );
   });
-
-popup.onclick=()=>popup.classList.remove("show");
+});
 
 /* 검색 */
-search.oninput=()=>{
+search.onchange=()=>{
   const q=search.value;
   if(!q) return;
   geocoder.addressSearch(q,(r,s)=>{
@@ -142,6 +159,8 @@ search.oninput=()=>{
     }
   });
 };
+
+popup.onclick=()=>popup.classList.remove("show");
 </script>
 
 </body>
