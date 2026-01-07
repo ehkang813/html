@@ -1,273 +1,142 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>여기주차</title>
+  <meta charset="UTF-8" />
+  <title>부산 공공주차장 지도</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Kakao Map -->
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
+  <!-- 카카오맵 -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;background:#fff}
-
-/* Header */
-.header{
-  height:56px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 16px;
-  font-weight:700;
-  box-shadow:0 2px 6px rgba(0,0,0,.1);
-}
-.header button{
-  background:none;
-  border:none;
-  font-size:20px;
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
 }
 
-/* Search */
-.search{
-  display:flex;
-  gap:8px;
-  padding:12px 16px;
-  border-bottom:1px solid #eee;
-}
-.search input{
-  flex:1;
-  height:40px;
-  border:1px solid #ddd;
-  border-radius:8px;
-  padding:0 12px;
-}
-.search button{
-  width:48px;
-  border:none;
-  border-radius:8px;
-  background:#ddd
-  ;
-  color:#fff;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-/* Map */
-#map{width:100%;height:45vh}
+body {
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
 
-/* List */
-.list{
-  height:calc(55vh - 56px);
-  overflow-y:auto;
-  padding:16px;
+#map {
+  flex: 6;
 }
-.item{
-  padding:14px 0;
-  border-bottom:1px solid #eee;
-  cursor:pointer;
-}
-.item h3{font-size:15px;margin-bottom:4px}
-.item p{font-size:13px;color:#666}
 
-/* Popup */
-.popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  display:none;
-  align-items:flex-end;
+.list-wrap {
+  flex: 4;
+  background: #fff;
+  overflow-y: auto;
+  padding: 16px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
-.popup.show{display:flex}
-.popup-box{
-  width:100%;
-  background:#fff;
-  border-radius:16px 16px 0 0;
-  padding:20px;
-}
-.popup-box h2{margin-bottom:12px}
-.popup-box p{
-  font-size:14px;
-  margin-bottom:8px;
-  display:flex;
-  justify-content:space-between;
-}
-.popup-box button{
-  width:100%;
-  height:44px;
-  border:none;
-  border-radius:10px;
-  background:#ddd;
-  color:#fff;
-  margin-top:10px;
-}
-</style>
+
 </head>
-
 <body>
 
-<div class="header">
-  여기주차
-  <button id="myLocBtn">📍</button>
-</div>
 
-<div class="search">
-  <input id="searchInput" placeholder="지역 검색 (예: 해운대)">
-  <button id="searchBtn">🔍</button>
-</div>
-
+  
 <div id="map"></div>
-<div class="list" id="list"></div>
 
-<!-- Popup -->
+<div class="list-wrap" id="parkingList"></div>
+
 <div class="popup" id="popup">
-  <div class="popup-box">
-    <h2 id="pName"></h2>
-    <p><strong>주소</strong><span id="pAddr"></span></p>
-    <p><strong>전화</strong><span id="pTel"></span></p>
-    <p><strong>주차면</strong><span id="pTotal"></span></p>
-    <p><strong>거리</strong><span id="pDist"></span></p>
-    <button id="navBtn">길안내</button>
-  </div>
+  <h2 id="pName"></h2>
+  <p id="pAddr"></p>
+  <p id="pTel"></p>
+  <p id="pTime"></p>
+  <p id="pCnt"></p>
+  <div class="close-btn" onclick="closePopup()">닫기</div>
 </div>
 
 <script>
-/* ===== MAP INIT ===== */
-const map = new kakao.maps.Map(document.getElementById("map"), {
-  center: new kakao.maps.LatLng(35.1796,129.0756),
-  level: 6
+const SERVICE_KEY = "64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
+
+let map;
+let markers = [];
+
+navigator.geolocation.getCurrentPosition(pos => {
+  const lat = pos.coords.latitude;
+  const lng = pos.coords.longitude;
+  initMap(lat, lng);
+  loadParkingData(lat, lng);
 });
-const geocoder = new kakao.maps.services.Geocoder();
 
-/* ===== STATE ===== */
-let myPos = null;
-const parks = [];
-const list = document.getElementById("list");
+function initMap(lat, lng) {
+  const container = document.getElementById('map');
+  const options = {
+    center: new kakao.maps.LatLng(lat, lng),
+    level: 5
+  };
+  map = new kakao.maps.Map(container, options);
 
-/* ===== UTIL ===== */
-function calcDistance(lat1,lng1,lat2,lng2){
-  const R=6371e3;
-  const toRad=x=>x*Math.PI/180;
-  const dLat=toRad(lat2-lat1);
-  const dLng=toRad(lng2-lng1);
-  const a=Math.sin(dLat/2)**2 +
-          Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*
-          Math.sin(dLng/2)**2;
-  return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
-}
-
-/* ===== LIST RENDER ===== */
-function renderList(){
-  list.innerHTML="";
-  const data = myPos
-    ? [...parks].sort((a,b)=>a.dist-b.dist)
-    : parks;
-
-  data.forEach(p=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.innerHTML=`
-      <h3>${p.name}</h3>
-      <p>${p.dist ? p.dist+"m" : "거리 정보 없음"} · ${p.addr}</p>
-    `;
-    div.onclick=()=>{
-      pName.textContent=p.name;
-      pAddr.textContent=p.addr;
-      pTel.textContent=p.tel;
-      pTotal.textContent=p.total;
-      pDist.textContent=p.dist ? p.dist+"m" : "-";
-      navBtn.onclick=()=>{
-        location.href=`https://map.kakao.com/link/to/${p.name},${p.lat},${p.lng}`;
-      };
-      popup.classList.add("show");
-      map.panTo(new kakao.maps.LatLng(p.lat,p.lng));
-    };
-    list.appendChild(div);
+  // 내 위치 마커
+  new kakao.maps.Marker({
+    map,
+    position: new kakao.maps.LatLng(lat, lng)
   });
 }
 
-/* ===== MY LOCATION ===== */
-myLocBtn.onclick=()=>{
-  navigator.geolocation.getCurrentPosition(pos=>{
-    myPos={
-      lat:pos.coords.latitude,
-      lng:pos.coords.longitude
-    };
-    const loc=new kakao.maps.LatLng(myPos.lat,myPos.lng);
-    map.panTo(loc);
+function loadParkingData() {
+  const url = `https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getBusanPblcPrkngInfo?serviceKey=${SERVICE_KEY}&numOfRows=50&pageNo=1`;
 
-    new kakao.maps.Marker({
-      map,
-      position:loc,
-      image:new kakao.maps.MarkerImage(
-        "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-        new kakao.maps.Size(24,35)
-      )
+  fetch(url)
+    .then(res => res.text())
+    .then(xml => {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xml, "text/xml");
+      const items = xmlDoc.getElementsByTagName("item");
+      const listEl = document.getElementById("parkingList");
+
+      for (let item of items) {
+        const name = item.getElementsByTagName("pkNm")[0]?.textContent;
+        const lat = item.getElementsByTagName("lat")[0]?.textContent;
+        const lng = item.getElementsByTagName("lng")[0]?.textContent;
+
+        if (!lat || !lng) continue;
+
+        // 마커
+        const marker = new kakao.maps.Marker({
+          map,
+          position: new kakao.maps.LatLng(lat, lng)
+        });
+
+        marker.setMap(map);
+
+        // 리스트
+        const card = document.createElement("div");
+        card.className = "parking-card";
+        card.innerHTML = `<h3>${name}</h3><p>공공주차장</p>`;
+        card.onclick = () => openPopup(item);
+
+        listEl.appendChild(card);
+      }
     });
+}
 
-    parks.forEach(p=>{
-      p.dist=calcDistance(myPos.lat,myPos.lng,p.lat,p.lng);
-    });
+function openPopup(item) {
+  document.getElementById("pName").innerText = item.getElementsByTagName("pkNm")[0]?.textContent || "";
+  document.getElementById("pAddr").innerText = "주소: " + (item.getElementsByTagName("addr")[0]?.textContent || "정보 없음");
+  document.getElementById("pTel").innerText = "전화: " + (item.getElementsByTagName("tel")[0]?.textContent || "정보 없음");
+  document.getElementById("pTime").innerText = "운영시간: " + (item.getElementsByTagName("operDay")[0]?.textContent || "정보 없음");
+  document.getElementById("pCnt").innerText = "주차대수: " + (item.getElementsByTagName("pkCnt")[0]?.textContent || "정보 없음");
 
-    renderList();
-  });
-};
+  document.getElementById("popup").classList.add("active");
+}
 
-/* ===== BUSAN PARKING DATA ===== */
-const BUSAN_KEY="64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
-
-fetch(`https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInfo?serviceKey=${BUSAN_KEY}&pageNo=1&numOfRows=30&resultType=json`)
-.then(r=>r.json())
-.then(data=>{
-  const items=data.getPblcPrkngInfo?.body?.items?.item||[];
-
-  items.forEach(p=>{
-    if(!p.latitude||!p.longitude) return;
-
-if(!p.lat || !p.lot) return;
-
-lat: Number(p.lat),
-lng: Number(p.lot),
-
-
-const park={
-  name:p.prkplceNm,
-  addr:p.lnmadr || "주소 없음",
-  tel:p.phoneNumber || "정보 없음",
-  total:p.prkcmprt || "정보 없음",
-  lat:Number(p.lat),
-  lng:Number(p.lng),
-  dist:null
-};
-
-
-    parks.push(park);
-
-    new kakao.maps.Marker({
-      map,
-      position:new kakao.maps.LatLng(park.lat,park.lng)
-    });
-  });
-
-  renderList();
-});
-
-/* ===== SEARCH ===== */
-searchBtn.onclick=()=>{
-  const q=searchInput.value;
-  if(!q) return;
-  geocoder.addressSearch(q,(r,s)=>{
-    if(s===kakao.maps.services.Status.OK){
-      map.panTo(new kakao.maps.LatLng(r[0].y,r[0].x));
-    }
-  });
-};
-
-/* ===== POPUP CLOSE ===== */
-popup.addEventListener("click", e=>{
-  if(e.target === popup){
-    popup.classList.remove("show");
-  }
-});
-
+function closePopup() {
+  document.getElementById("popup").classList.remove("active");
+}
 </script>
 
 </body>
