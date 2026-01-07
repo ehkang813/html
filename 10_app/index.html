@@ -2,207 +2,241 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>부산 맛집 정보</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>부산 맛집 BEST 100</title>
 
-  <!-- 카카오맵 SDK (❗본인 키로 교체) -->
+  <!-- 카카오맵 SDK -->
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-    }
-
-    body {
-      background: #f6f6f6;
-      color: #111;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; }
+    body { background: #f5f5f5; }
 
     header {
+      padding: 14px;
       background: #000;
       color: #fff;
-      padding: 16px;
       text-align: center;
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
     }
 
-    ul {
-      list-style: none;
-    }
-
-    .container {
-      padding: 12px;
-    }
-
-    .food-item {
+    /* 리스트 */
+    .list {
+      max-height: 40vh;
+      overflow-y: auto;
       background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .item {
+      display: flex;
+      gap: 12px;
       padding: 14px;
       border-bottom: 1px solid #eee;
       cursor: pointer;
+      align-items: center;
     }
 
-    .food-item h3 {
+    .item.active {
+      background: #fff6d5;
+      border-left: 4px solid #d4af37;
+    }
+
+    .rank {
+      width: 42px;
+      text-align: center;
+      font-weight: 800;
       font-size: 16px;
+    }
+
+    .rank.top { color: #d4af37; }
+
+    /* 지도 */
+    #map { height: 30vh; }
+
+    /* 상세 */
+    .detail {
+      padding: 14px;
+      background: #fff;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .detail h3 {
+      font-size: 17px;
       margin-bottom: 6px;
     }
 
-    .food-item p {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 2px;
+    .rating { color: #ffb400; font-size: 14px; }
+
+    .detail a { color: #0066cc; text-decoration: none; }
+
+    /* 리뷰 */
+    .reviews {
+      padding: 14px;
+      background: #fafafa;
+      border-top: 1px solid #eee;
     }
 
-    /* 상세 화면 */
-    .detail {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    .review {
       background: #fff;
-      z-index: 100;
-      overflow-y: auto;
-      display: none;
-    }
-
-    .detail.show {
-      display: block;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 14px;
-      font-size: 28px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .detail-img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      background: #ddd;
-    }
-
-    .detail-info {
-      padding: 16px;
-    }
-
-    .detail-info p {
-      font-size: 14px;
+      padding: 10px;
+      border-radius: 6px;
       margin-bottom: 8px;
+      font-size: 13px;
     }
 
-    .map {
+    .review .user { font-weight: 600; }
+    .review .star { color: #ffb400; }
+
+    .toggle-btn {
+      text-align: center;
+      color: #0066cc;
+      font-size: 13px;
+      cursor: pointer;
+      margin: 8px 0;
+    }
+
+    /* 리뷰 작성 */
+    .write-review {
+      margin-top: 10px;
+    }
+
+    .write-review textarea {
       width: 100%;
-      height: 260px;
+      height: 60px;
+      padding: 8px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .write-review button {
+      margin-top: 6px;
+      width: 100%;
+      padding: 10px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-<header>부산 맛집 정보</header>
+<header>부산 맛집 BEST 100</header>
 
-<main class="container">
-  <ul id="foodList"></ul>
-</main>
+<!-- 리스트 -->
+<div class="list" id="list"></div>
 
-<!-- 상세 화면 -->
-<section id="detail" class="detail">
-  <button class="close-btn" onclick="closeDetail()">×</button>
-  <img id="detailImg" class="detail-img" />
-  <div class="detail-info">
-    <p><strong>상호명</strong> <span id="dName"></span></p>
-    <p><strong>주소</strong> <span id="dAddr"></span></p>
-    <p><strong>소개</strong> <span id="dDesc"></span></p>
-    <p><strong>대표메뉴</strong> <span id="dMenu"></span></p>
-    <p><strong>문의</strong> <span id="dTel"></span></p>
-    <p><strong>운영시간</strong> <span id="dTime"></span></p>
+<!-- 지도 -->
+<div id="map"></div>
+
+<!-- 상세 -->
+<div class="detail">
+  <h3 id="dName">선택하세요 <span class="rating" id="dRate"></span></h3>
+  <p><strong>주소</strong> <span id="dAddr"></span></p>
+  <p><strong>전화</strong> <a id="dTel"></a></p>
+  <p><strong>운영시간</strong> <span id="dTime"></span></p>
+</div>
+
+<!-- 리뷰 -->
+<div class="reviews">
+  <h4>리뷰</h4>
+  <div id="reviewList"></div>
+  <div class="toggle-btn" id="toggleReview">리뷰 더보기</div>
+
+  <!-- 리뷰 작성 -->
+  <div class="write-review">
+    <textarea placeholder="리뷰를 작성해주세요"></textarea>
+    <button>리뷰 등록</button>
   </div>
-  <div id="map" class="map"></div>
-</section>
+</div>
 
 <script>
-  /* ===============================
-     ❗ 반드시 본인 키로 교체
-  =============================== */
-  const SERVICE_KEY = "PUBLIC_DATA_SERVICE_KEY";
+  const foods = Array.from({ length: 100 }, (_, i) => ({
+    rank: i + 1,
+    name: `부산 맛집 ${i + 1}`,
+    rate: (Math.random() * 1 + 4).toFixed(1),
+    addr: "부산광역시",
+    tel: "051-123-4567",
+    time: "10:00 ~ 22:00 (라스트오더 21:30)",
+    lat: 35.1 + i * 0.001,
+    lng: 129.03 + i * 0.001,
+    reviews: [
+      { user: "현지인", star: 5, text: "진짜 맛집이에요!" },
+      { user: "여행객", star: 4, text: "웨이팅 있지만 만족!" },
+      { user: "단골", star: 5, text: "자주 옵니다." },
+      { user: "방문자", star: 4, text: "또 올게요!" }
+    ]
+  }));
 
-  const API_URL = "https://apis.data.go.kr/6260000/FoodService/getFoodServiceList";
+  const listEl = document.getElementById("list");
+  const reviewEl = document.getElementById("reviewList");
+  const toggleBtn = document.getElementById("toggleReview");
+  let map, marker, currentActive, expanded = false;
 
-  const listEl = document.getElementById("foodList");
-  const detailEl = document.getElementById("detail");
+  foods.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="rank ${item.rank <= 3 ? "top" : ""}">
+        ${item.rank <= 3 ? "👑" : ""}${item.rank}
+      </div>
+      <div>${item.name}</div>
+    `;
+    div.onclick = () => selectItem(div, item);
+    listEl.appendChild(div);
+  });
 
-  /* 1. 부산 맛집 리스트 불러오기 */
-  fetch(`${API_URL}?serviceKey=${64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d}&pageNo=1&numOfRows=10&resultType=json`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("API 응답", data);
+  function selectItem(el, item) {
+    if (currentActive) currentActive.classList.remove("active");
+    el.classList.add("active");
+    currentActive = el;
 
-      const items = data.getFoodServiceList.item;
+    document.getElementById("dName").innerText = item.name;
+    document.getElementById("dRate").innerText = `⭐ ${item.rate}`;
+    document.getElementById("dAddr").innerText = item.addr;
+    document.getElementById("dTel").innerText = item.tel;
+    document.getElementById("dTel").href = `tel:${item.tel}`;
+    document.getElementById("dTime").innerText = item.time;
 
-      if (!items || items.length === 0) {
-        listEl.innerHTML = "<li style='padding:20px;'>데이터가 없습니다.</li>";
-        return;
-      }
+    renderReviews(item.reviews.slice(0, 3));
+    expanded = false;
+    toggleBtn.innerText = "리뷰 더보기";
 
-      items.forEach(item => {
-        const li = document.createElement("li");
-        li.className = "food-item";
-        li.innerHTML = `
-          <h3>${item.MAIN_TITLE}</h3>
-          <p>주소: ${item.ADDR1}</p>
-          <p>메뉴: ${item.RPRSNTV_MENU || "-"}</p>
-        `;
-        li.onclick = () => openDetail(item);
-        listEl.appendChild(li);
-      });
-    })
-    .catch(err => {
-      console.error("API 오류", err);
-      listEl.innerHTML = "<li style='padding:20px;'>API 호출 오류</li>";
-    });
-
-  /* 2. 상세 열기 */
-  function openDetail(item) {
-    detailEl.classList.add("show");
-
-    document.getElementById("detailImg").src = item.MAIN_IMG_NORMAL || "";
-    document.getElementById("dName").innerText = item.MAIN_TITLE;
-    document.getElementById("dAddr").innerText = item.ADDR1;
-    document.getElementById("dDesc").innerText = item.ITEMCNTNTS || "";
-    document.getElementById("dMenu").innerText = item.RPRSNTV_MENU || "";
-    document.getElementById("dTel").innerText = item.CNTCT_TEL || "";
-    document.getElementById("dTime").innerText = item.USAGE_DAY_WEEK_AND_TIME || "";
-
-    drawMap(item.LAT, item.LNG);
+    const pos = new kakao.maps.LatLng(item.lat, item.lng);
+    if (!map) {
+      map = new kakao.maps.Map(document.getElementById("map"), { center: pos, level: 5 });
+      marker = new kakao.maps.Marker({ position: pos, map });
+    } else {
+      map.setCenter(pos);
+      marker.setPosition(pos);
+    }
   }
 
-  function closeDetail() {
-    detailEl.classList.remove("show");
-  }
-
-  /* 3. 카카오맵 */
-  function drawMap(lat, lng) {
-    const container = document.getElementById("map");
-    container.innerHTML = "";
-
-    const map = new kakao.maps.Map(container, {
-      center: new kakao.maps.LatLng(lat, lng),
-      level: 3
-    });
-
-    new kakao.maps.Marker({
-      position: new kakao.maps.LatLng(lat, lng),
-      map: map
+  function renderReviews(list) {
+    reviewEl.innerHTML = "";
+    list.forEach(r => {
+      reviewEl.innerHTML += `
+        <div class="review">
+          <div class="user">${r.user}</div>
+          <div class="star">${"★".repeat(r.star)}</div>
+          <div>${r.text}</div>
+        </div>
+      `;
     });
   }
+
+  toggleBtn.onclick = () => {
+    if (!currentActive) return;
+    expanded = !expanded;
+    const item = foods.find(f => f.name === document.getElementById("dName").innerText);
+    renderReviews(expanded ? item.reviews : item.reviews.slice(0, 3));
+    toggleBtn.innerText = expanded ? "리뷰 접기" : "리뷰 더보기";
+  };
 </script>
 
 </body>
