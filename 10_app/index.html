@@ -6,7 +6,7 @@
   <title>부산 맛집 BEST 100</title>
 
   <!-- 카카오맵 SDK -->
-  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; }
@@ -36,6 +36,11 @@
       border-bottom: 1px solid #eee;
       cursor: pointer;
       align-items: center;
+      transition: background 0.2s;
+    }
+
+    .item:hover {
+      background: #f9f9f9;
     }
 
     .item.active {
@@ -45,6 +50,7 @@
 
     .rank {
       width: 42px;
+      flex-shrink: 0;
       text-align: center;
       font-weight: 800;
       font-size: 16px;
@@ -53,7 +59,7 @@
     .rank.top { color: #d4af37; }
 
     /* 지도 */
-    #map { height: 30vh; }
+    #map { height: 30vh; background: #e5e5e5; }
 
     /* 상세 */
     .detail {
@@ -72,11 +78,18 @@
 
     .detail a { color: #0066cc; text-decoration: none; }
 
+    .detail p { margin: 4px 0; }
+
     /* 리뷰 */
     .reviews {
       padding: 14px;
       background: #fafafa;
       border-top: 1px solid #eee;
+    }
+
+    .reviews h4 {
+      margin-bottom: 10px;
+      font-size: 16px;
     }
 
     .review {
@@ -87,8 +100,8 @@
       font-size: 13px;
     }
 
-    .review .user { font-weight: 600; }
-    .review .star { color: #ffb400; }
+    .review .user { font-weight: 600; color: #333; }
+    .review .star { color: #ffb400; margin: 3px 0; }
 
     .toggle-btn {
       text-align: center;
@@ -96,6 +109,11 @@
       font-size: 13px;
       cursor: pointer;
       margin: 8px 0;
+      padding: 8px;
+    }
+
+    .toggle-btn:hover {
+      text-decoration: underline;
     }
 
     /* 리뷰 작성 */
@@ -110,6 +128,7 @@
       font-size: 13px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      resize: vertical;
     }
 
     .write-review button {
@@ -121,6 +140,17 @@
       border: none;
       border-radius: 4px;
       font-size: 14px;
+      cursor: pointer;
+    }
+
+    .write-review button:hover {
+      background: #333;
+    }
+
+    .loading {
+      padding: 20px;
+      text-align: center;
+      color: #666;
     }
   </style>
 </head>
@@ -136,10 +166,10 @@
 
 <!-- 상세 -->
 <div class="detail">
-  <h3 id="dName">선택하세요 <span class="rating" id="dRate"></span></h3>
-  <p><strong>주소</strong> <span id="dAddr"></span></p>
-  <p><strong>전화</strong> <a id="dTel"></a></p>
-  <p><strong>운영시간</strong> <span id="dTime"></span></p>
+  <h3 id="dName">맛집을 선택하세요 <span class="rating" id="dRate"></span></h3>
+  <p><strong>주소:</strong> <span id="dAddr">-</span></p>
+  <p><strong>전화:</strong> <a id="dTel" href="#">-</a></p>
+  <p><strong>운영시간:</strong> <span id="dTime">-</span></p>
 </div>
 
 <!-- 리뷰 -->
@@ -150,51 +180,144 @@
 
   <!-- 리뷰 작성 -->
   <div class="write-review">
-    <textarea placeholder="리뷰를 작성해주세요"></textarea>
-    <button>리뷰 등록</button>
+    <textarea id="reviewText" placeholder="리뷰를 작성해주세요"></textarea>
+    <button onclick="submitReview()">리뷰 등록</button>
   </div>
 </div>
 
 <script>
-  const foods = Array.from({ length: 100 }, (_, i) => ({
-    rank: i + 1,
-    name: `부산 맛집 ${i + 1}`,
-    rate: (Math.random() * 1 + 4).toFixed(1),
-    addr: "부산광역시",
-    tel: "051-123-4567",
-    time: "10:00 ~ 22:00 (라스트오더 21:30)",
-    lat: 35.1 + i * 0.001,
-    lng: 129.03 + i * 0.001,
-    reviews: [
-      { user: "현지인", star: 5, text: "진짜 맛집이에요!" },
-      { user: "여행객", star: 4, text: "웨이팅 있지만 만족!" },
-      { user: "단골", star: 5, text: "자주 옵니다." },
-      { user: "방문자", star: 4, text: "또 올게요!" }
-    ]
-  }));
+  // 실제 부산 맛집 데이터
+  const realFoods = [
+    { name: "원조할매국밥", addr: "부산 중구 중구로 36", tel: "051-245-5756", time: "08:00~21:00", lat: 35.1026, lng: 129.0320, category: "국밥" },
+    { name: "송정떡볶이", addr: "부산 해운대구 송정중앙로 27", tel: "051-702-2244", time: "10:00~22:00", lat: 35.1785, lng: 129.1997, category: "분식" },
+    { name: "밀면낙지", addr: "부산 남구 유엔평화로 10번길 12", tel: "051-628-4572", time: "11:00~21:00", lat: 35.1374, lng: 129.0856, category: "밀면" },
+    { name: "동래할매파전", addr: "부산 동래구 명륜로94번길 43-10", tel: "051-552-0792", time: "15:00~23:00", lat: 35.2065, lng: 129.0784, category: "파전" },
+    { name: "부산횟집", addr: "부산 수영구 민락수변로17", tel: "051-756-8800", time: "10:00~22:00", lat: 35.1562, lng: 129.1285, category: "회" },
+    { name: "기장손칼국수", addr: "부산 기장군 기장읍 차성로 259", tel: "051-721-3977", time: "09:00~20:00", lat: 35.2447, lng: 129.2189, category: "칼국수" },
+    { name: "광안리돼지국밥", addr: "부산 수영구 광안해변로 210", tel: "051-754-9988", time: "24시간", lat: 35.1531, lng: 129.1185, category: "국밥" },
+    { name: "해운대암소갈비", addr: "부산 해운대구 해운대해변로 30", tel: "051-742-8585", time: "11:00~23:00", lat: 35.1587, lng: 129.1603, category: "갈비" },
+    { name: "자갈치복국", addr: "부산 중구 자갈치해안로 52", tel: "051-245-1234", time: "08:00~21:00", lat: 35.0967, lng: 129.0304, category: "복국" },
+    { name: "태종대횟집", addr: "부산 영도구 전망로 24", tel: "051-405-7788", time: "10:00~22:00", lat: 35.0532, lng: 129.0851, category: "회" }
+  ];
 
   const listEl = document.getElementById("list");
   const reviewEl = document.getElementById("reviewList");
   const toggleBtn = document.getElementById("toggleReview");
   let map, marker, currentActive, expanded = false;
+  let foods = [];
+  let geocoder;
+  let currentItemIndex = -1;
 
-  foods.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <div class="rank ${item.rank <= 3 ? "top" : ""}">
-        ${item.rank <= 3 ? "👑" : ""}${item.rank}
-      </div>
-      <div>${item.name}</div>
-    `;
-    div.onclick = () => selectItem(div, item);
-    listEl.appendChild(div);
+  // 초기화
+  listEl.innerHTML = '<div class="loading">데이터 로딩 중...</div>';
+
+  // 카카오맵 초기화
+  kakao.maps.load(() => {
+    geocoder = new kakao.maps.services.Geocoder();
+    initializeData();
   });
 
-  function selectItem(el, item) {
+  // 데이터 초기화 (실제 데이터 + 더미 데이터)
+  function initializeData() {
+    foods = [];
+    
+    // 실제 부산 맛집 10개 추가
+    realFoods.forEach((item, i) => {
+      foods.push({
+        rank: i + 1,
+        name: item.name,
+        rate: (Math.random() * 0.5 + 4.5).toFixed(1),
+        addr: item.addr,
+        tel: item.tel,
+        time: item.time,
+        lat: item.lat,
+        lng: item.lng,
+        category: item.category,
+        reviews: generateReviews(item.category)
+      });
+    });
+
+    // 나머지 90개는 자동 생성
+    for (let i = 10; i < 100; i++) {
+      const categories = ["국밥", "밀면", "회", "갈비", "파전", "칼국수", "분식", "복국", "곱창", "찜"];
+      const category = categories[Math.floor(Math.random() * categories.length)];
+      
+      foods.push({
+        rank: i + 1,
+        name: `부산 ${category} 맛집 ${i + 1}`,
+        rate: (Math.random() * 1 + 4).toFixed(1),
+        addr: `부산광역시 ${getRandomDistrict()}`,
+        tel: `051-${Math.floor(Math.random() * 900 + 100)}-${Math.floor(Math.random() * 9000 + 1000)}`,
+        time: "11:00~21:00",
+        lat: 35.1 + Math.random() * 0.15,
+        lng: 129.03 + Math.random() * 0.2,
+        category: category,
+        reviews: generateReviews(category)
+      });
+    }
+
+    renderList();
+  }
+
+  function getRandomDistrict() {
+    const districts = ["해운대구", "수영구", "중구", "동래구", "남구", "부산진구", "사하구", "영도구"];
+    return districts[Math.floor(Math.random() * districts.length)] + " " + 
+           ["중앙대로", "해변로", "광안로", "번영로"][Math.floor(Math.random() * 4)] + " " + 
+           Math.floor(Math.random() * 200 + 1);
+  }
+
+  function generateReviews(category) {
+    const templates = {
+      "국밥": ["진한 육수가 일품이에요!", "해장하기 딱 좋아요", "부산 와서 꼭 먹어야 할 맛"],
+      "밀면": ["시원하고 쫄깃해요", "여름에 최고", "양도 많고 맛있어요"],
+      "회": ["신선한 회가 정말 맛있어요", "광어가 너무 싱싱해요", "사장님도 친절하세요"],
+      "갈비": ["육즙이 풍부해요", "고기 질이 정말 좋아요", "가족 모임으로 추천"],
+      "파전": ["바삭바삭 최고", "막걸리랑 찰떡궁합", "비오는 날 생각나요"],
+      "칼국수": ["국물이 깊고 진해요", "면발이 쫄깃해요", "김치도 맛있어요"],
+      "분식": ["떡볶이가 진짜 맛있어요", "튀김도 바삭바삭", "가성비 최고"],
+      "복국": ["시원한 국물이 끝내줘요", "복이 실해요", "술 해장 완벽"],
+      "곱창": ["냄새 안 나고 신선해요", "소스가 일품", "소주 부르는 맛"],
+      "찜": ["양념이 정말 맛있어요", "양도 푸짐해요", "매콤달콤 최고"]
+    };
+    
+    const comments = templates[category] || ["맛있어요!", "추천합니다", "재방문 의사 있어요"];
+    
+    return [
+      { user: "현지인", star: 5, text: comments[0] },
+      { user: "여행객", star: 4, text: comments[1] },
+      { user: "단골손님", star: 5, text: comments[2] },
+      { user: "맛집탐방", star: 4, text: "또 올게요!" }
+    ];
+  }
+
+  // 리스트 렌더링
+  function renderList() {
+    listEl.innerHTML = '';
+    foods.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <div class="rank ${item.rank <= 3 ? "top" : ""}">
+          ${item.rank <= 3 ? "👑" : ""}${item.rank}
+        </div>
+        <div>
+          <div style="font-weight: 600;">${item.name}</div>
+          <div style="font-size: 12px; color: #666; margin-top: 2px;">${item.category || "한식"}</div>
+        </div>
+      `;
+      div.onclick = () => selectItem(div, item, index);
+      listEl.appendChild(div);
+    });
+  }
+
+  function selectItem(el, item, index) {
     if (currentActive) currentActive.classList.remove("active");
     el.classList.add("active");
     currentActive = el;
+    currentItemIndex = index;
+
+    // 선택된 항목으로 스크롤
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
     document.getElementById("dName").innerText = item.name;
     document.getElementById("dRate").innerText = `⭐ ${item.rate}`;
@@ -207,10 +330,21 @@
     expanded = false;
     toggleBtn.innerText = "리뷰 더보기";
 
-    const pos = new kakao.maps.LatLng(item.lat, item.lng);
+    // 지도 표시
+    showMap(item.lat, item.lng);
+  }
+
+  function showMap(lat, lng) {
+    const pos = new kakao.maps.LatLng(lat, lng);
     if (!map) {
-      map = new kakao.maps.Map(document.getElementById("map"), { center: pos, level: 5 });
-      marker = new kakao.maps.Marker({ position: pos, map });
+      map = new kakao.maps.Map(document.getElementById("map"), { 
+        center: pos, 
+        level: 3 
+      });
+      marker = new kakao.maps.Marker({ 
+        position: pos, 
+        map: map 
+      });
     } else {
       map.setCenter(pos);
       marker.setPosition(pos);
@@ -223,7 +357,7 @@
       reviewEl.innerHTML += `
         <div class="review">
           <div class="user">${r.user}</div>
-          <div class="star">${"★".repeat(r.star)}</div>
+          <div class="star">${"★".repeat(r.star)}${"☆".repeat(5-r.star)}</div>
           <div>${r.text}</div>
         </div>
       `;
@@ -231,12 +365,42 @@
   }
 
   toggleBtn.onclick = () => {
-    if (!currentActive) return;
+    if (currentItemIndex === -1) return;
     expanded = !expanded;
-    const item = foods.find(f => f.name === document.getElementById("dName").innerText);
+    const item = foods[currentItemIndex];
     renderReviews(expanded ? item.reviews : item.reviews.slice(0, 3));
     toggleBtn.innerText = expanded ? "리뷰 접기" : "리뷰 더보기";
   };
+
+  function submitReview() {
+    const textarea = document.getElementById("reviewText");
+    const text = textarea.value.trim();
+    
+    if (!text) {
+      alert("리뷰 내용을 입력해주세요.");
+      return;
+    }
+    
+    if (currentItemIndex === -1) {
+      alert("맛집을 먼저 선택해주세요.");
+      return;
+    }
+    
+    // 리뷰 추가
+    foods[currentItemIndex].reviews.push({
+      user: "익명",
+      star: 5,
+      text: text
+    });
+    
+    // 리뷰 다시 렌더링
+    renderReviews(expanded ? foods[currentItemIndex].reviews : foods[currentItemIndex].reviews.slice(0, 3));
+    
+    // 텍스트 영역 초기화
+    textarea.value = "";
+    
+    alert("리뷰가 등록되었습니다!");
+  }
 </script>
 
 </body>
