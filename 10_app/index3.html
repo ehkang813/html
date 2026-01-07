@@ -104,7 +104,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 
 <script>
 /* 지도 */
-const map = new kakao.maps.Map(document.getElementById('map'),{
+const map=new kakao.maps.Map(document.getElementById('map'),{
   center:new kakao.maps.LatLng(37.5665,126.9780),
   level:6
 });
@@ -138,46 +138,44 @@ document.getElementById("searchBtn").onclick=()=>{
   });
 };
 
-/* 서울시 공공주차장 API */
+/* ✅ 서울시 공공주차장 API (HTTPS 필수) */
 const SEOUL_KEY="467852516f6a65773838624f6e6148";
-fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/50`)
+fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/30`)
 .then(res=>res.json())
 .then(data=>{
-  const list = document.getElementById("list");
+  const list=document.getElementById("list");
 
-  if (!data.GetParkingInfo || !data.GetParkingInfo.row) {
-    list.innerHTML = "<p>주차장 데이터가 없습니다.</p>";
-    console.log("API 응답:", data);
+  if(!data.GetParkingInfo || !data.GetParkingInfo.row){
+    list.innerHTML="<p>주차장 데이터가 없습니다.</p>";
+    console.log("API 응답:",data);
     return;
   }
 
   data.GetParkingInfo.row.forEach(p=>{
-
     if(!p.ADDR) return;
 
     const park={
       name:p.PARKING_NAME,
       addr:p.ADDR,
-      tel:p.PARKING_TEL || "정보 없음",
+      tel:p.PARKING_TEL||"정보 없음",
       total:Number(p.PARKING_CNT)||0,
       handi:Number(p.HANDICAP_PARKING)||0,
-      special:p.SPECIAL_PARKING || "없음"
+      special:p.SPECIAL_PARKING||"없음"
     };
 
     const status =
-      park.total >= 300 ? "여유" :
-      park.total >= 100 ? "보통" : "혼잡";
+      park.total>=300?"여유":
+      park.total>=100?"보통":"혼잡";
 
     const color =
-      status==="여유" ? "green" :
-      status==="보통" ? "yellow" : "red";
+      status==="여유"?"green":
+      status==="보통"?"yellow":"red";
 
     geocoder.addressSearch(park.addr,(r,s)=>{
       if(s!==kakao.maps.services.Status.OK) return;
       const pos=new kakao.maps.LatLng(r[0].y,r[0].x);
 
-      /* 색상 마커 */
-      const marker=new kakao.maps.Marker({
+      new kakao.maps.Marker({
         map,position:pos,
         image:new kakao.maps.MarkerImage(
           `https://maps.google.com/mapfiles/ms/icons/${color}-dot.png`,
@@ -185,37 +183,34 @@ fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/50`)
         )
       });
 
-      /* 목록 */
       const item=document.createElement("div");
       item.className="item";
       item.innerHTML=`<h3>${park.name}</h3><p>${status} · ${park.addr}</p>`;
       list.appendChild(item);
 
       item.onclick=()=>{
-        document.getElementById("pName").textContent=park.name;
-        document.getElementById("pAddr").textContent=park.addr;
-        document.getElementById("pTel").textContent=park.tel;
-        document.getElementById("pStatus").textContent=status;
-        document.getElementById("pTotal").textContent=park.total+"면";
-        document.getElementById("pHandi").textContent=park.handi+"면";
-        document.getElementById("pSpecial").textContent=park.special;
+        pName.textContent=park.name;
+        pAddr.textContent=park.addr;
+        pTel.textContent=park.tel;
+        pStatus.textContent=status;
+        pTotal.textContent=park.total+"면";
+        pHandi.textContent=park.handi+"면";
+        pSpecial.textContent=park.special;
 
-        document.getElementById("navBtn").onclick=()=>{
+        navBtn.onclick=()=>{
           location.href=`https://map.kakao.com/link/to/${park.name},${pos.getLat()},${pos.getLng()}`;
         };
 
         map.panTo(pos);
-        document.getElementById("detailPopup").classList.add("show");
+        detailPopup.classList.add("show");
       };
     });
   });
 });
 
 /* 팝업 닫기 */
-const popup=document.getElementById("detailPopup");
-const popupContent=document.getElementById("popupContent");
-popup.onclick=()=>popup.classList.remove("show");
-popupContent.onclick=()=>popup.classList.remove("show");
+detailPopup.onclick=()=>detailPopup.classList.remove("show");
+popupContent.onclick=()=>detailPopup.classList.remove("show");
 </script>
 
 </body>
