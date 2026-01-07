@@ -8,6 +8,7 @@
 <!-- 카카오맵 (services 포함 필수) -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
 
+
 <style>
 * { box-sizing: border-box; }
 
@@ -133,25 +134,25 @@ header h1 {
 let map, userLat, userLng;
 let markers = [];
 
-/* ======================
-   더미 주정차 단속 데이터
-   (현재 위치 기준 근처)
-====================== */
+/* ===== 더미 단속 데이터 ===== */
 const dummyNoParkingData = [
-  { name: "장기동 주정차 단속구역", latOffset: 0.0012, lngOffset: 0.0008 },
-  { name: "장기초등학교 앞", latOffset: -0.0009, lngOffset: 0.0011 },
-  { name: "김포시청 인근 단속구역", latOffset: 0.0015, lngOffset: -0.0012 },
-  { name: "장기공원 주변", latOffset: -0.0014, lngOffset: -0.0006 },
-  { name: "장기역 인근 단속구역", latOffset: 0.0007, lngOffset: -0.0015 }
+  { name: "장기동 주정차 단속구역", dLat: 0.001, dLng: 0.001 },
+  { name: "장기초등학교 앞", dLat: -0.0012, dLng: 0.0008 },
+  { name: "김포시청 인근", dLat: 0.0006, dLng: -0.001 },
+  { name: "장기공원 주변", dLat: -0.001, dLng: -0.0007 },
+  { name: "장기역 인근", dLat: 0.0014, dLng: -0.0004 }
 ];
 
 /* 현재 위치 */
-navigator.geolocation.getCurrentPosition(pos => {
-  userLat = pos.coords.latitude;
-  userLng = pos.coords.longitude;
-  initMap();
-  renderDummyData();
-});
+navigator.geolocation.getCurrentPosition(
+  pos => {
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+    initMap();
+    renderDummy();
+  },
+  () => alert("위치 권한을 허용해주세요")
+);
 
 /* 지도 초기화 */
 function initMap() {
@@ -160,7 +161,6 @@ function initMap() {
     level: 4
   });
 
-  // 내 위치 마커
   new kakao.maps.Marker({
     map,
     position: new kakao.maps.LatLng(userLat, userLng)
@@ -172,48 +172,47 @@ function moveToMyLocation() {
   map.setCenter(new kakao.maps.LatLng(userLat, userLng));
 }
 
-/* 주소 검색 */
+/* 주소 검색 (services 있을 때만 실행) */
 function searchAddress() {
+  if (!kakao.maps.services) return;
+
   const keyword = document.getElementById("searchInput").value;
   if (!keyword) return;
 
   const geocoder = new kakao.maps.services.Geocoder();
-  geocoder.addressSearch(keyword, function(result, status) {
+  geocoder.addressSearch(keyword, (result, status) => {
     if (status === kakao.maps.services.Status.OK) {
       map.setCenter(new kakao.maps.LatLng(result[0].y, result[0].x));
     }
   });
 }
 
-/* 더미 데이터 렌더링 */
-function renderDummyData() {
+/* 더미 데이터 렌더 */
+function renderDummy() {
   const list = document.getElementById("list");
   list.innerHTML = "";
   markers.forEach(m => m.setMap(null));
   markers = [];
 
-  const dataWithDistance = dummyNoParkingData.map(d => {
-    const lat = userLat + d.latOffset;
-    const lng = userLng + d.lngOffset;
-    return {
-      name: d.name,
-      lat,
-      lng,
-      distance: calcDistance(userLat, userLng, lat, lng)
-    };
-  });
-
-  dataWithDistance
+  dummyNoParkingData
+    .map(d => {
+      const lat = userLat + d.dLat;
+      const lng = userLng + d.dLng;
+      return {
+        name: d.name,
+        lat,
+        lng,
+        distance: calcDistance(userLat, userLng, lat, lng)
+      };
+    })
     .sort((a, b) => a.distance - b.distance)
     .forEach(d => {
-      // 지도 마커
       const marker = new kakao.maps.Marker({
         map,
         position: new kakao.maps.LatLng(d.lat, d.lng)
       });
       markers.push(marker);
 
-      // 리스트
       list.innerHTML += `
         <div class="item" onclick="map.setCenter(new kakao.maps.LatLng(${d.lat}, ${d.lng}))">
           <strong>${d.name}</strong>
@@ -236,6 +235,7 @@ function calcDistance(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 </script>
+
 
 
 </body>
