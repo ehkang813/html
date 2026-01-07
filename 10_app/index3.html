@@ -1,20 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-	<meta charset="utf-8"/>
-	<title>Kakao 지도 시작하기</title>
-</head>
-<body>
-	<div id="map" style="width:500px;height:400px;"></div>
-	<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
-	<script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
-		};
+<meta charset="UTF-8">
+<title>여기주차</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		var map = new kakao.maps.Map(container, options);
-	</script>
+<!-- 카카오맵 -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;background:#f5f5f5}
+
+/* 헤더 */
+.header{
+  position:fixed;top:0;left:0;width:100%;height:56px;
+  background:#fff;display:flex;align-items:center;
+  padding:0 16px;font-weight:700;z-index:10;
+  box-shadow:0 2px 8px rgba(0,0,0,.08)
+}
+
+/* 지도 */
+#map{width:100%;height:55vh;margin-top:56px}
+
+/* 목록 */
+.list{
+  background:#fff;padding:12px
+}
+.item{
+  padding:12px 0;border-bottom:1px solid #eee;cursor:pointer
+}
+.item h3{font-size:15px;margin-bottom:4px}
+.item p{font-size:13px;color:#666}
+
+/* 상세 카드 */
+.detail{
+  position:fixed;left:0;bottom:-100%;
+  width:100%;background:#fff;border-radius:16px 16px 0 0;
+  padding:16px;box-shadow:0 -6px 20px rgba(0,0,0,.15);
+  transition:.3s;z-index:20
+}
+.detail.show{bottom:0}
+.drag{width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 12px}
+
+.thumb{
+  width:100%;height:160px;border-radius:12px;
+  overflow:hidden;background:#eee;margin:8px 0 12px
+}
+.thumb img{width:100%;height:100%;object-fit:cover}
+
+.info p{
+  font-size:14px;margin-bottom:6px;
+  display:flex;justify-content:space-between
+}
+
+.btns{display:flex;gap:8px;margin-top:12px}
+.btns button{
+  flex:1;height:48px;border:none;border-radius:10px;
+  font-size:15px;color:#fff;cursor:pointer
+}
+.kakao{background:#000}
+.naver{background:#03c75a}
+</style>
+</head>
+
+<body>
+
+<div class="header">여기주차</div>
+<div id="map"></div>
+<div class="list" id="list"></div>
+
+<!-- 상세 카드 -->
+<div class="detail" id="detail">
+  <div class="drag"></div>
+  <h2 id="dName"></h2>
+  <div class="thumb"><img id="dImg"></div>
+  <div class="info">
+    <p><strong>주소</strong><span id="dAddr"></span></p>
+    <p><strong>총 주차면</strong><span id="dTotal"></span></p>
+    <p><strong>혼잡도</strong><span id="dStatus"></span></p>
+    <p><strong>요금</strong><span id="dFee"></span></p>
+    <p><strong>운영시간</strong><span id="dTime"></span></p>
+  </div>
+  <div class="btns">
+    <button class="kakao" id="kakaoNav">카카오 길안내</button>
+    <button class="naver" id="naverNav">네이버 길안내</button>
+  </div>
+</div>
+
+<script>
+/* 지도 */
+const map = new kakao.maps.Map(document.getElementById('map'),{
+  center:new kakao.maps.LatLng(37.5665,126.9780),
+  level:6
+});
+const geocoder=new kakao.maps.services.Geocoder();
+
+/* 샘플 공영주차장 데이터 */
+const parks=[
+ {name:"서울시청 공영주차장",addr:"서울 중구 세종대로 110",total:300,fee:"30분 1,000원",time:"24시간"},
+ {name:"종로 공영주차장",addr:"서울 종로구 종로1길 36",total:120,fee:"30분 800원",time:"06~22시"},
+ {name:"강남역 공영주차장",addr:"서울 강남구 테헤란로 114",total:450,fee:"30분 1,500원",time:"24시간"}
+];
+
+const list=document.getElementById("list");
+let currentLatLng=null;
+
+/* 혼잡도 */
+const status=t=>t>=300?"🟢 여유":t>=100?"🟡 보통":"🔴 혼잡";
+
+/* 지역 랜덤 이미지 */
+function randomImg(addr){
+  const key=addr.split(" ")[0];
+  return `https://source.unsplash.com/600x400/?parking,${key}`;
+}
+
+/* 목록 & 마커 */
+parks.forEach(p=>{
+  geocoder.addressSearch(p.addr,(r,s)=>{
+    if(s!==kakao.maps.services.Status.OK)return;
+    const pos=new kakao.maps.LatLng(r[0].y,r[0].x);
+
+    const marker=new kakao.maps.Marker({map,position:pos});
+
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerHTML=`<h3>${p.name}</h3>
+      <p>${status(p.total)} · ${p.addr}</p>`;
+    list.appendChild(item);
+
+    function openDetail(){
+      currentLatLng=pos;
+      document.getElementById("dName").textContent=p.name;
+      document.getElementById("dAddr").textContent=p.addr;
+      document.getElementById("dTotal").textContent=p.total+"면";
+      document.getElementById("dStatus").textContent=status(p.total);
+      document.getElementById("dFee").textContent=p.fee;
+      document.getElementById("dTime").textContent=p.time;
+      document.getElementById("dImg").src=randomImg(p.addr);
+      document.getElementById("detail").classList.add("show");
+      map.panTo(pos);
+    }
+
+    item.onclick=openDetail;
+    kakao.maps.event.addListener(marker,"click",openDetail);
+  });
+});
+
+/* 길안내 */
+document.getElementById("kakaoNav").onclick=()=>{
+  if(!currentLatLng)return;
+  location.href=`https://map.kakao.com/link/to/주차장,${currentLatLng.getLat()},${currentLatLng.getLng()}`;
+};
+document.getElementById("naverNav").onclick=()=>{
+  if(!currentLatLng)return;
+  location.href=`https://map.naver.com/v5/directions/-/-/${currentLatLng.getLng()},${currentLatLng.getLat()},주차장`;
+};
+</script>
+
 </body>
 </html>
