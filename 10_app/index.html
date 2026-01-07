@@ -203,10 +203,34 @@ function drawMap(lat, lng) {
 }
 
 
+function drawMap(lat, lng) {
+  const mapContainer = document.getElementById("map");
+
+  const _lat = Number(lat);
+  const _lng = Number(lng);
+
+  if (!_lat || !_lng) {
+    mapContainer.innerHTML = "위치 정보 없음";
+    return;
+  }
+
+  const map = new kakao.maps.Map(mapContainer, {
+    center: new kakao.maps.LatLng(_lat, _lng),
+    level: 3
+  });
+
+  // ⭐⭐⭐ 이게 핵심
+  setTimeout(() => {
+    map.relayout();
+    map.setCenter(new kakao.maps.LatLng(_lat, _lng));
+  }, 0);
+
   new kakao.maps.Marker({
     map,
-    position: new kakao.maps.LatLng(Number(lat), Number(lng))
+    position: new kakao.maps.LatLng(_lat, _lng)
   });
+}
+
 }
 
 function goBack() {
@@ -234,7 +258,7 @@ function saveReview() {
   loadReviews();
 }
 
-console.log(item.LAT, item.LNG);
+console.log("좌표:", item.LAT, item.LNG);
 
 </script>
 
