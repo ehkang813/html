@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>부산 맛집 정보</title>
+
+  <!-- 카카오맵 SDK (❗본인 키로 교체) -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    }
+
+    body {
+      background: #f6f6f6;
+      color: #111;
+    }
+
+    header {
+      background: #000;
+      color: #fff;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .container {
+      padding: 12px;
+    }
+
+    .food-item {
+      background: #fff;
+      padding: 14px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .food-item h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .food-item p {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 2px;
+    }
+
+    /* 상세 화면 */
+    .detail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 100;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .detail.show {
+      display: block;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .detail-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .detail-info {
+      padding: 16px;
+    }
+
+    .detail-info p {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .map {
+      width: 100%;
+      height: 260px;
+    }
+  </style>
+</head>
+<body>
+
+<header>부산 맛집 정보</header>
+
+<main class="container">
+  <ul id="foodList"></ul>
+</main>
+
+<!-- 상세 화면 -->
+<section id="detail" class="detail">
+  <button class="close-btn" onclick="closeDetail()">×</button>
+  <img id="detailImg" class="detail-img" />
+  <div class="detail-info">
+    <p><strong>상호명</strong> <span id="dName"></span></p>
+    <p><strong>주소</strong> <span id="dAddr"></span></p>
+    <p><strong>소개</strong> <span id="dDesc"></span></p>
+    <p><strong>대표메뉴</strong> <span id="dMenu"></span></p>
+    <p><strong>문의</strong> <span id="dTel"></span></p>
+    <p><strong>운영시간</strong> <span id="dTime"></span></p>
+  </div>
+  <div id="map" class="map"></div>
+</section>
+
+<script>
+  /* ===============================
+     ❗ 반드시 본인 키로 교체
+  =============================== */
+  const SERVICE_KEY = "PUBLIC_DATA_SERVICE_KEY";
+
+  const API_URL = "https://apis.data.go.kr/6260000/FoodService/getFoodServiceList";
+
+  const listEl = document.getElementById("foodList");
+  const detailEl = document.getElementById("detail");
+
+  /* 1. 부산 맛집 리스트 불러오기 */
+  fetch(`${API_URL}?serviceKey=${64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d}&pageNo=1&numOfRows=10&resultType=json`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("API 응답", data);
+
+      const items = data.getFoodServiceList.item;
+
+      if (!items || items.length === 0) {
+        listEl.innerHTML = "<li style='padding:20px;'>데이터가 없습니다.</li>";
+        return;
+      }
+
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.className = "food-item";
+        li.innerHTML = `
+          <h3>${item.MAIN_TITLE}</h3>
+          <p>주소: ${item.ADDR1}</p>
+          <p>메뉴: ${item.RPRSNTV_MENU || "-"}</p>
+        `;
+        li.onclick = () => openDetail(item);
+        listEl.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("API 오류", err);
+      listEl.innerHTML = "<li style='padding:20px;'>API 호출 오류</li>";
+    });
+
+  /* 2. 상세 열기 */
+  function openDetail(item) {
+    detailEl.classList.add("show");
+
+    document.getElementById("detailImg").src = item.MAIN_IMG_NORMAL || "";
+    document.getElementById("dName").innerText = item.MAIN_TITLE;
+    document.getElementById("dAddr").innerText = item.ADDR1;
+    document.getElementById("dDesc").innerText = item.ITEMCNTNTS || "";
+    document.getElementById("dMenu").innerText = item.RPRSNTV_MENU || "";
+    document.getElementById("dTel").innerText = item.CNTCT_TEL || "";
+    document.getElementById("dTime").innerText = item.USAGE_DAY_WEEK_AND_TIME || "";
+
+    drawMap(item.LAT, item.LNG);
+  }
+
+  function closeDetail() {
+    detailEl.classList.remove("show");
+  }
+
+  /* 3. 카카오맵 */
+  function drawMap(lat, lng) {
+    const container = document.getElementById("map");
+    container.innerHTML = "";
+
+    const map = new kakao.maps.Map(container, {
+      center: new kakao.maps.LatLng(lat, lng),
+      level: 3
+    });
+
+    new kakao.maps.Marker({
+      position: new kakao.maps.LatLng(lat, lng),
+      map: map
+    });
+  }
+</script>
+
+</body>
+</html>
