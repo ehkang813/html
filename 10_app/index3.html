@@ -47,6 +47,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 .item:last-child{border-bottom:none}
 .item h3{font-size:15px}
 .item p{font-size:13px;color:#666}
+.error{color:#e74c3c;padding:20px;text-align:center}
+.loading{color:#666;padding:20px;text-align:center}
 
 /* 팝업 */
 .detail-popup{
@@ -84,7 +86,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
   </div>
 </div>
 
-<div class="bottom-ui" id="list"></div>
+<div class="bottom-ui" id="list">
+  <div class="loading">주차장 정보를 불러오는 중...</div>
+</div>
 
 <!-- 팝업 -->
 <div class="detail-popup" id="detailPopup">
@@ -103,14 +107,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 </div>
 
 <script>
-/* 지도 */
+/* 지도 초기화 */
 const map=new kakao.maps.Map(document.getElementById('map'),{
   center:new kakao.maps.LatLng(37.5665,126.9780),
   level:6
 });
 const geocoder=new kakao.maps.services.Geocoder();
 
-/* 현재 위치 핀 */
+/* 내 위치 */
 let myMarker=null;
 document.getElementById("myLocBtn").onclick=()=>{
   navigator.geolocation.getCurrentPosition(pos=>{
@@ -124,6 +128,9 @@ document.getElementById("myLocBtn").onclick=()=>{
         new kakao.maps.Size(24,35)
       )
     });
+  }, err=>{
+    alert("위치 정보를 가져올 수 없습니다.");
+    console.error(err);
   });
 };
 
@@ -134,28 +141,58 @@ document.getElementById("searchBtn").onclick=()=>{
   geocoder.addressSearch(q,(r,s)=>{
     if(s===kakao.maps.services.Status.OK){
       map.panTo(new kakao.maps.LatLng(r[0].y,r[0].x));
+    } else {
+      alert("주소를 찾을 수 없습니다.");
     }
   });
 };
 
-/* ✅ 서울시 공공주차장 API (HTTPS 필수) */
-const SEOUL_KEY="467852516f6a65773838624f6e6148";
-fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/30`)
-.then(res=>res.json())
-.then(data=>{
-  const list=document.getElementById("list");
+/* 서울 공공주차장 API */
+const API_KEY = "77426e49686a6577343575774f5963"; // 본인의 API 키로 교체하세요
+const API_URL = `https://openapi.seoul.go.kr:8088/${API_KEY}/json/GetParkingInfo/1/100`;
 
-  if(!data.GetParkingInfo || !data.GetParkingInfo.row){
-    list.innerHTML="<p>주차장 데이터가 없습니다.</p>";
-    console.log("API 응답:",data);
+fetch(API_URL)
+.then(res => {
+  console.log("응답 상태:", res.status);
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+  return res.json();
+})
+.then(data => {
+  console.log("받은 데이터:", data);
+  const list=document.getElementById("list");
+  list.innerHTML = ""; // 로딩 메시지 제거
+  
+  // API 응답 구조 확인
+  if (!data.GetParkingInfo) {
+    console.error("GetParkingInfo 없음:", data);
+    list.innerHTML = `<div class="error">API 응답 형식이 올바르지 않습니다.<br>콘솔을 확인하세요.</div>`;
+    return;
+  }
+  
+  if (!data.GetParkingInfo.row) {
+    console.error("row 데이터 없음:", data.GetParkingInfo);
+    list.innerHTML = `<div class="error">주차장 데이터가 없습니다.<br>${data.GetParkingInfo.RESULT?.MESSAGE || ''}</div>`;
     return;
   }
 
-  data.GetParkingInfo.row.forEach(p=>{
-    if(!p.ADDR) return;
+  const parkingData = data.GetParkingInfo.row;
+  console.log(`총 ${parkingData.length}개 주차장 발견`);
+
+  if (parkingData.length === 0) {
+    list.innerHTML = '<div class="error">주차장 데이터가 없습니다.</div>';
+    return;
+  }
+
+  parkingData.forEach((p, index) => {
+    if(!p.ADDR) {
+      console.log(`${index}번 주차장: 주소 없음`, p);
+      return;
+    }
 
     const park={
-      name:p.PARKING_NAME,
+      name:p.PARKING_NAME || "이름 없음",
       addr:p.ADDR,
       tel:p.PARKING_TEL||"정보 없음",
       total:Number(p.PARKING_CNT)||0,
@@ -167,50 +204,65 @@ fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/30`)
       park.total>=300?"여유":
       park.total>=100?"보통":"혼잡";
 
-    const color =
-      status==="여유"?"green":
-      status==="보통"?"yellow":"red";
+    /* 목록 생성 */
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerHTML=`<h3>${park.name}</h3><p>${status} · ${park.addr}</p>`;
+    list.appendChild(item);
 
+    item.onclick=()=>{
+      document.getElementById("pName").textContent=park.name;
+      document.getElementById("pAddr").textContent=park.addr;
+      document.getElementById("pTel").textContent=park.tel;
+      document.getElementById("pStatus").textContent=status;
+      document.getElementById("pTotal").textContent=park.total+"면";
+      document.getElementById("pHandi").textContent=park.handi+"면";
+      document.getElementById("pSpecial").textContent=park.special;
+      document.getElementById("detailPopup").classList.add("show");
+    };
+
+    /* 지도 마커 */
     geocoder.addressSearch(park.addr,(r,s)=>{
-      if(s!==kakao.maps.services.Status.OK) return;
+      if(s!==kakao.maps.services.Status.OK) {
+        console.log(`주소 변환 실패: ${park.name} - ${park.addr}`);
+        return;
+      }
       const pos=new kakao.maps.LatLng(r[0].y,r[0].x);
 
       new kakao.maps.Marker({
         map,position:pos,
         image:new kakao.maps.MarkerImage(
-          `https://maps.google.com/mapfiles/ms/icons/${color}-dot.png`,
+          `https://maps.google.com/mapfiles/ms/icons/${
+            status==="여유"?"green":status==="보통"?"yellow":"red"
+          }-dot.png`,
           new kakao.maps.Size(32,32)
         )
       });
-
-      const item=document.createElement("div");
-      item.className="item";
-      item.innerHTML=`<h3>${park.name}</h3><p>${status} · ${park.addr}</p>`;
-      list.appendChild(item);
-
-      item.onclick=()=>{
-        pName.textContent=park.name;
-        pAddr.textContent=park.addr;
-        pTel.textContent=park.tel;
-        pStatus.textContent=status;
-        pTotal.textContent=park.total+"면";
-        pHandi.textContent=park.handi+"면";
-        pSpecial.textContent=park.special;
-
-        navBtn.onclick=()=>{
-          location.href=`https://map.kakao.com/link/to/${park.name},${pos.getLat()},${pos.getLng()}`;
-        };
-
-        map.panTo(pos);
-        detailPopup.classList.add("show");
-      };
     });
   });
+})
+.catch(error => {
+  console.error("API 호출 에러:", error);
+  const list=document.getElementById("list");
+  list.innerHTML = `
+    <div class="error">
+      <p>주차장 정보를 불러오는데 실패했습니다.</p>
+      <p style="font-size:12px;margin-top:8px">${error.message}</p>
+      <p style="font-size:12px;margin-top:8px">
+        1. API 키를 확인하세요<br>
+        2. CORS 문제일 경우 서버를 통해 실행하세요<br>
+        3. 브라우저 콘솔(F12)에서 자세한 에러를 확인하세요
+      </p>
+    </div>
+  `;
 });
 
 /* 팝업 닫기 */
-detailPopup.onclick=()=>detailPopup.classList.remove("show");
-popupContent.onclick=()=>detailPopup.classList.remove("show");
+document.getElementById("detailPopup").onclick=(e)=>{
+  if(e.target.id === "detailPopup") {
+    document.getElementById("detailPopup").classList.remove("show");
+  }
+};
 </script>
 
 </body>
