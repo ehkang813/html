@@ -143,9 +143,16 @@ const SEOUL_KEY="467852516f6a65773838624f6e6148";
 fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/50`)
 .then(res=>res.json())
 .then(data=>{
-  const list=document.getElementById("list");
+  const list = document.getElementById("list");
+
+  if (!data.GetParkingInfo || !data.GetParkingInfo.row) {
+    list.innerHTML = "<p>주차장 데이터가 없습니다.</p>";
+    console.log("API 응답:", data);
+    return;
+  }
 
   data.GetParkingInfo.row.forEach(p=>{
+
     if(!p.ADDR) return;
 
     const park={
