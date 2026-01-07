@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>부산 맛집</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f6f6f6; font-family: -apple-system, BlinkMacSystemFont; }
+
+    header {
+      padding: 16px;
+      text-align: center;
+      font-weight: 600;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .card { background: #fff; padding: 14px; border-bottom: 1px solid #eee; }
+    .card h3 { font-size: 16px; margin-bottom: 6px; }
+    .card p { font-size: 13px; color: #666; }
+
+    .hidden { display: none; }
+
+    .detail { background: #fff; }
+    .section { padding: 14px; }
+
+    .thumb {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .rating {
+      font-size: 14px;
+      color: #ff9800;
+      margin-left: 6px;
+    }
+
+    .info p {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .divider {
+      height: 10px;
+      background: #f6f6f6;
+    }
+
+    #map { width: 100%; height: 260px; }
+
+    .review {
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 8px;
+      margin-top: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      background: #000;
+      color: #fff;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="header">부산 맛집</header>
+
+<main id="listView"></main>
+
+<section id="detailView" class="hidden">
+  <!-- 지도 -->
+  <div id="map"></div>
+
+  <div class="divider"></div>
+
+  <!-- 상세 정보 -->
+  <div class="detail">
+    <div class="section">
+      <div onclick="goBack()">← 뒤로가기</div>
+    </div>
+
+    <div class="section" id="detailContent"></div>
+
+    <div class="divider"></div>
+
+    <!-- 리뷰 -->
+    <div class="section">
+      <h4>리뷰</h4>
+      <div id="reviewList"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 리뷰 작성 -->
+    <div class="section">
+      <h4>리뷰 작성</h4>
+      <textarea id="reviewInput" placeholder="리뷰를 작성해주세요"></textarea>
+      <button onclick="saveReview()">리뷰 등록</button>
+    </div>
+  </div>
+</section>
+
+<script>
+const SERVICE_KEY = "64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
+const API_URL = "https://apis.data.go.kr/6260000/FoodService/getFoodKr";
+
+let foodData = [];
+let currentId = "";
+
+fetch(`${API_URL}?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=100&resultType=json`)
+  .then(res => res.json())
+  .then(data => {
+    foodData = data.getFoodKr.item;
+    renderList();
+  });
+
+function renderList() {
+  const list = document.getElementById("listView");
+  list.innerHTML = "";
+
+  foodData.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <h3>${item.MAIN_TITLE}</h3>
+      <p>${item.ADDR1}</p>
+      <p>${item.RPRSNTV_MENU}</p>
+    `;
+    div.onclick = () => openDetail(item);
+    list.appendChild(div);
+  });
+}
+
+function openDetail(item) {
+  currentId = item.UC_SEQ;
+
+  document.getElementById("listView").classList.add("hidden");
+  document.getElementById("detailView").classList.remove("hidden");
+  document.getElementById("header").innerText = item.MAIN_TITLE;
+
+  const rating = (Math.random() * 1.5 + 3).toFixed(1);
+
+  document.getElementById("detailContent").innerHTML = `
+    <img class="thumb" src="${item.MAIN_IMG_NORMAL || ''}">
+    <div class="title">
+      ${item.MAIN_TITLE}
+      <span class="rating">⭐ ${rating}</span>
+    </div>
+    <div class="info">
+      <p>📍 ${item.ADDR1}</p>
+      <p>📞 ${item.CNTCT_TEL || '정보 없음'}</p>
+      <p>⏰ ${item.USAGE_DAY_WEEK_AND_TIME || '정보 없음'}</p>
+    </div>
+  `;
+
+  loadReviews();
+  setTimeout(() => {
+  drawMap(item.LAT, item.LNG);
+}, 100);
+
+
+function drawMap(lat, lng) {
+  const mapContainer = document.getElementById("map");
+
+  const _lat = Number(lat);
+  const _lng = Number(lng);
+
+  if (!_lat || !_lng) {
+    mapContainer.innerHTML = "위치 정보 없음";
+    return;
+  }
+
+  const map = new kakao.maps.Map(mapContainer, {
+    center: new kakao.maps.LatLng(_lat, _lng),
+    level: 3
+  });
+
+  new kakao.maps.Marker({
+    map,
+    position: new kakao.maps.LatLng(_lat, _lng)
+  });
+}
+
+
+function drawMap(lat, lng) {
+  const mapContainer = document.getElementById("map");
+
+  const _lat = Number(lat);
+  const _lng = Number(lng);
+
+  if (!_lat || !_lng) {
+    mapContainer.innerHTML = "위치 정보 없음";
+    return;
+  }
+
+  const map = new kakao.maps.Map(mapContainer, {
+    center: new kakao.maps.LatLng(_lat, _lng),
+    level: 3
+  });
+
+  // ⭐⭐⭐ 이게 핵심
+  setTimeout(() => {
+    map.relayout();
+    map.setCenter(new kakao.maps.LatLng(_lat, _lng));
+  }, 0);
+
+  new kakao.maps.Marker({
+    map,
+    position: new kakao.maps.LatLng(_lat, _lng)
+  });
+}
+
+}
+
+function goBack() {
+  document.getElementById("detailView").classList.add("hidden");
+  document.getElementById("listView").classList.remove("hidden");
+  document.getElementById("header").innerText = "부산 맛집";
+}
+
+function loadReviews() {
+  const list = document.getElementById("reviewList");
+  const reviews = JSON.parse(localStorage.getItem("reviews_" + currentId)) || [];
+  list.innerHTML = reviews.map(r => `<div class="review">${r}</div>`).join("");
+}
+
+function saveReview() {
+  const input = document.getElementById("reviewInput");
+  if (!input.value.trim()) return;
+
+  const key = "reviews_" + currentId;
+  const reviews = JSON.parse(localStorage.getItem(key)) || [];
+  reviews.push(input.value);
+  localStorage.setItem(key, JSON.stringify(reviews));
+
+  input.value = "";
+  loadReviews();
+}
+
+console.log("좌표:", item.LAT, item.LNG);
+
+</script>
+
+</body>
+</html>
