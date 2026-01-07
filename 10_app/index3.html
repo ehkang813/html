@@ -20,10 +20,13 @@ body{
   position:fixed;top:0;left:0;
   width:100%;height:56px;
   background:#fff;
-  display:flex;align-items:center;
+  display:flex;align-items:center;justify-content:space-between;
   padding:0 16px;font-weight:700;
   z-index:1000;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.header button{
+  border:none;background:none;font-size:18px;cursor:pointer;
 }
 
 /* 지도 */
@@ -33,7 +36,7 @@ body{
   margin-top:56px;
 }
 
-/* 위치 + 검색 */
+/* 위치 + 검색 바 */
 .location-bar{
   position:fixed;
   left:0;
@@ -44,9 +47,24 @@ body{
   z-index:1000;
   box-shadow:0 -2px 8px rgba(0,0,0,.08);
 }
-.location-bar .current{
-  font-size:13px;
-  margin-bottom:8px;
+.location-bar .row{
+  display:flex;
+  gap:8px;
+}
+.location-bar input{
+  flex:1;
+  height:40px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  padding:0 12px;
+}
+.location-bar button{
+  width:64px;
+  height:40px;
+  border:none;
+  border-radius:8px;
+  background:#000;
+  color:#fff;
 }
 
 /* 목록 */
@@ -61,7 +79,6 @@ body{
   box-shadow:0 -4px 16px rgba(0,0,0,.15);
   padding:16px;
   overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
 }
 .item{
   padding:12px 0;
@@ -76,7 +93,7 @@ body{
 .detail-popup{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.4);
+  background:rgba(0,0,0,.45);
   z-index:2000;
   display:none;
   align-items:flex-end;
@@ -113,23 +130,40 @@ body{
   display:flex;
   justify-content:space-between;
 }
+.nav-btn{
+  width:100%;
+  height:48px;
+  margin-top:12px;
+  border:none;
+  border-radius:10px;
+  background:#000;
+  color:#fff;
+  font-size:16px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">여기주차</div>
+<div class="header">
+  <span>여기주차</span>
+  <button id="myLocBtn">📍</button>
+</div>
+
 <div id="map"></div>
 
 <div class="location-bar">
-  <div class="current">📍 서울 공공주차장 정보 (실시간 아님)</div>
+  <div class="row">
+    <input id="searchInput" placeholder="지역 검색 (예: 서울시청)">
+    <button id="searchBtn">검색</button>
+  </div>
 </div>
 
 <div class="bottom-ui" id="list"></div>
 
 <!-- 상세 팝업 -->
 <div class="detail-popup" id="detailPopup">
-  <div class="popup-content">
+  <div class="popup-content" id="popupContent">
     <h2 id="pName"></h2>
     <div class="popup-img">
       <img id="pImg">
@@ -141,74 +175,88 @@ body{
       <p><strong>요금</strong><span id="pFee"></span></p>
       <p><strong>운영시간</strong><span id="pTime"></span></p>
     </div>
+    <button class="nav-btn" id="navBtn">길안내</button>
   </div>
 </div>
 
 <script>
-/* 카카오맵 */
+/* 지도 */
 const map = new kakao.maps.Map(document.getElementById('map'),{
   center:new kakao.maps.LatLng(37.5665,126.9780),
   level:6
 });
-const geocoder = new kakao.maps.services.Geocoder();
+const geocoder=new kakao.maps.services.Geocoder();
+
+/* 현재 위치 */
+let myPosition=null;
+document.getElementById("myLocBtn").onclick=()=>{
+  navigator.geolocation.getCurrentPosition(pos=>{
+    myPosition=new kakao.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+    map.panTo(myPosition);
+    new kakao.maps.Marker({map,position:myPosition});
+  });
+};
+
+/* 검색 */
+document.getElementById("searchBtn").onclick=()=>{
+  const q=document.getElementById("searchInput").value;
+  if(!q) return;
+  geocoder.addressSearch(q,(r,s)=>{
+    if(s===kakao.maps.services.Status.OK){
+      map.panTo(new kakao.maps.LatLng(r[0].y,r[0].x));
+    }
+  });
+};
 
 /* 서울 공공데이터 */
-const SEOUL_KEY = "467852516f6a65773838624f6e6148";
-const API_URL =
-  `https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/50`;
+const SEOUL_KEY="467852516f6a65773838624f6e6148";
+fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/30`)
+.then(res=>res.json())
+.then(data=>{
+  const list=document.getElementById("list");
+  data.GetParkingInfo.row.forEach(p=>{
+    if(!p.ADDR) return;
+    const park={
+      name:p.PARKING_NAME,
+      addr:p.ADDR,
+      total:Number(p.PARKING_CNT)||0,
+      fee:p.PAY_NM||"정보 없음",
+      time:p.OPER_TIME||"정보 없음"
+    };
+    geocoder.addressSearch(park.addr,(r,s)=>{
+      if(s!==kakao.maps.services.Status.OK) return;
+      const pos=new kakao.maps.LatLng(r[0].y,r[0].x);
+      new kakao.maps.Marker({map,position:pos});
 
-const list = document.getElementById("list");
-const popup = document.getElementById("detailPopup");
+      const item=document.createElement("div");
+      item.className="item";
+      item.innerHTML=`<h3>${park.name}</h3><p>${park.addr}</p>`;
+      list.appendChild(item);
 
-const status = t => t>=300?"🟢 여유":t>=100?"🟡 보통":"🔴 혼잡";
-
-fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
-    const rows = data.GetParkingInfo.row;
-
-    rows.forEach(p => {
-      if(!p.ADDR) return;
-
-      const park = {
-        name: p.PARKING_NAME,
-        addr: p.ADDR,
-        total: Number(p.PARKING_CNT) || 0,
-        fee: p.PAY_NM || "요금 정보 없음",
-        time: p.OPER_TIME || "운영시간 정보 없음"
-      };
-
-      geocoder.addressSearch(park.addr,(r,s)=>{
-        if(s!==kakao.maps.services.Status.OK) return;
-
-        const pos=new kakao.maps.LatLng(r[0].y,r[0].x);
-        new kakao.maps.Marker({map,position:pos});
-
-        const item=document.createElement("div");
-        item.className="item";
-        item.innerHTML=
-          `<h3>${park.name}</h3>
-           <p>${status(park.total)} · ${park.addr}</p>`;
-        list.appendChild(item);
-
-        item.onclick=()=>{
-          document.getElementById("pName").textContent=park.name;
-          document.getElementById("pAddr").textContent=park.addr;
-          document.getElementById("pTotal").textContent=park.total+"면";
-          document.getElementById("pStatus").textContent=status(park.total);
-          document.getElementById("pFee").textContent=park.fee;
-          document.getElementById("pTime").textContent=park.time;
-          document.getElementById("pImg").src=
-            `https://source.unsplash.com/600x400/?parking,${park.addr.split(" ")[0]}`;
-          popup.classList.add("show");
-          map.panTo(pos);
+      item.onclick=()=>{
+        document.getElementById("pName").textContent=park.name;
+        document.getElementById("pAddr").textContent=park.addr;
+        document.getElementById("pTotal").textContent=park.total+"면";
+        document.getElementById("pStatus").textContent="참고용";
+        document.getElementById("pFee").textContent=park.fee;
+        document.getElementById("pTime").textContent=park.time;
+        document.getElementById("pImg").src=
+          `https://source.unsplash.com/600x400/?parking,${park.addr.split(" ")[0]}`;
+        document.getElementById("navBtn").onclick=()=>{
+          location.href=`https://map.kakao.com/link/to/${park.name},${pos.getLat()},${pos.getLng()}`;
         };
-      });
+        document.getElementById("detailPopup").classList.add("show");
+        map.panTo(pos);
+      };
     });
-  })
-  .catch(err => console.error(err));
+  });
+});
 
+/* 팝업 닫기 (안/밖 모두) */
+const popup=document.getElementById("detailPopup");
+const popupContent=document.getElementById("popupContent");
 popup.onclick=()=>popup.classList.remove("show");
+popupContent.onclick=()=>popup.classList.remove("show");
 </script>
 
 </body>
