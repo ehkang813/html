@@ -2,195 +2,234 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>부산 공공주차장 지도</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>주정차OK?</title>
 
-<!-- 카카오맵 -->
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f"></script>
+<!-- 카카오맵 (services 포함 필수) -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+* { box-sizing: border-box; }
 
 body {
-  display: flex;
-  flex-direction: column;
-  background: #f5f5f5;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
+  background: #f5f6f8;
+  color: #222;
 }
 
-#map {
-  flex: 6;
-}
-
-/* 리스트 영역 */
-.list-wrap {
-  flex: 4;
+/* ===== 헤더 ===== */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   background: #fff;
-  overflow-y: auto;
-  padding: 16px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  z-index: 1000;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 14px;
 }
 
-/* 주차장 카드 */
-.parking-card {
-  padding: 14px;
-  border-radius: 12px;
-  background: #f9f9f9;
-  margin-bottom: 12px;
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.loc-btn {
+  border: none;
+  background: none;
+  font-size: 20px;
   cursor: pointer;
 }
 
-.parking-card h3 {
-  font-size: 15px;
-  margin-bottom: 6px;
+.search-wrap {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.parking-card p {
-  font-size: 13px;
-  color: #666;
+.search-wrap input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-/* 팝업 */
-.popup {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: -100%;
+.search-wrap button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #1e88e5;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* ===== 지도 ===== */
+#map {
+  margin-top: 112px;
+  width: 100%;
+  height: 45vh;
+}
+
+/* ===== 리스트 ===== */
+.list-wrap {
   background: #fff;
-  padding: 20px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  transition: 0.3s;
-  z-index: 1000;
+  height: calc(55vh - 112px);
+  overflow-y: auto;
+  padding: 12px 14px;
 }
 
-.popup.active {
-  bottom: 0;
-}
-
-.popup h2 {
-  font-size: 18px;
+.list-title {
+  font-size: 15px;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
-.popup p {
-  font-size: 14px;
-  margin-bottom: 6px;
+.item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.close-btn {
-  margin-top: 12px;
-  text-align: center;
-  color: #007aff;
-  font-weight: 600;
-  cursor: pointer;
+.item strong {
+  display: block;
+  font-size: 14px;
+}
+
+.item span {
+  font-size: 12px;
+  color: #666;
 }
 </style>
 </head>
-
 <body>
 
-<div id="map"></div>
-<div class="list-wrap" id="parkingList"></div>
+<header>
+  <div class="header-top">
+    <h1>주정차 OK?</h1>
+    <button class="loc-btn" onclick="moveToMyLocation()">📍</button>
+  </div>
 
-<div class="popup" id="popup">
-  <h2 id="pName"></h2>
-  <p id="pAddr"></p>
-  <p id="pTel"></p>
-  <p id="pTime"></p>
-  <p id="pCnt"></p>
-  <div class="close-btn" onclick="closePopup()">닫기</div>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="주소 검색 (예: 성남시 분당구)">
+    <button onclick="searchAddress()">검색</button>
+  </div>
+</header>
+
+<div id="map"></div>
+
+<div class="list-wrap">
+  <div class="list-title">가까운 주정차 단속구역</div>
+  <div id="list"></div>
 </div>
 
 <script>
-const SERVICE_KEY = "64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d";
+let map, userLat, userLng;
+let markers = [];
 
-let map;
-
+/* 현재 위치 */
 navigator.geolocation.getCurrentPosition(pos => {
-  initMap(pos.coords.latitude, pos.coords.longitude);
-  loadParkingData();
+  userLat = pos.coords.latitude;
+  userLng = pos.coords.longitude;
+  initMap();
+  loadData();
 });
 
-function initMap(lat, lng) {
+/* 지도 초기화 */
+function initMap() {
   map = new kakao.maps.Map(document.getElementById("map"), {
-    center: new kakao.maps.LatLng(lat, lng),
-    level: 5
+    center: new kakao.maps.LatLng(userLat, userLng),
+    level: 4
   });
 
   new kakao.maps.Marker({
     map,
-    position: new kakao.maps.LatLng(lat, lng)
+    position: new kakao.maps.LatLng(userLat, userLng)
   });
 }
 
-function loadParkingData() {
-  const url =
-    `https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getBusanPblcPrkngInfo` +
-    `?serviceKey=${SERVICE_KEY}&numOfRows=50&pageNo=1`;
+/* 내 위치 이동 */
+function moveToMyLocation() {
+  map.setCenter(new kakao.maps.LatLng(userLat, userLng));
+}
 
-  fetch(url)
-    .then(res => res.text())
-    .then(xml => {
-      const xmlDoc = new DOMParser().parseFromString(xml, "text/xml");
-      const items = xmlDoc.getElementsByTagName("item");
-      const listEl = document.getElementById("parkingList");
+/* 주소 검색 */
+function searchAddress() {
+  const keyword = document.getElementById("searchInput").value;
+  if (!keyword) return;
 
-      for (let item of items) {
-        const name = item.getElementsByTagName("pkNm")[0]?.textContent || "이름 없음";
-        const lat = Number(item.getElementsByTagName("yCdnt")[0]?.textContent);
-        const lng = Number(item.getElementsByTagName("xCdnt")[0]?.textContent);
+  const geocoder = new kakao.maps.services.Geocoder();
+  geocoder.addressSearch(keyword, function(result, status) {
+    if (status === kakao.maps.services.Status.OK) {
+      map.setCenter(new kakao.maps.LatLng(result[0].y, result[0].x));
+    }
+  });
+}
 
-        // 리스트는 무조건 표시
-        const card = document.createElement("div");
-        card.className = "parking-card";
-        card.innerHTML = `<h3>${name}</h3><p>공공주차장</p>`;
-        card.onclick = () => openPopup(item);
-        listEl.appendChild(card);
+/* 공공데이터 호출 */
+function loadData() {
+  fetch(`https://apis.data.go.kr/4090000/NoParkingAreasService/getNoParkingAreaList
+?serviceKey=64dfa8ddd0226789d625e94b0537771b1f1d70d23e68899d4914267475e8398d
+&pageNo=1&numOfRows=50&type=json`)
+    .then(res => res.json())
+    .then(data => render(data.response.body.items.item));
+}
 
-        // 좌표 있을 때만 마커 생성
-        if (!lat || !lng) continue;
+/* 리스트 + 마커 렌더링 */
+function render(items) {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  markers.forEach(m => m.setMap(null));
+  markers = [];
 
-        new kakao.maps.Marker({
-          map,
-          position: new kakao.maps.LatLng(lat, lng)
-        });
-      }
+  items
+    .map(i => {
+      const lat = parseFloat(i.latitude);
+      const lng = parseFloat(i.longitude);
+      if (isNaN(lat) || isNaN(lng)) return null;
+
+      return {
+        ...i,
+        lat,
+        lng,
+        distance: calcDistance(userLat, userLng, lat, lng)
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 5)
+    .forEach(i => {
+      const marker = new kakao.maps.Marker({
+        map,
+        position: new kakao.maps.LatLng(i.lat, i.lng)
+      });
+      markers.push(marker);
+
+      list.innerHTML += `
+        <div class="item">
+          <strong>${i.roadNm || i.address || "주정차 단속구역"}</strong>
+          <span>${Math.round(i.distance)}m</span>
+        </div>`;
     });
 }
 
-function openPopup(item) {
-  document.getElementById("pName").innerText =
-    item.getElementsByTagName("pkNm")[0]?.textContent || "";
-
-  document.getElementById("pAddr").innerText =
-    "주소: " + (item.getElementsByTagName("addr")[0]?.textContent || "정보 없음");
-
-  document.getElementById("pTel").innerText =
-    "전화: " + (item.getElementsByTagName("tel")[0]?.textContent || "정보 없음");
-
-  document.getElementById("pTime").innerText =
-    "운영시간: " + (item.getElementsByTagName("operDay")[0]?.textContent || "정보 없음");
-
-  document.getElementById("pCnt").innerText =
-    "주차대수: " + (item.getElementsByTagName("pkCnt")[0]?.textContent || "정보 없음");
-
-  document.getElementById("popup").classList.add("active");
-}
-
-function closePopup() {
-  document.getElementById("popup").classList.remove("active");
+/* 거리 계산 */
+function calcDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 </script>
 
