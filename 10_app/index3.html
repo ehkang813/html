@@ -46,7 +46,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;back
   width:48px;
   border:none;
   border-radius:8px;
-  background:#000;
+  background:#ddd
+  ;
   color:#fff;
 }
 
@@ -94,7 +95,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;back
   height:44px;
   border:none;
   border-radius:10px;
-  background:#000;
+  background:#ddd;
   color:#fff;
   margin-top:10px;
 }
@@ -221,15 +222,22 @@ fetch(`https://apis.data.go.kr/6260000/BusanPblcPrkngInfoService/getPblcPrkngInf
   items.forEach(p=>{
     if(!p.latitude||!p.longitude) return;
 
-    const park={
-      name:p.prkplceNm,
-      addr:p.lnmadr||"주소 없음",
-      tel:p.phoneNumber||"정보 없음",
-      total:p.prkcmprt||"정보 없음",
-      lat:Number(p.latitude),
-      lng:Number(p.longitude),
-      dist:null
-    };
+if(!p.lat || !p.lot) return;
+
+lat: Number(p.lat),
+lng: Number(p.lot),
+
+
+const park={
+  name:p.prkplceNm,
+  addr:p.lnmadr || "주소 없음",
+  tel:p.phoneNumber || "정보 없음",
+  total:p.prkcmprt || "정보 없음",
+  lat:Number(p.lat),
+  lng:Number(p.lng),
+  dist:null
+};
+
 
     parks.push(park);
 
