@@ -5,96 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>여기주차</title>
 
-<!-- 카카오맵 -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=723a28831bc100497d089cbc3a64e24f&libraries=services"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
-  background:#f5f5f5;
-}
+body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 
 /* 헤더 */
 .header{
-  position:fixed;top:0;left:0;
-  width:100%;height:56px;
-  background:#fff;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;font-weight:700;
-  z-index:3000;
+  position:fixed;top:0;left:0;width:100%;height:56px;
+  background:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;font-weight:700;z-index:3000;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
-.header button{border:none;background:none;font-size:20px;cursor:pointer;}
+.header button{border:none;background:none;font-size:20px}
 
 /* 지도 */
 #map{
-  position:fixed;
-  top:56px;left:0;
-  width:100%;
-  height:calc(100vh - 56px - 42vh);
-  z-index:1;
+  position:fixed;top:56px;left:0;width:100%;
+  height:calc(100vh - 56px - 42vh);z-index:1;
 }
 
 /* 검색 */
 .location-bar{
-  position:fixed;
-  top:56px;left:0;
-  width:100%;
-  background:#fff;
-  padding:12px 16px;
-  z-index:2000;
+  position:fixed;top:56px;left:0;width:100%;
+  background:#fff;padding:12px 16px;z-index:2000;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
-.location-bar .row{display:flex;gap:8px;}
-.location-bar input{
-  flex:1;height:40px;border-radius:8px;
-  border:1px solid #ddd;padding:0 12px;
-}
-.location-bar button{
-  width:64px;height:40px;border:none;
-  border-radius:8px;background:#000;color:#fff;
-}
+.location-bar .row{display:flex;gap:8px}
+.location-bar input{flex:1;height:40px;border:1px solid #ddd;border-radius:8px;padding:0 12px}
+.location-bar button{width:64px;height:40px;border:none;border-radius:8px;background:#000;color:#fff}
 
 /* 목록 */
 .bottom-ui{
-  position:fixed;bottom:0;left:0;
-  width:100%;height:42vh;
+  position:fixed;bottom:0;left:0;width:100%;height:42vh;
   background:#fff;border-radius:16px 16px 0 0;
   z-index:2000;box-shadow:0 -4px 16px rgba(0,0,0,.15);
   padding:16px;overflow-y:auto;
 }
-.item{padding:12px 0;border-bottom:1px solid #eee;cursor:pointer;}
-.item:last-child{border-bottom:none;}
-.item h3{font-size:15px;margin-bottom:4px;}
-.item p{font-size:13px;color:#666;}
+.item{padding:12px 0;border-bottom:1px solid #eee;cursor:pointer}
+.item:last-child{border-bottom:none}
+.item h3{font-size:15px}
+.item p{font-size:13px;color:#666}
 
 /* 팝업 */
 .detail-popup{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.45);
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
   z-index:4000;display:none;align-items:flex-end;
 }
-.detail-popup.show{display:flex;}
+.detail-popup.show{display:flex}
 .popup-content{
-  width:100%;background:#fff;
-  border-radius:16px 16px 0 0;
-  padding:16px;
+  width:100%;background:#fff;border-radius:16px 16px 0 0;padding:16px;
 }
-.popup-img{
-  width:100%;height:180px;
-  border-radius:12px;overflow:hidden;
-  margin:8px 0 12px;display:none;
-}
-.popup-img img{width:100%;height:100%;object-fit:cover;}
 .popup-info p{
-  font-size:14px;margin-bottom:6px;
+  font-size:14px;margin-bottom:8px;
   display:flex;justify-content:space-between;
 }
 .nav-btn{
-  width:100%;height:48px;margin-top:12px;
-  border:none;border-radius:10px;
-  background:#000;color:#fff;font-size:16px;
+  width:100%;height:48px;border:none;border-radius:10px;
+  background:#000;color:#fff;font-size:16px;margin-top:12px;
 }
 </style>
 </head>
@@ -117,37 +86,31 @@ body{
 
 <div class="bottom-ui" id="list"></div>
 
-<!-- 상세 팝업 -->
+<!-- 팝업 -->
 <div class="detail-popup" id="detailPopup">
   <div class="popup-content" id="popupContent">
     <h2 id="pName"></h2>
-
-    <div class="popup-img" id="imgWrap">
-      <img id="pImg">
-    </div>
-
     <div class="popup-info">
       <p><strong>주소</strong><span id="pAddr"></span></p>
-      <p><strong>전화</strong><span id="pTel"></span></p>
-      <p><strong>운영시간</strong><span id="pTime"></span></p>
+      <p><strong>전화번호</strong><span id="pTel"></span></p>
+      <p><strong>이용현황</strong><span id="pStatus"></span></p>
       <p><strong>총 주차면</strong><span id="pTotal"></span></p>
       <p><strong>장애인 주차</strong><span id="pHandi"></span></p>
-      <p><strong>특수 공간</strong><span id="pSpecial"></span></p>
+      <p><strong>특수 주차</strong><span id="pSpecial"></span></p>
     </div>
-
     <button class="nav-btn" id="navBtn">길안내</button>
   </div>
 </div>
 
 <script>
 /* 지도 */
-const map=new kakao.maps.Map(document.getElementById('map'),{
+const map = new kakao.maps.Map(document.getElementById('map'),{
   center:new kakao.maps.LatLng(37.5665,126.9780),
   level:6
 });
 const geocoder=new kakao.maps.services.Geocoder();
 
-/* 현재 위치 */
+/* 현재 위치 핀 */
 let myMarker=null;
 document.getElementById("myLocBtn").onclick=()=>{
   navigator.geolocation.getCurrentPosition(pos=>{
@@ -180,43 +143,55 @@ const SEOUL_KEY="467852516f6a65773838624f6e6148";
 fetch(`https://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/GetParkingInfo/1/50`)
 .then(res=>res.json())
 .then(data=>{
-  const rows=data.GetParkingInfo.row;
   const list=document.getElementById("list");
 
-  rows.forEach(p=>{
+  data.GetParkingInfo.row.forEach(p=>{
     if(!p.ADDR) return;
 
     const park={
       name:p.PARKING_NAME,
       addr:p.ADDR,
       tel:p.PARKING_TEL || "정보 없음",
-      time:p.OPER_TIME || "정보 없음",
-      total:p.PARKING_CNT || "0",
-      handi:p.HANDICAP_PARKING || "0",
+      total:Number(p.PARKING_CNT)||0,
+      handi:Number(p.HANDICAP_PARKING)||0,
       special:p.SPECIAL_PARKING || "없음"
     };
+
+    const status =
+      park.total >= 300 ? "여유" :
+      park.total >= 100 ? "보통" : "혼잡";
+
+    const color =
+      status==="여유" ? "green" :
+      status==="보통" ? "yellow" : "red";
 
     geocoder.addressSearch(park.addr,(r,s)=>{
       if(s!==kakao.maps.services.Status.OK) return;
       const pos=new kakao.maps.LatLng(r[0].y,r[0].x);
 
-      const marker=new kakao.maps.Marker({map,position:pos});
+      /* 색상 마커 */
+      const marker=new kakao.maps.Marker({
+        map,position:pos,
+        image:new kakao.maps.MarkerImage(
+          `https://maps.google.com/mapfiles/ms/icons/${color}-dot.png`,
+          new kakao.maps.Size(32,32)
+        )
+      });
 
+      /* 목록 */
       const item=document.createElement("div");
       item.className="item";
-      item.innerHTML=`<h3>${park.name}</h3><p>${park.addr}</p>`;
+      item.innerHTML=`<h3>${park.name}</h3><p>${status} · ${park.addr}</p>`;
       list.appendChild(item);
 
       item.onclick=()=>{
         document.getElementById("pName").textContent=park.name;
         document.getElementById("pAddr").textContent=park.addr;
         document.getElementById("pTel").textContent=park.tel;
-        document.getElementById("pTime").textContent=park.time;
+        document.getElementById("pStatus").textContent=status;
         document.getElementById("pTotal").textContent=park.total+"면";
         document.getElementById("pHandi").textContent=park.handi+"면";
         document.getElementById("pSpecial").textContent=park.special;
-
-        document.getElementById("imgWrap").style.display="none";
 
         document.getElementById("navBtn").onclick=()=>{
           location.href=`https://map.kakao.com/link/to/${park.name},${pos.getLat()},${pos.getLng()}`;
