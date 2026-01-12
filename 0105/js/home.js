@@ -83,3 +83,17 @@ dots.forEach((dot, index) => {
 /* 초기 실행 */
 moveTo(1, false);
 startAutoSlide();
+
+const menuBtn = document.getElementById("menuBtn");
+const sideMenu = document.getElementById("sideMenu");
+const overlay = document.getElementById("sideMenuOverlay");
+
+menuBtn.addEventListener("click", () => {
+  sideMenu.classList.add("open");
+  overlay.classList.add("show");
+});
+
+overlay.addEventListener("click", () => {
+  sideMenu.classList.remove("open");
+  overlay.classList.remove("show");
+});
