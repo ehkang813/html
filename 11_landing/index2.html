@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커넥츠 이벤트 랜딩페이지</title>
+    <style>
+        /* 1. 전체 스타일 및 색상 정의 */
+        :root { --main-purple: #7b2cbf; --dark-bg: #1a1a1a; --light-grey: #f9f9f9; }
+        body, html { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; color: #333; line-height: 1.6; }
+
+        /* 2. 헤더 & 비주얼 영역 (메인 배너) */
+        .hero { background-color: var(--dark-bg); color: white; padding: 60px 20px; text-align: center; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; color: #a29bfe; }
+        .hero-img { max-width: 80%; margin: 20px auto; display: block; }
+
+        /* 3. 카운트다운 섹션 (이벤트 참여 유도) */
+        .timer-section { background: #333; color: #fff; padding: 40px 0; text-align: center; }
+        .timer-display { font-size: 3rem; font-weight: bold; letter-spacing: 5px; color: #ffeb3b; }
+
+        /* 4. 경품 리스트 (그리드 레이아웃) */
+        .gift-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .gift-item { background: white; border: 1px solid #ddd; padding: 20px; border-radius: 8px; text-align: center; transition: 0.3s; }
+        .gift-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .gift-item img { width: 100%; height: auto; margin-bottom: 15px; }
+
+        /* 5. 응모하기 버튼 (CTA) */
+        .cta-area { padding: 50px 0; text-align: center; background: var(--light-grey); }
+        .btn-apply { background: var(--main-purple); color: white; border: none; padding: 20px 60px; font-size: 1.5rem; font-weight: bold; border-radius: 50px; cursor: pointer; }
+
+        /* 6. 모달 팝업 (폼) */
+        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index: 1000; }
+        .modal-body { background: white; width: 90%; max-width: 400px; margin: 100px auto; padding: 40px; border-radius: 15px; position: relative; }
+        .modal-body input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        
+        /* 유의사항 구역 */
+        .footer-info { background: #eee; padding: 30px; font-size: 0.85rem; color: #666; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <p>EVENT.01</p>
+        <h1>커넥츠가<br>미러리스 밀어줄게</h1>
+        <p>매일 밤 10시, 연습 100% 당첨</p>
+        <div style="background:#555; width:300px; height:200px; margin:20px auto; display:flex; align-items:center; justify-content:center;">[메인 이미지 영역]</div>
+    </header>
+
+    <section class="timer-section">
+        <h3>이번 이벤트 종료까지</h3>
+        <div class="timer-display" id="timer">10 : 00 : 00</div>
+    </section>
+
+    <section class="gift-container">
+        <div class="gift-item"><strong>소니 미러리스</strong><br>3명</div>
+        <div class="gift-item"><strong>커넥츠 이용권</strong><br>10명</div>
+        <div class="gift-item"><strong>문화상품권</strong><br>20명</div>
+        <div class="gift-item"><strong>셀카봉</strong><br>30명</div>
+        <div class="gift-item"><strong>바나나우유</strong><br>100명</div>
+    </section>
+
+    <div class="cta-area">
+        <button class="btn-apply" onclick="openModal()">응모하기</button>
+    </div>
+
+    <footer class="footer-info">
+        <h4>이벤트 유의사항</h4>
+        <ul>
+            <li>본 이벤트는 선착순으로 진행됩니다.</li>
+            <li>부정한 방법으로 참여 시 당첨이 취소될 수 있습니다.</li>
+        </ul>
+    </footer>
+
+    <div id="modal">
+        <div class="modal-body">
+            <h2>이벤트 응모하기</h2>
+            <form id="submit-to-google">
+                <input name="name" type="text" placeholder="이름을 입력하세요" required>
+                <input name="phone" type="tel" placeholder="전화번호 (010-0000-0000)" required>
+                <input name="email" type="email" placeholder="이메일 주소를 입력하세요" required>
+                <button type="submit" class="btn-apply" style="width:100%; margin-top:10px;">제출 완료</button>
+            </form>
+            <button onclick="closeModal()" style="display:block; margin:20px auto; border:none; background:none; cursor:pointer;">창 닫기</button>
+        </div>
+    </div>
+
+    <script>
+        // 모달 제어
+        function openModal() { document.getElementById('modal').style.display = 'block'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        // 구글 시트 연동 (지난번 알려드린 스크립트 URL을 여기에 넣으세요)
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyzaA8qMILG-VRKzMoGUDt9-vC5W3_SLtpojWZ6oMmJRkaxAl6eEz-X3tLzCRJsG_-FRA/exec';
+        const form = document.getElementById('submit-to-google')
+
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                alert('응모가 완료되었습니다!')
+                closeModal()
+            })
+            .catch(error => console.error('Error!', error.message))
+        })
+    </script>
+</body>
+</html>
